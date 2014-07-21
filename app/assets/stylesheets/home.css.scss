@@ -1,0 +1,71 @@
+// Place all the styles related to the home controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.bg{
+  background: url('/assets/granite.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+.main_container{
+  position:absolute;
+
+  width:1024px;
+  margin-left: calc(50% - 512px);
+  top:2.5px;
+}
+
+.side_bar{
+  position:fixed;
+  left: calc(50% - 512px);
+  height:calc(100% - 15px);
+  top:7.5px;
+  background:rgba(1,1,1,0.45);
+  width:50px;
+  border-radius:5px;
+}
+.header_container{
+  position:relative;
+  background:yellow;
+  margin-top:10px;
+  width:calc(100% - 75px);
+  margin-bottom:15px;
+  float:right;
+  padding:5px 10px 5px 10px;
+  border-radius:5px;
+  display:block;
+}
+.info_container{
+  position:relative;
+  background:white;
+  width:calc(100% - 55px);
+  float:right;
+  min-height:725px;
+  border-radius:5px;
+}
+.side_bar_cell{
+  position:relative;
+  text-align:center;
+  padding:10px 0px 10px 0px;
+  color:#A7A7A7;
+  cursor:pointer;
+  font-size:15px;
+}
+.side_bar_cell:first-child{
+  margin-bottom:5px;
+  font-size:20px
+}
+.side_bar_cell:hover{
+  color:#55ACEE;
+  background:rgba(255,255,255,0.1);
+}
+.side_bar_cell:first-child:hover{
+  border-radius:5px;
+  color:#55ACEE;
+  background:rgba(255,255,255,0.1);
+}
+.side_bar_cell.active{
+  color:#55ACEE;
+  border-left: 3px #55ACEE solid;
+}
