@@ -2,7 +2,8 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 .bg{
-  background: url('/assets/granite.jpg') no-repeat center center fixed;
+  background-color: rgb(28, 34, 39);
+  background-image: radial-gradient(900px at 50% 0%, rgb(78, 94, 106) 0%, rgb(28, 34, 39) 100%);
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -27,7 +28,7 @@
 }
 .header_container{
   position:relative;
-  background:yellow;
+  background:#575a5d;
   margin-top:10px;
   width:calc(100% - 75px);
   margin-bottom:15px;
