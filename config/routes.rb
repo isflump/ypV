@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
   get 'report_detail/index'
-
   get 'home/index'
 
+  post 'execution/storeSession'
+  post 'execution/storeExecution'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

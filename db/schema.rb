@@ -11,9 +11,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20140722174335) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "executions", force: true do |t|
+    t.string   "case"
+    t.string   "scenario"
+    t.integer  "line"
+    t.string   "location"
+    t.string   "result"
+    t.string   "keyword"
+    t.decimal  "duration"
+    t.text     "exception"
+    t.text     "log"
+    t.integer  "session_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sessions", force: true do |t|
+    t.string   "start_time"
+    t.string   "end_time"
+    t.string   "tlib_version"
+    t.string   "selenium_version"
+    t.string   "python_version"
+    t.string   "os"
+    t.string   "processor"
+    t.string   "machine"
+    t.string   "ip"
+    t.string   "browser"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end
