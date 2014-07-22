@@ -1,0 +1,46 @@
+// Place all the styles related to the reportDetail controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.report_image_container{
+  width: calc(100% - 50px);
+  border-top-left-radius:5px;
+  border-top-right-radius:5px;
+  min-height:25px;
+  background:rgba(0,0,0,0.5);
+  display:block;
+  padding:25px 25px 25px 25px;
+  position:relative;
+}
+.report_image_cell{
+  position:relative;
+  width:26.5%;
+  height: 250px;
+  display:inline-block;
+  vertical-align:top;
+  background:rgba(0,0,0,0.5);
+  border:solid 1px #555;
+  text-align:center;
+  border-radius:5px;
+  opacity:0.8;
+  cursor:pointer;
+}
+.report_image_cell:hover{
+  opacity:95;
+}
+
+.report_image_cell_separator{
+  width:5.5%;
+  height:250px;
+  display:inline-block;
+  text-align:center;
+  vertical-align:middle;
+  font-size:45px;
+  line-height: 250px;
+  color:#888;
+}
+.report_graph_container{
+  display:block;
+  width:100%;
+  min-height:500px;
+  background:white;
+}
