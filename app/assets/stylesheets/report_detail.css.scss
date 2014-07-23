@@ -13,8 +13,8 @@
 }
 .report_image_cell{
   position:relative;
-  width:26.5%;
-  height: 250px;
+  width:17.5%;
+  height: 185px;
   display:inline-block;
   vertical-align:top;
   background:rgba(0,0,0,0.5);
@@ -30,13 +30,27 @@
 
 .report_image_cell_separator{
   width:5.5%;
-  height:250px;
+  height: 185px;
   display:inline-block;
   text-align:center;
   vertical-align:middle;
-  font-size:45px;
-  line-height: 250px;
+  font-size:37.5px;
+  line-height: 185px;
   color:#888;
+}
+.report_image_cell_expand_button{
+  width:5.5%;
+  height: 185px;
+  display:inline-block;
+  text-align:center;
+  vertical-align:middle;
+  font-size:37.5px;
+  line-height: 185px;
+  color:#aaa;
+  cursor:pointer;
+}
+.report_image_cell_expand_button:hover{
+  color:white
 }
 .report_graph_container{
   display:block;
