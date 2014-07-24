@@ -29,16 +29,13 @@ GEM
       tzinfo (~> 1.1)
     arel (5.0.1.20140414130214)
     builder (3.2.2)
-<<<<<<< HEAD
     carrierwave (0.10.0)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
       json (>= 1.7)
       mime-types (>= 1.16)
-=======
     chart-js-rails (0.0.7)
       railties (> 3.1)
->>>>>>> origin/master
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -131,11 +128,8 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
-<<<<<<< HEAD
   carrierwave
-=======
   chart-js-rails
->>>>>>> origin/master
   coffee-rails (~> 4.0.0)
   jbuilder (~> 2.0)
   jquery-rails

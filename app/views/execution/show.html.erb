@@ -20,7 +20,11 @@
       <% end %>
     </div>
     <div class="report_graph_container">
-      <p>Execution ID is <%=@execution.log%></p>
+        <canvas id="myChart" height="255px" width="450px"></canvas>
+        <canvas id="myChart2" height="255px" width="450px" style="margin-left:10px"></canvas>
+    </div>
+    <div class="report_log_container">
+      <pre>Execution ID is <%=@execution.log%></pre>
     </div>
   </div>
 </div>
