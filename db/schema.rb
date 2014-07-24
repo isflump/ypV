@@ -11,13 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140722174335) do
+ActiveRecord::Schema.define(version: 20140723204930) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "executions", force: true do |t|
-    t.string   "case"
+    t.string   "case_name"
+    t.string   "case_id"
+    t.string   "markers"
     t.string   "scenario"
     t.integer  "line"
     t.string   "location"
@@ -26,7 +28,15 @@ ActiveRecord::Schema.define(version: 20140722174335) do
     t.decimal  "duration"
     t.text     "exception"
     t.text     "log"
+    t.string   "ss_path"
     t.integer  "session_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "screenshots", force: true do |t|
+    t.string   "avatar"
+    t.integer  "execution_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -42,6 +52,7 @@ ActiveRecord::Schema.define(version: 20140722174335) do
     t.string   "machine"
     t.string   "ip"
     t.string   "browser"
+    t.string   "base_url"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

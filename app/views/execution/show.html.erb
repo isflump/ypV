@@ -1,0 +1,26 @@
+<div class="main_container">
+
+  <%= render "shared/side_menu" %>
+
+  <div class="header_container">
+    <div class="login_container">
+      hello
+    </div>
+
+  </div>
+  <div class='info_container'>
+    <div class="report_image_container">
+      <% @sshots.each_with_index  do |page,index|
+        if index==0 %>
+          <div class="report_image_cell_expand_button"><i class="fa fa-ellipsis-h"></i></div>
+        <% else %>
+          <div class="report_image_cell_separator"><i class="fa fa-arrow-right"></i></div>
+        <% end %>
+        <%= image_tag page.avatar_url, :class => "report_image_cell" %>
+      <% end %>
+    </div>
+    <div class="report_graph_container">
+      <p>Execution ID is <%=@execution.log%></p>
+    </div>
+  </div>
+</div>
