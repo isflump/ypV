@@ -6,7 +6,7 @@
   border-top-left-radius:5px;
   border-top-right-radius:5px;
   min-height:25px;
-  background:rgba(0,0,0,0.5);
+  background:rgba(0,0,0,0.7);
   display:block;
   padding:25px 25px 25px 25px;
   position:relative;
@@ -54,7 +54,18 @@
 }
 .report_graph_container{
   display:block;
-  width:100%;
+  width:calc(100% - 50px);
+  min-height:250px;
+  background:rgba(0,0,0,0.5);
+  border-top:1px solid #777;
+  padding: 25px 25px 25px 25px;
+}
+
+.report_log_container{
+  display:block;
+  width:calc(100% - 50px);
   min-height:500px;
-  background:white;
+  background:rgba(0,0,0,0.5);
+  border-top:1px solid #777;
+  padding: 25px 25px 25px 25px;
 }
