@@ -63,9 +63,107 @@
 
 .report_log_container{
   display:block;
-  width:calc(100% - 50px);
+  width: 100%;
   min-height:500px;
-  background:rgba(0,0,0,0.5);
+
   border-top:1px solid #777;
-  padding: 25px 25px 25px 25px;
+
+}
+
+
+
+
+
+
+
+.log-navigation {
+  overflow: hidden;
+  margin-top: -15px;
+  position: relative;
+  padding: 0 0 0 1rem;
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  li {
+    float: left;
+    width: 8.5rem;
+    height: 4.05rem;
+    margin: 0 0 0 -1rem;
+    position: relative;
+    &.active {
+      z-index: 6;
+    }
+  }
+  a {
+    position: relative;
+    display: inline-block;
+    color: white;
+    width: 100%;
+    height: 100%;
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+  }
+  svg {
+    width: 120%;
+    height: 100%;
+    // for tab shadows
+    // also screws up Firefox
+    // filter: url(#shadow);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+  span {
+    position: relative;
+    padding: 0.95rem 0 0 1.55rem;
+    z-index: 2;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+  }
+  .tab-1 {
+    z-index: 104;
+    svg {
+      fill:  #1D2328;
+    }
+  }
+  .tab-2 {
+    z-index: 3;
+    svg {
+      fill: rgba(241, 128, 49,0.7);
+    }
+  }
+  .tab-3 {
+    z-index: 2;
+    svg {
+      fill: url(#tab-3-bg);
+    }
+  }
+  .tab-4 {
+    z-index: 1;
+    svg {
+      fill: url(#tab-4-bg);
+    }
+  }
+}
+
+.errorLog-content{
+  position: relative;
+  z-index: 10;
+  background: #1D2328;
+  margin: -1.6rem 0 0 0;
+
+  padding:10px 10px 10px 10px;
+  border-radius: 5px;
+  border-top-left-radius: 0;
+}
+
+.errorTestCase{
+  position:relative;
+  width:100%;
 }

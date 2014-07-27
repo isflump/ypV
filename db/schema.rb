@@ -17,9 +17,7 @@ ActiveRecord::Schema.define(version: 20140723204930) do
   enable_extension "plpgsql"
 
   create_table "executions", force: true do |t|
-    t.string   "case_name"
-    t.string   "case_id"
-    t.string   "markers"
+    t.string   "case"
     t.string   "scenario"
     t.integer  "line"
     t.string   "location"
@@ -28,7 +26,6 @@ ActiveRecord::Schema.define(version: 20140723204930) do
     t.decimal  "duration"
     t.text     "exception"
     t.text     "log"
-    t.string   "ss_path"
     t.integer  "session_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -52,7 +49,6 @@ ActiveRecord::Schema.define(version: 20140723204930) do
     t.string   "machine"
     t.string   "ip"
     t.string   "browser"
-    t.string   "base_url"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
