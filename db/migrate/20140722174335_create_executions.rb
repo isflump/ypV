@@ -3,6 +3,7 @@ class CreateExecutions < ActiveRecord::Migration
     create_table :executions do |t|
       t.string :case_name
       t.string :case_id
+      t.string :spira_case_id
       t.string :markers
       t.string :scenario
       t.integer :line
