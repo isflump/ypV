@@ -5,7 +5,7 @@ $(document).ready ->
   pytestCase = CodeMirror.fromTextArea(document.getElementById('code'), {
     lineNumbers: true,
     mode: "text/x-cython",
-    theme: 'dracula'
+    theme: 'monokai'
   });
 
   data = {

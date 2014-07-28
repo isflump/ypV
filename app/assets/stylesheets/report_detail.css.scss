@@ -1,6 +1,7 @@
 // Place all the styles related to the reportDetail controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+@import url(http://fonts.googleapis.com/css?family=Happy+Monkey);
 .report_image_container{
   width: calc(100% - 50px);
   border-top-left-radius:5px;
@@ -129,33 +130,28 @@
   .tab-1 {
     z-index: 104;
     svg {
-      fill:  #1D2328;
+      fill:  #13171A;
     }
   }
   .tab-2 {
     z-index: 3;
     svg {
-      fill: rgba(241, 128, 49,0.7);
+      fill: #1D2328;
     }
   }
   .tab-3 {
     z-index: 2;
     svg {
-      fill: url(#tab-3-bg);
+      fill: #2B333A;
     }
   }
-  .tab-4 {
-    z-index: 1;
-    svg {
-      fill: url(#tab-4-bg);
-    }
-  }
+
 }
 
 .errorLog-content{
   position: relative;
   z-index: 10;
-  background: #1D2328;
+  background: #13171A;
   margin: -1.6rem 0 0 0;
 
   padding:10px 10px 10px 10px;
@@ -166,4 +162,13 @@
 .errorTestCase{
   position:relative;
   width:100%;
+}
+
+.errorInfo{
+  position:relative;
+  width: calc(100% - 35px);
+  padding: 10px 10px 10px 25px;
+  font-family: monospace;
+  color:red;
+
 }
