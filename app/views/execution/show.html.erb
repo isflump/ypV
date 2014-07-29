@@ -3,22 +3,40 @@
   <%= render "shared/side_menu" %>
 
   <div class="header_container">
-    <div class="login_container">
-      This is header
-    </div>
+    <table class="status_table">
+      <tr>
+        <td><i class="fa fa-file-code-o"></i> <%=@execution.case_name%></td>
+        <% if @execution.result =~/passed/ %>
+          <td style="color:green"><i class="fa fa-check-circle"></i> Passed </td>
+        <%else%>
+          <td style="color:red"><i class="fa fa-times-circle"></i> Failed </td>
+        <%end%>
 
+        <td><i class="fa fa-folder-o"></i> <%=@execution.location%></td>
+        <td><i class="fa fa-clock-o"></i> <%=@execution.duration.round(2)%> secs</td>
+      </tr>
+    </table>
   </div>
+
   <div class='info_container'>
     <div class="report_image_container">
       <% @sshots.each_with_index  do |page,index|
         if index==0
           if @sshots.size > 4 %>
-          <div class="report_image_cell_expand_button"><i class="fa fa-ellipsis-h"></i></div>
+            <div class="report_image_cell_expand_button"><i class="fa fa-ellipsis-h"></i></div>
           <%end%>
         <% else %>
           <div class="report_image_cell_separator"><i class="fa fa-arrow-right"></i></div>
         <% end %>
-        <%= image_tag page.avatar_url, :class => "report_image_cell" %>
+        <% if (index == (@sshots.size - 1) && @execution.result =~ /failed/) %>
+          <div class="report_image_cell" onmouseover="$('#last_report_image').css('opacity','0.95');console.log($('#last_report_image'))">
+            <%= image_tag page.avatar_url, :class => "report_image_cell last-child" %>
+            <img class="report_image_cell last-child-overlay" src="/assets/epic_fail.png" >
+          </div>
+        <% else %>
+          <%= image_tag page.avatar_url, :class => "report_image_cell" %>
+        <% end %>
+
       <% end %>
     </div>
 
@@ -33,52 +51,101 @@
         <path id="tab-shape" class="tab-shape" d="M116.486,29.036c-23.582-8-14.821-29-42.018-29h-62.4C5.441,0.036,0,5.376,0,12.003v28.033h122v-11H116.486
             z">
       </svg>
-      <nav class="log-navigation">
-        <ul>
-          <li class="tab-1 active" >
-            <a href="#error">
-              <span>Error Log</span>
-              <svg viewBox="0 0 122 40">
-                 <use xlink:href="#tab-shape"></use>
-              </svg>
-            </a>
-          </li>
-          <li class="tab-2" >
-            <a href="#spira">
-              <span>Spira TC</span>
-              <svg viewBox="0 0 122 40">
-                <use xlink:href="#tab-shape"></use>
-              </svg>
-            </a>
-          </li>
-          <li class="tab-3" >
-            <a href="#log">
-              <span>User Log</span>
-              <svg viewBox="0 0 122 40">
-                <use xlink:href="#tab-shape"></use>
-              </svg>
-            </a>
-          </li>
-        </ul>
-      </nav>
 
-      <div class="userLog-content" style="display:none">
-        <div>
-        </div>
-      </div>
 
-      <div class="errorLog-content">
-        <div class="errorInfo">
-<pre>
+      <%if @execution.result =~ /failed/%>
+        <nav class="log-navigation">
+          <ul>
+            <li class="tab-1 active">
+              <a href="#error">
+                <span>Error Log</span>
+                <svg viewBox="0 0 122 40">
+                   <use xlink:href="#tab-shape"></use>
+                </svg>
+              </a>
+            </li>
+            <li class="tab-2" >
+              <a href="#spira">
+                <span>Spira TC</span>
+                <svg viewBox="0 0 122 40">
+                  <use xlink:href="#tab-shape"></use>
+                </svg>
+              </a>
+            </li>
+            <li class="tab-3" >
+              <a href="#log">
+                <span>User Log</span>
+                <svg viewBox="0 0 122 40">
+                  <use xlink:href="#tab-shape"></use>
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="errorLog-content">
+          <div class="errorInfo">
+  <pre>
+<%=parse_exception_to_error(@execution.exception)%>
+  </pre>
+          </div>
+          <div class="errorTestCase">
+            <textarea id='code'>
 <%=parse_exception_to_user_case(@execution.exception)%>
-</pre>
+            </textarea>
+          </div>
         </div>
-        <div class="errorTestCase">
-          <textarea id='code'>
-<%=parse_exception_to_user_case(@execution.exception)%>
-          </textarea>
+
+        <div class="userLog-content" style="display:none">
+          <%if @execution.log %>
+            <table><tbody>
+              <% @execution.log.split("\n").each do |line| %>
+                <tr>
+                  <td>
+                  <%=line%>
+                </td></tr>
+              <% end %>
+            </tbody></table>
+          <% end %>
         </div>
-      </div>
+      <!--End if first failed condition-->
+      <%else%>
+        <nav class="log-navigation">
+          <ul>
+            <li class="tab-2">
+              <a href="#spira">
+                <span>Spira TC</span>
+                <svg viewBox="0 0 122 40">
+                  <use xlink:href="#tab-shape"></use>
+                </svg>
+              </a>
+            </li>
+            <li class="tab-3 active">
+              <a href="#log">
+                <span>User Log</span>
+                <svg viewBox="0 0 122 40">
+                  <use xlink:href="#tab-shape"></use>
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="userLog-content">
+          <%if @execution.log %>
+            <table><tbody>
+              <% @execution.log.split("\n").each do |line| %>
+                <tr>
+                  <td>
+                  <%=line%>
+                </td></tr>
+              <% end %>
+            </tbody></table>
+          <% end %>
+        </div>
+
+      <%end%>
+
     </div>
   </div>
 </div>
