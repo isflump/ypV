@@ -186,6 +186,17 @@
   border-top-left-radius: 0;
 }
 
+.userLog-content{
+  position: relative;
+  z-index: 10;
+  background: #2B333A;
+  margin: -1.6rem 0 0 0;
+
+  padding:10px 10px 10px 10px;
+  border-radius: 5px;
+  border-top-left-radius: 0;
+}
+
 .errorTestCase{
   position:relative;
   width:100%;

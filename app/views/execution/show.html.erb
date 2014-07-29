@@ -4,27 +4,81 @@
 
   <div class="header_container">
     <div class="login_container">
-      hello
+      This is header
     </div>
 
   </div>
   <div class='info_container'>
     <div class="report_image_container">
       <% @sshots.each_with_index  do |page,index|
-        if index==0 %>
+        if index==0
+          if @sshots.size > 4 %>
           <div class="report_image_cell_expand_button"><i class="fa fa-ellipsis-h"></i></div>
+          <%end%>
         <% else %>
           <div class="report_image_cell_separator"><i class="fa fa-arrow-right"></i></div>
         <% end %>
         <%= image_tag page.avatar_url, :class => "report_image_cell" %>
       <% end %>
     </div>
+
     <div class="report_graph_container">
         <canvas id="myChart" height="255px" width="450px"></canvas>
         <canvas id="myChart2" height="255px" width="450px" style="margin-left:10px"></canvas>
     </div>
+
     <div class="report_log_container">
-      <pre>Execution ID is <%=@execution.log%></pre>
+      <!-- TAB TEMPLATE -->
+      <svg height="0" width="0" style="position: absolute; margin-left: -100%;">
+        <path id="tab-shape" class="tab-shape" d="M116.486,29.036c-23.582-8-14.821-29-42.018-29h-62.4C5.441,0.036,0,5.376,0,12.003v28.033h122v-11H116.486
+            z">
+      </svg>
+      <nav class="log-navigation">
+        <ul>
+          <li class="tab-1 active" >
+            <a href="#error">
+              <span>Error Log</span>
+              <svg viewBox="0 0 122 40">
+                 <use xlink:href="#tab-shape"></use>
+              </svg>
+            </a>
+          </li>
+          <li class="tab-2" >
+            <a href="#spira">
+              <span>Spira TC</span>
+              <svg viewBox="0 0 122 40">
+                <use xlink:href="#tab-shape"></use>
+              </svg>
+            </a>
+          </li>
+          <li class="tab-3" >
+            <a href="#log">
+              <span>User Log</span>
+              <svg viewBox="0 0 122 40">
+                <use xlink:href="#tab-shape"></use>
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="userLog-content" style="display:none">
+        <div>
+        </div>
+      </div>
+
+      <div class="errorLog-content">
+        <div class="errorInfo">
+<pre>
+<%=parse_exception_to_user_case(@execution.exception)%>
+</pre>
+        </div>
+        <div class="errorTestCase">
+          <textarea id='code'>
+<%=parse_exception_to_user_case(@execution.exception)%>
+          </textarea>
+        </div>
+      </div>
     </div>
   </div>
 </div>

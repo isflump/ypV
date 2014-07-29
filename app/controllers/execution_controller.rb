@@ -4,5 +4,6 @@ class ExecutionController < ApplicationController
     puts params
     @execution = Execution.find_by(id: params[:id])
     @sshots = @execution.screenshots
+
   end
 end
