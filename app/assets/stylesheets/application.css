@@ -13,4 +13,5 @@
  *= require_tree .
  *= require_self
  *= require_tree ../../../vendor/assets/stylesheets
+*= require jquery-ui
  */

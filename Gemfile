@@ -41,3 +41,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin]
 gem 'pg'
 gem 'carrierwave'
 gem 'thin'
+gem 'jquery-ui-rails'

@@ -59,3 +59,14 @@ $(document).ready ->
   myNewChart = new Chart(ctx).Line(data)
   ctx2 = document.getElementById("myChart2").getContext("2d")
   myNewChart2 = new Chart(ctx2).Bar(data2)
+
+@show_report_image_full_panel = () ->
+  console.log $('#report_image_full_panel').height()
+  console.log $(window).height()
+  if $('#report_image_full_panel').height() > ($(window).height() - 30)
+    $('#report_image_full_panel').css('top', 25)
+    $('#report_image_full_panel').css('height', $(window).height() - 100)
+  else
+    $('#report_image_full_panel').css('top', ($(window).height() - $('#report_image_full_panel').height()) / 2 - 20)
+
+  $('#background_grey_layer').show('slow')
