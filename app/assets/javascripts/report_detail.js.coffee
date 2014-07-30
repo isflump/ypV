@@ -61,12 +61,30 @@ $(document).ready ->
   myNewChart2 = new Chart(ctx2).Bar(data2)
 
 @show_report_image_full_panel = () ->
-  console.log $('#report_image_full_panel').height()
-  console.log $(window).height()
-  if $('#report_image_full_panel').height() > ($(window).height() - 30)
-    $('#report_image_full_panel').css('top', 25)
-    $('#report_image_full_panel').css('height', $(window).height() - 100)
-  else
-    $('#report_image_full_panel').css('top', ($(window).height() - $('#report_image_full_panel').height()) / 2 - 20)
-
   $('#background_grey_layer').show('slow')
+  $('body').css('overflow','hidden')
+
+@hide_report_image_full_panel = () ->
+  $('#background_grey_layer').hide('slow')
+  $('body').css('overflow','auto')
+
+@enlarge_report_image = (id) ->
+  $('#report_image_large_view_box').show()
+  enlarge_img_html = '<div class="report_image_large_view_close_btn" onclick="hide_report_image_large_view()"><i class="fa fa-times-circle-o"></i></div><img src="' + $('#' + id).attr('src') + '" id="enlarged_img" style="border-radius:5px;border:solid 2px #aaa"></img>'
+  $('#report_image_large_view_box').html(enlarge_img_html)
+  if $(window).width() * 0.5 < $('#enlarged_img').width()
+    display_width = $(window).width() * 0.5
+  else
+    display_width = $('#enlarged_img').width()
+  $('#enlarged_img').attr('width','100%')
+  $('#report_image_large_view_box').css('width',display_width)
+  $('body').css('overflow','hidden')
+  $('#report_image_large_view_box').css('left', ($(window).width() - display_width) / 2)
+  $('#report_image_large_view_box').wrap('<div class="report_image_large_view_grey_layer" id="report_image_large_view_grey_layer"></div>')
+  $('#report_image_large_view_grey_layer').show()
+
+@hide_report_image_large_view = () ->
+  $('#report_image_large_view_box').hide()
+  $('#report_image_large_view_grey_layer').hide()
+  $('#report_image_large_view_box').unwrap()
+  $('body').css('overflow','auto')

@@ -1,4 +1,4 @@
-<div class="main_container">
+<div class="main_container" id='main_container' >
   <nav class="side_bar">
     <img src="/assets/WF-EN-C-L-W.gif" alt="some_text" width=60% style="margin-top:10px;margin-left:10px">
 
@@ -27,14 +27,14 @@
   <div class='info_container'>
     <div class="report_image_container">
       <div class="report_image_cell_expand_button" onclick="show_report_image_full_panel()"><i class="fa fa-ellipsis-h"></i></div>
-      <img class="report_image_cell" src="/assets/screenshot3.png" >
+      <img class="report_image_cell" src="/assets/screenshot3.png" id="report_image_1" onclick="enlarge_report_image(this.id)">
       <div class="report_image_cell_separator"><i class="fa fa-arrow-right"></i></div>
       <img class="report_image_cell" src="/assets/screenshot1.png" >
       <div class="report_image_cell_separator"><i class="fa fa-arrow-right"></i></div>
       <img class="report_image_cell" src="/assets/screenshot2.png" >
       <div class="report_image_cell_separator"><i class="fa fa-arrow-right"></i></div>
-      <div class="report_image_cell" onmouseover="$('#last_report_image').css('opacity','0.95');console.log($('#last_report_image'))">
-        <img class="report_image_cell last-child" src="/assets/screenshot3.png" id="last_report_image">
+      <div class="report_image_cell" onmouseover="$('#last_report_image').css('opacity','0.95');console.log($('#last_report_image'))" onclick="enlarge_report_image('report_image_4')">
+        <img class="report_image_cell last-child" id="report_image_4" src="/assets/screenshot2.png" >
         <img class="report_image_cell last-child-overlay" src="/assets/epic_fail.png" >
       </div>
     </div>
@@ -134,10 +134,17 @@ def pairwise_cython(double[:, ::1] X):
   </div>
 </div>
 
+
+<div class="report_image_large_view_box" id="report_image_large_view_box">
+
+</div>
+
 <div class="report_image_full_panel_grey_layer" id="background_grey_layer">
   <div class="report_image_full_panel" id='report_image_full_panel'>
+    <div class="report_image_full_panel_close_btn" onclick="hide_report_image_full_panel()"><i class="fa fa-times-circle-o"></i></div>
+
     <div class="report_image_container fullview">
-      <img class="report_image_cell" src="/assets/screenshot3.png" >
+      <img class="report_image_cell" src="/assets/screenshot3.png" id="report_image_3" onclick="enlarge_report_image(this.id)">
       <div class="report_image_cell_separator"><i class="fa fa-arrow-right"></i></div>
       <img class="report_image_cell" src="/assets/screenshot1.png" >
       <div class="report_image_cell_separator"><i class="fa fa-arrow-right"></i></div>
