@@ -88,3 +88,59 @@ $(document).ready ->
   $('#report_image_large_view_grey_layer').hide()
   $('#report_image_large_view_box').unwrap()
   $('body').css('overflow','auto')
+
+prevTabId=null
+prevPanelId=null
+@switch_tab_fail = (id) ->
+  if prevTabId
+    if prevTabId isnt id
+      $("#"+prevTabId).removeClass('active')
+      $("#"+id).addClass('active')
+    else
+      return
+  else
+    $("#"+id).addClass('active')
+    $("#errorTab").removeClass('active')
+
+  if id is "errorTab"
+    panelId="errorlog"
+  else if id is "logTab"
+    panelId="userlog"
+  else
+    panelId="spiralog"
+
+  $("#"+panelId).css('display','block')
+
+  if prevPanelId
+    $("#"+prevPanelId).css('display','none')
+  else
+    $("#errorlog").css('display','none')
+
+  prevTabId=id
+  prevPanelId=panelId
+
+@switch_tab_pass = (id) ->
+  if prevTabId
+    if prevTabId isnt id
+      $("#"+prevTabId).removeClass('active')
+      $("#"+id).addClass('active')
+    else
+      return
+  else
+    $("#"+id).addClass('active')
+    $("#logTab").removeClass('active')
+
+  if id is "logTab"
+    panelId="userlog"
+  else
+    panelId="spiralog"
+
+  $("#"+panelId).css('display','block')
+
+  if prevPanelId
+    $("#"+prevPanelId).css('display','none')
+  else
+    $("#userlog").css('display','none')
+
+  prevTabId=id
+  prevPanelId=panelId

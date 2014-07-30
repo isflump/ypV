@@ -23,18 +23,27 @@
       <% @sshots.each_with_index  do |page,index|
         if index==0
           if @sshots.size > 4 %>
-            <div class="report_image_cell_expand_button"><i class="fa fa-ellipsis-h"></i></div>
+            <div class="report_image_cell_expand_button" onclick="show_report_image_full_panel()"><i class="fa fa-ellipsis-h"></i></div>
           <%end%>
-        <% else %>
-          <div class="report_image_cell_separator"><i class="fa fa-arrow-right"></i></div>
         <% end %>
-        <% if (index == (@sshots.size - 1) && @execution.result =~ /failed/) %>
-          <div class="report_image_cell" onmouseover="$('#last_report_image').css('opacity','0.95');console.log($('#last_report_image'))">
-            <%= image_tag page.avatar_url, :class => "report_image_cell last-child" %>
-            <img class="report_image_cell last-child-overlay" src="/assets/epic_fail.png" >
-          </div>
+
+        <% if index == (@sshots.size - 1)
+            if @execution.result =~ /failed/ %>
+            <div class="report_image_cell" onmouseover="$('#last_report_image').css('opacity','0.95');console.log($('#last_report_image'))" onclick="enlarge_report_image('report_image_<%=index%>')">
+              <%= image_tag page.avatar_url, :id => "report_image_#{index}", :class => "report_image_cell last-child" %>
+              <img class="report_image_cell last-child-overlay" src="/assets/epic_fail.png" >
+            </div>
+            <% else %>
+            <%= image_tag page.avatar_url, :class => "report_image_cell" , :id => "report_image_#{index}" , :onclick => "enlarge_report_image(this.id)"%>
+            <%end%>
+            <%next%>
+        <% end %>
+
+        <% if @sshots.size > 4 && index < (@sshots.size - 4)
+          next %>
         <% else %>
-          <%= image_tag page.avatar_url, :class => "report_image_cell" %>
+          <%= image_tag page.avatar_url, :class => "report_image_cell" , :id => "report_image_#{index}" , :onclick => "enlarge_report_image(this.id)"%>
+          <div class="report_image_cell_separator"><i class="fa fa-arrow-right"></i></div>
         <% end %>
 
       <% end %>
@@ -56,7 +65,7 @@
       <%if @execution.result =~ /failed/%>
         <nav class="log-navigation">
           <ul>
-            <li class="tab-1 active">
+            <li id="errorTab" class="tab-1 active" onclick="switch_tab_fail(this.id)">
               <a href="#error">
                 <span>Error Log</span>
                 <svg viewBox="0 0 122 40">
@@ -64,7 +73,7 @@
                 </svg>
               </a>
             </li>
-            <li class="tab-2" >
+            <li id="spiraTab" class="tab-2" onclick="switch_tab_fail(this.id)">
               <a href="#spira">
                 <span>Spira TC</span>
                 <svg viewBox="0 0 122 40">
@@ -72,7 +81,7 @@
                 </svg>
               </a>
             </li>
-            <li class="tab-3" >
+            <li id="logTab" class="tab-3" onclick="switch_tab_fail(this.id)">
               <a href="#log">
                 <span>User Log</span>
                 <svg viewBox="0 0 122 40">
@@ -83,7 +92,7 @@
           </ul>
         </nav>
 
-        <div class="errorLog-content">
+        <div id="errorlog" class="errorLog-content">
           <div class="errorInfo">
   <pre>
 <%=parse_exception_to_error(@execution.exception)%>
@@ -96,7 +105,7 @@
           </div>
         </div>
 
-        <div class="userLog-content" style="display:none">
+        <div id="userlog" class="userLog-content" style="display:none">
           <%if @execution.log %>
             <table><tbody>
               <% @execution.log.split("\n").each do |line| %>
@@ -112,7 +121,7 @@
       <%else%>
         <nav class="log-navigation">
           <ul>
-            <li class="tab-2">
+            <li id="spiraTab" class="tab-2" onclick="switch_tab_pass(this.id)">
               <a href="#spira">
                 <span>Spira TC</span>
                 <svg viewBox="0 0 122 40">
@@ -120,7 +129,7 @@
                 </svg>
               </a>
             </li>
-            <li class="tab-3 active">
+            <li id="logTab" class="tab-3 active" onclick="switch_tab_pass(this.id)">
               <a href="#log">
                 <span>User Log</span>
                 <svg viewBox="0 0 122 40">
@@ -131,7 +140,7 @@
           </ul>
         </nav>
 
-        <div class="userLog-content">
+        <div id="userlog" class="userLog-content">
           <%if @execution.log %>
             <table><tbody>
               <% @execution.log.split("\n").each do |line| %>
@@ -143,9 +152,42 @@
             </tbody></table>
           <% end %>
         </div>
-
       <%end%>
 
     </div>
+  </div>
+</div>
+
+
+
+<div class="report_image_large_view_box" id="report_image_large_view_box"></div>
+
+<div class="report_image_full_panel_grey_layer" id="background_grey_layer">
+  <div class="report_image_full_panel" id='report_image_full_panel'>
+    <div class="report_image_full_panel_close_btn" onclick="hide_report_image_full_panel()"><i class="fa fa-times-circle-o"></i></div>
+    <% @sshots.each_with_index  do |page,index|
+         if (index.modulo(4) == 0)
+            if index == 0 %>
+              <div class="report_image_container fullview">
+            <% else %>
+              </div><div class="report_image_container fullview">
+            <% end %>
+          <%end%>
+
+          <% if index == (@sshots.size - 1)
+              if @execution.result =~ /failed/ %>
+              <div class="report_image_cell" onmouseover="$('#last_report_image').css('opacity','0.95');console.log($('#last_report_image'))" onclick="enlarge_report_image('report_image_<%=index%>')">
+                <%= image_tag page.avatar_url, :id => "report_image_#{index}", :class => "report_image_cell last-child" %>
+                <img class="report_image_cell last-child-overlay" src="/assets/epic_fail.png" >
+              </div>
+              <% else %>
+              <%= image_tag page.avatar_url, :class => "report_image_cell" , :id => "report_image_#{index}" , :onclick => "enlarge_report_image(this.id)"%>
+              <%end%>
+              <%next%>
+          <% end %>
+
+          <%= image_tag page.avatar_url, :class => "report_image_cell" , :id => "report_image_#{index}" , :onclick => "enlarge_report_image(this.id)"%>
+          <div class="report_image_cell_separator"><i class="fa fa-arrow-right"></i></div>
+      <% end %>
   </div>
 </div>
