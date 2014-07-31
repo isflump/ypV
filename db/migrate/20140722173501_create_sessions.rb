@@ -12,6 +12,7 @@ class CreateSessions < ActiveRecord::Migration
       t.string :ip
       t.string :browser
       t.string :base_url
+      t.belongs_to :project
       t.timestamps
     end
   end

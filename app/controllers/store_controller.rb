@@ -2,11 +2,17 @@ class StoreController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
   def storeSession
-    @ses = Session.new(JSON.parse(params[:session]))
-    if @ses.save
-      render :text => @ses.id, :status => 200
+    @project=Project.find_by_name(params[:project])
+    if @project
+      @ses = Session.new(JSON.parse(params[:session]))
+      @ses.project_id = @project.id
+      if @ses.save
+        render :text => @ses.id, :status => 200
+      else
+        render :text => "ERROR", :status => 400
+      end
     else
-      render :text => "ERROR", :status => 400
+      render :text => "Cannot find project #{params[:project]}, please contact your ypv administrator", :status => 400
     end
   end
 

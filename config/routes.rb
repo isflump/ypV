@@ -7,7 +7,9 @@ Rails.application.routes.draw do
   post 'store/storeScreenShot'
 
 
-  resources :execution
+  resources :execution do
+    post 'getSpira', on: :member
+  end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

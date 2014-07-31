@@ -2,12 +2,6 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 $(document).ready ->
-  pytestCase = CodeMirror.fromTextArea(document.getElementById('code'), {
-    lineNumbers: true,
-    mode: "text/x-cython",
-    theme: 'monokai'
-  });
-
   data = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
@@ -60,6 +54,11 @@ $(document).ready ->
   ctx2 = document.getElementById("myChart2").getContext("2d")
   myNewChart2 = new Chart(ctx2).Bar(data2)
 
+  pytestCase = CodeMirror.fromTextArea(document.getElementById('code'), {
+    lineNumbers: true,
+    mode: "text/x-cython",
+    theme: 'monokai'
+  });
 @show_report_image_full_panel = () ->
   $('#background_grey_layer').show('slow')
   $('body').css('overflow','hidden')

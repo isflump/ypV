@@ -19,35 +19,37 @@
   </div>
 
   <div class='info_container'>
-    <div class="report_image_container">
-      <% @sshots.each_with_index  do |page,index|
-        if index==0
-          if @sshots.size > 4 %>
-            <div class="report_image_cell_expand_button" onclick="show_report_image_full_panel()"><i class="fa fa-ellipsis-h"></i></div>
-          <%end%>
-        <% end %>
-
-        <% if index == (@sshots.size - 1)
-            if @execution.result =~ /failed/ %>
-            <div class="report_image_cell" onmouseover="$('#last_report_image').css('opacity','0.95');console.log($('#last_report_image'))" onclick="enlarge_report_image('report_image_<%=index%>')">
-              <%= image_tag page.avatar_url, :id => "report_image_#{index}", :class => "report_image_cell last-child" %>
-              <img class="report_image_cell last-child-overlay" src="/assets/epic_fail.png" >
-            </div>
-            <% else %>
-            <%= image_tag page.avatar_url, :class => "report_image_cell" , :id => "report_image_#{index}" , :onclick => "enlarge_report_image(this.id)"%>
+    <% if @sshots %>
+      <div class="report_image_container">
+        <% @sshots.each_with_index  do |page,index|
+          if index==0
+            if @sshots.size > 4 %>
+              <div class="report_image_cell_expand_button" onclick="show_report_image_full_panel()"><i class="fa fa-ellipsis-h"></i></div>
             <%end%>
-            <%next%>
-        <% end %>
+          <% end %>
 
-        <% if @sshots.size > 4 && index < (@sshots.size - 4)
-          next %>
-        <% else %>
-          <%= image_tag page.avatar_url, :class => "report_image_cell" , :id => "report_image_#{index}" , :onclick => "enlarge_report_image(this.id)"%>
-          <div class="report_image_cell_separator"><i class="fa fa-arrow-right"></i></div>
-        <% end %>
+          <% if index == (@sshots.size - 1)
+              if @execution.result =~ /failed/ %>
+              <div class="report_image_cell" onmouseover="$('#last_report_image').css('opacity','0.95');console.log($('#last_report_image'))" onclick="enlarge_report_image('report_image_<%=index%>')">
+                <%= image_tag page.avatar_url, :id => "report_image_#{index}", :class => "report_image_cell last-child" %>
+                <img class="report_image_cell last-child-overlay" src="/assets/epic_fail.png" >
+              </div>
+              <% else %>
+              <%= image_tag page.avatar_url, :class => "report_image_cell" , :id => "report_image_#{index}" , :onclick => "enlarge_report_image(this.id)"%>
+              <%end%>
+              <%next%>
+          <% end %>
 
-      <% end %>
-    </div>
+          <% if @sshots.size > 4 && index < (@sshots.size - 4)
+            next %>
+          <% else %>
+            <%= image_tag page.avatar_url, :class => "report_image_cell" , :id => "report_image_#{index}" , :onclick => "enlarge_report_image(this.id)"%>
+            <div class="report_image_cell_separator"><i class="fa fa-arrow-right"></i></div>
+          <% end %>
+
+        <% end %>
+      </div>
+    <%end%>
 
     <div class="report_graph_container">
         <canvas id="myChart" height="255px" width="450px"></canvas>
@@ -161,7 +163,7 @@
 
 
 <div class="report_image_large_view_box" id="report_image_large_view_box"></div>
-
+<% if @sshots %>
 <div class="report_image_full_panel_grey_layer" id="background_grey_layer">
   <div class="report_image_full_panel" id='report_image_full_panel'>
     <div class="report_image_full_panel_close_btn" onclick="hide_report_image_full_panel()"><i class="fa fa-times-circle-o"></i></div>
@@ -191,3 +193,4 @@
       <% end %>
   </div>
 </div>
+<% end %>
