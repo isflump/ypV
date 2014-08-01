@@ -241,15 +241,29 @@
   padding: 0 20px 0 0;
 }
 .report_image_full_panel_close_btn{
-  position:absolute;
+  position:fixed;
   top:25px;
-  right:25px;
+  right:50px;
   font-size:35px;
   color:#aaa;
   cursor:pointer;
 }
 .report_image_full_panel_close_btn:hover{
   color: #FEF200;
+}
+.report_image_large_view_max_btn{
+  position:fixed;
+  top:25px;
+  right:100px;
+  font-size:35px;
+  color:#555;
+  cursor:pointer;
+}
+.report_image_large_view_max_btn.hide{
+  display:none;
+}
+.report_image_large_view_max_btn:hover{
+  color:#ff0084;
 }
 .report_image_large_view_box{
   display:none;
@@ -273,13 +287,39 @@
 }
 
 .report_image_large_view_close_btn{
-  position:absolute;
+  position:fixed;
   top:25px;
-  right:25px;
+  right:50px;
   font-size:35px;
   color:#555;
   cursor:pointer;
 }
 .report_image_large_view_close_btn:hover{
   color: #FEF200;
+}
+.report_image_next{
+  position:fixed;
+  right:35px;
+  height:100%;
+  font-size:45px;
+  color:#777;
+  cursor:pointer;
+  height:45px;
+  top:calc(50% - 22.5px);
+}
+.report_image_next:hover{
+  color:#FEF200;
+}
+.report_image_prev{
+  position:fixed;
+  left:35px;
+  height:45px;
+  top:calc(50% - 22.5px);
+  font-size:45px;
+  color:#777;
+  cursor:pointer;
+  height:100%;
+}
+.report_image_prev:hover{
+  color:#FEF200;
 }
