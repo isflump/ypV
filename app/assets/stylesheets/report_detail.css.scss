@@ -185,13 +185,23 @@
   border-radius: 5px;
   border-top-left-radius: 0;
 }
+.spiraLog-content{
+  position: relative;
+  z-index: 10;
+  background: #1D2328;
+  margin: -1.6rem 0 0 0;
+  font-size:12.5px;
+  color: #999;
+  padding:10px 10px 10px 10px;
+  border-radius: 5px;
+  border-top-left-radius: 0;
+}
 
 .userLog-content{
   position: relative;
   z-index: 10;
   background: #2B333A;
   margin: -1.6rem 0 0 0;
-
   font-size:12.5px;
   color: #999;
   padding:10px 10px 10px 10px;
@@ -207,10 +217,42 @@
 .errorInfo{
   position:relative;
   width: calc(100% - 35px);
-  padding: 10px 10px 10px 25px;
+  padding: 5px 10px 5px 25px;
   font-family: monospace;
+  font-family: 'Roboto', sans-serif;
   color:red;
 
+}
+.spira_description{
+  margin-top:-10px;
+  padding-left:10px;
+  font-family: 'Roboto', sans-serif;
+  font-size:15px;
+  color:#8FB5D9;
+}
+.spira_step_table{
+
+  width:calc(100% - 50px);
+  margin-left:25px;
+  border-radius:7.5px;
+  border:solid 1px #555;
+
+}
+
+.spira_step_table th{
+  font-size:17px;
+  font-weight:bold;
+  color:#ddd;
+  text-align:center;
+  padding:5px 5px 5px 5px;
+  background:rgba(0,0,0,0.5);
+}
+.spira_step_table td{
+  font-size:14.5px;
+  padding:5px 5px 5px 5px;
+  color:#ddd;
+  text-align:left;
+  color:#aaa;
 }
 .report_image_full_panel_grey_layer{
   display:none;

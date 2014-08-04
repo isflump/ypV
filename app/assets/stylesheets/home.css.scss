@@ -1,7 +1,7 @@
 // Place all the styles related to the home controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-
+@import url(http://fonts.googleapis.com/css?family=Roboto);
 .bg{
   background-color: rgb(28, 34, 39);
   background-image: radial-gradient(900px at 50% 0%, rgb(78, 94, 106) 0%, rgb(28, 34, 39) 100%);
@@ -40,6 +40,40 @@
   border-radius:5px;
   display:block;
 }
+.detail_header_container{
+  position:relative;
+  //background:#FEF200;
+  color:#DCDCDC;
+  margin-top:10px;
+  width:calc(100% - 60px);
+  margin-bottom:-12.5px;
+  float:right;
+  border-radius:5px;
+  display:block;
+}
+.detail_header_text_block{
+  width: 70%;
+  display:inline-block;
+}
+.detail_header_author_block{
+  width:30%;
+  display:inline-block;
+}
+.detail_header_case_name_block{
+  width:calc(100%);
+  font-family: 'Roboto', sans-serif;
+  font-size:14.5x;
+  font-weight:bold;
+  color:white;
+  padding-bottom:5px;
+}
+.detail_header_case_path_block{
+  width:calc(100%);
+  font-family: 'Roboto', sans-serif;
+  font-size:12px;
+  color:#aaa;
+}
+
 .info_container{
   position:relative;
   width:calc(100% - 55px);

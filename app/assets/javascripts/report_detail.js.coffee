@@ -89,6 +89,10 @@ current_image_view_id = ''
   $('#report_image_large_view_grey_layer').append('<div class="report_image_large_view_max_btn" onclick="maximize_report_image()" id="report_image_large_view_max_btn"><i class="fa fa-expand"></i></div><div class="report_image_large_view_max_btn hide" onclick="reg_report_image()" id="report_image_large_view_reg_btn"><i class="fa fa-compress"></i></div> <div class="report_image_large_view_close_btn" onclick="hide_report_image_large_view()" id="report_image_large_view_close_btn"><i class="fa fa-times-circle-o"></i></div>')
   $('#report_image_large_view_grey_layer').append('<div class="report_image_next" onclick="report_image_next()" id="report_image_next"><i class="fa fa-chevron-right"></i></div>')
   $('#report_image_large_view_grey_layer').append('<div class="report_image_prev" onclick="report_image_prev()" id="report_image_prev"><i class="fa fa-chevron-left"></i></div>')
+  if !$('#report_image_' + String(parseInt(current_image_view_id.split('_')[current_image_view_id.split('_').length-1]) + 1)).length > 0
+    $('#report_image_next').hide()
+  if parseInt(current_image_view_id.split('_')[current_image_view_id.split('_').length-1]) == 0
+    $('#report_image_prev').hide()
   $('#report_image_large_view_grey_layer').show()
   $('#report_image_large_view_max_btn').removeClass('hide')
 
@@ -128,9 +132,28 @@ current_image_view_id = ''
 
 
 @report_image_next = () ->
-  $('#enlarged_img').attr('src', $('#' + current_image_view_id.substring(parseInt(current_image_view_id) + 1)).attr('src'))
-  if !$('#' + current_image_view_id).length > 0
+  $('#enlarged_img').hide("drop")
+  current_image_view_id_dup = current_image_view_id
+  setTimeout (->
+    $('#enlarged_img').attr('src', $('#report_image_' + String(parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) + 1)).attr('src'))
+    $('#enlarged_img').show("drop", { direction: "right" })
+    ), 450
+  $('#report_image_prev').show()
+  if !$('#report_image_' + String(parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) + 2)).length > 0
     $('#report_image_next').hide()
+    current_image_view_id = 'report_image_' + String(parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) + 1)
+
+@report_image_prev = () ->
+  $('#enlarged_img').hide("drop", { direction: "right" })
+  current_image_view_id_dup = current_image_view_id
+  $('#report_image_next').show()
+  setTimeout (->
+    $('#enlarged_img').attr('src', $('#report_image_' + String(parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) - 1)).attr('src'))
+    $('#enlarged_img').show("drop")
+    ), 450
+  if parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) - 1 == 0
+    $('#report_image_prev').hide()
+    current_image_view_id = 'report_image_' + String(parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) - 1)
 
 
 prevTabId=null
