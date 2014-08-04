@@ -136,28 +136,69 @@ go_next_id=null
 
 
 @report_image_next = () ->
+  # $('#enlarged_img').hide("drop")
+  # current_image_view_id_dup = current_image_view_id
+  # setTimeout (->
+  #   $('#enlarged_img').attr('src', $('#report_image_' + String(parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) + 1)).attr('src'))
+  #   $('#enlarged_img').show("drop", { direction: "right" })
+  #   ), 450
+  # $('#report_image_prev').show()
+  # if !$('#report_image_' + String(parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) + 2)).length > 0
+  #   $('#report_image_next').hide()
+  #   current_image_view_id = 'report_image_' + String(parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) + 1)
+
   $('#enlarged_img').hide("drop")
-  current_image_view_id_dup = current_image_view_id
-  setTimeout (->
-    $('#enlarged_img').attr('src', $('#report_image_' + String(parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) + 1)).attr('src'))
-    $('#enlarged_img').show("drop", { direction: "right" })
-    ), 450
-  $('#report_image_prev').show()
-  if !$('#report_image_' + String(parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) + 2)).length > 0
+  if !go_next_id
+    go_next_id=current_image_view_id
+
+  nextSrc=$('#report_image_' + (parseInt(go_next_id.replace("report_image_","")) + 1))
+
+  if !nextSrc.length > 0
+    return
+
+  if !$('#report_image_' + (parseInt(go_next_id.replace("report_image_","")) + 2)).length > 0
     $('#report_image_next').hide()
-    current_image_view_id = 'report_image_' + String(parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) + 1)
+
+  go_next_id = nextSrc.attr("id")
+  console.log("next "+go_next_id)
+  $('#enlarged_img').attr('src', nextSrc.attr('src'))
+  $('#enlarged_img').show("drop", { direction: "right" })
+
+  if $('#report_image_prev').css("display") is "none"
+    $('#report_image_prev').show()
 
 @report_image_prev = () ->
+  # $('#enlarged_img').hide("drop", { direction: "right" })
+  # current_image_view_id_dup = current_image_view_id
+  # $('#report_image_next').show()
+  # setTimeout (->
+  #   $('#enlarged_img').attr('src', $('#report_image_' + String(parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) - 1)).attr('src'))
+  #   $('#enlarged_img').show("drop")
+  #   ), 450
+  # if parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) - 1 == 0
+  #   $('#report_image_prev').hide()
+  #   current_image_view_id = 'report_image_' + String(parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) - 1)
+
   $('#enlarged_img').hide("drop", { direction: "right" })
-  current_image_view_id_dup = current_image_view_id
-  $('#report_image_next').show()
+  if !go_next_id
+    go_next_id=current_image_view_id
+
+  if parseInt(go_next_id.replace("report_image_","")) is 0
+    return
+
+  if (parseInt(go_next_id.replace("report_image_","")) - 1) is 0
+    $('#report_image_prev').hide()
+
+  prevSrc=$('#report_image_' + (parseInt(go_next_id.replace("report_image_","")) - 1))
+  go_next_id = prevSrc.attr("id")
+  console.log("prev "+go_next_id)
   setTimeout (->
-    $('#enlarged_img').attr('src', $('#report_image_' + String(parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) - 1)).attr('src'))
+    $('#enlarged_img').attr('src', prevSrc.attr('src'))
     $('#enlarged_img').show("drop")
     ), 450
-  if parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) - 1 == 0
-    $('#report_image_prev').hide()
-    current_image_view_id = 'report_image_' + String(parseInt(current_image_view_id_dup.split('_')[current_image_view_id_dup.split('_').length-1]) - 1)
+
+  if $('#report_image_next').css("display") is "none"
+    $('#report_image_next').show()
 
 prevTabId=null
 prevPanelId=null

@@ -24,8 +24,8 @@ class ExecutionController < ApplicationController
         #
         data[:foundCase]=true
         # #get the description
-        data['tcDescription'] = driver.TestCase_RetrieveById({testCaseId: @execution.spira_case_id}).testCase_RetrieveByIdResult.description
-        data['tcDescription'] = data['tcDescription'] ?  data['tcDescription'].strip : ""
+        desc = driver.TestCase_RetrieveById({testCaseId: @execution.spira_case_id}).testCase_RetrieveByIdResult.description
+        data['tcDescription'] = desc ?  desc.strip : "No Description found"
 
         # #get the steps
         data['tcSteps'] = []
