@@ -31,7 +31,7 @@ $(document).ready ->
                             <td>Step "+(i+1)+"</td>
                             <td>" + step.tsDescription + "</td>
                             <td>" + step.tsExpectedResult + "</td>
-                            <td></td>
+                            <td>" + step.tsSample + "</td>
                             </tr>"
             else
               content += "<tr><td>No Steps found</td></tr>"

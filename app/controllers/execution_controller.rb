@@ -35,6 +35,7 @@ class ExecutionController < ApplicationController
             tempStep = {}
             tempStep['tsExpectedResult'] = step.expectedResult.gsub('"','\'').gsub('<div>',"\n").gsub(/\<[^>]*>/,'').strip
             tempStep['tsDescription'] = step.description.gsub('"','\'').gsub('<div>',"\n").gsub(/<[^>]*>/,'').strip
+            tempStep['tsSample'] = step.sampleData ?  step.sampleData : "N/A"
             data['tcSteps'].push tempStep
           }
         end
