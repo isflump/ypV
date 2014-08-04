@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>YpV</title>
+  <title>YpV | <%= yield(:title)%> </title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
+<link rel="shortcut icon" href="/assets/WF-EN-C-L-W.gif"/>
 <body class="bg">
 
 <%= yield %>
