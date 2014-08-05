@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
   resources :execution do
     post 'getSpira', on: :member
+    post 'getHistoryTrend', on: :member
   end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

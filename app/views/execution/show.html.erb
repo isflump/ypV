@@ -33,7 +33,7 @@
   </div>
 
   <div class='info_container'>
-    <% if @sshots %>
+    <% if @sshots.size != 0 %>
       <div class="report_image_container">
         <% @sshots.each_with_index  do |page,index|
           if index==0
@@ -66,8 +66,8 @@
     <%end%>
 
     <div class="report_graph_container">
-        <canvas id="myChart" height="255px" width="450px"></canvas>
-        <canvas id="myChart2" height="255px" width="450px" style="margin-left:10px"></canvas>
+        <canvas id="executionHistoryChart" height="255px" width="650px"></canvas>
+        <div id="executionHistoryLegend"></div>
     </div>
 
     <div class="report_log_container">

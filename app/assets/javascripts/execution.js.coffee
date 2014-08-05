@@ -4,6 +4,59 @@
 $(document).ready ->
   console.log(document.URL)
   $.ajax({
+        type: "POST",
+        url: document.URL+"/getHistoryTrend",
+        data: ''
+        success:(data) ->
+          console.log(data)
+          if data['error'] isnt null
+            options = {
+              bezierCurve : false,
+              scaleGridLineColor : "#444",
+              scaleGridLineWidth : 1,
+              scaleLineColor: "rgba(240,240,240,1)",
+              scaleFontColor: "#aaa"
+              }
+            #"rgba(220,220,220,1)"
+            pass_color="rgba(70, 191, 189,0.5)"
+            data = {
+              labels: data['label'],
+              datasets: [
+                  {
+                      title: "Accumulated executions"
+                      label: "My First dataset",
+                      fillColor: "rgba(220,220,220,0.2)",
+                      strokeColor: "rgba(220,220,220,1)",
+                      pointColor: "rgba(220,220,220,1)",
+                      pointStrokeColor: "#fff",
+                      pointHighlightFill: "#fff",
+                      pointHighlightStroke: "rgba(240,240,240,1)",
+                      data: data['executionNumber']
+                  },
+                  {
+                      label: "My Second dataset",
+                      fillColor: pass_color,
+                      strokeColor: pass_color,
+                      pointColor: pass_color,
+                      pointStrokeColor: "#fff",
+                      pointHighlightFill: "#fff",
+                      pointHighlightStroke: pass_color,
+                      data: data['executionPassNumber'],
+                      title: "Number of passed execution"
+                  }
+              ]
+              }
+            ctx = document.getElementById("executionHistoryChart").getContext("2d")
+            new Chart(ctx).Line(data,options)
+            legend(document.getElementById("executionHistoryLegend"), data)
+          else
+            console.log("Error")
+        error:(data) ->
+          #showError('Error on request',data)
+      })
+
+
+  $.ajax({
 				type: "POST",
 				url: document.URL+"/getSpira",
 				data: ''
@@ -40,3 +93,18 @@ $(document).ready ->
 				error:(data) ->
 					#showError('Error on request',data)
 			})
+
+legend = (parent, data) ->
+  parent.className = "legend"
+  datas = (if data.hasOwnProperty("datasets") then data.datasets else data)
+
+  # remove possible children of the parent
+  parent.removeChild parent.lastChild  while parent.hasChildNodes()
+  datas.forEach (d) ->
+    title = document.createElement("div")
+    title.className = "title"
+    title.style.borderColor = (if d.hasOwnProperty("strokeColor") then d.strokeColor else d.color)
+    title.style.borderStyle = "solid"
+    parent.appendChild title
+    text = document.createTextNode(d.title)
+    title.appendChild text

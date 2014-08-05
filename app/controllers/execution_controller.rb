@@ -4,9 +4,41 @@ require 'soap/wsdlDriver'
 class ExecutionController < ApplicationController
 
   def show
-    puts params
     @execution = Execution.find_by(id: params[:id])
     @sshots = @execution.screenshots
+  end
+
+
+  def getHistoryTrend
+    data = Hash.new
+    @execution = Execution.find_by(id: params[:id])
+    begin
+      #We measure the interval weekly
+      day_factor=1
+      #construct history graph
+      current_begining_of_week=Date.today.at_beginning_of_week
+      time_range = (-7..-1).collect{ |i| { :start => (current_begining_of_week - day_factor * i*-1).to_s , :end => (current_begining_of_week - day_factor * (i*-1-1)).to_s } }
+      puts time_range
+      #range label
+      data[:label] = time_range.collect{|c| c[:start]}
+
+      obj_arr=time_range.collect{|c|
+        Execution.select("case_name,result,executions.created_at").joins('JOIN sessions on executions.session_id=sessions.id').where(case_name: @execution.case_name , created_at:c[:start] .. c[:end])
+      }
+      value_arr = obj_arr.collect{|o| o.size }
+      data[:executionNumber]= []
+      value_arr.each_with_index{|a, i| data[:executionNumber] << value_arr[0..i].sum }
+
+      data[:executionPassNumber]= []
+      value_pass_var = obj_arr.collect{|o| o.size == 0 ? 0 : o.collect{|so| 1 if so.result =~ /passed/i}.sum }
+      value_pass_var.each_with_index{|a, i| data[:executionPassNumber] << value_pass_var[0..i].sum }
+
+      render json: data
+    rescue Exception => e
+      data[:error] = e.message.strip
+      data[:trace] = e.backtrace.join("<br>")
+      render json: data
+    end
   end
 
   def getSpira
