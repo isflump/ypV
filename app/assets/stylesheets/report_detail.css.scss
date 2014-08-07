@@ -367,7 +367,9 @@
 }
 
 .legend {
-    width: 650px;
+    display: inline-block;
+
+    width: 400px;
     color:#888;
     text-align:center;
 }

@@ -58,7 +58,7 @@
             next %>
           <% else %>
           <%= image_tag page.avatar_url, :class => "report_image_cell" , :id => "report_image_#{index}" , :onclick => "enlarge_report_image(this.id)"%>
-            <div class="report_image_cell_separator"><i class="fa fa-arrow-right"></i></div>
+            <div class="report_image_cell_separator"><i class="fa fa-chevron-right"></i></div>
           <% end %>
 
         <% end %>
@@ -66,8 +66,11 @@
     <%end%>
 
     <div class="report_graph_container">
-        <canvas id="executionHistoryChart" height="255px" width="650px"></canvas>
+        <canvas id="executionHistoryChart" height="255px" width="450px"></canvas>
+        <canvas id="latestExecutionChart" height="255px" width="450px"></canvas>
         <div id="executionHistoryLegend"></div>
+
+        <div id="latestExecutionLegend"></div>
     </div>
 
     <div class="report_log_container">
@@ -206,7 +209,7 @@
           <% end %>
 
           <%= image_tag page.avatar_url, :class => "report_image_cell" , :id => "report_image_#{index}" , :onclick => "enlarge_report_image(this.id)"%>
-          <div class="report_image_cell_separator"><i class="fa fa-arrow-right"></i></div>
+          <div class="report_image_cell_separator"><i class="fa fa-chevron-right"></i></div>
       <% end %>
   </div>
 </div>

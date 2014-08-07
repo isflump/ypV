@@ -19,11 +19,12 @@ $(document).ready ->
               }
             #"rgba(220,220,220,1)"
             pass_color="rgba(70, 191, 189,0.5)"
-            data = {
+            red_color="rgba(247, 70, 74,0.5)"
+            line = {
               labels: data['label'],
               datasets: [
                   {
-                      title: "Accumulated executions"
+                      title: "Accumulated"
                       label: "My First dataset",
                       fillColor: "rgba(220,220,220,0.2)",
                       strokeColor: "rgba(220,220,220,1)",
@@ -42,13 +43,42 @@ $(document).ready ->
                       pointHighlightFill: "#fff",
                       pointHighlightStroke: pass_color,
                       data: data['executionPassNumber'],
-                      title: "Number of passed execution"
+                      title: "Passed"
                   }
               ]
               }
             ctx = document.getElementById("executionHistoryChart").getContext("2d")
-            new Chart(ctx).Line(data,options)
-            legend(document.getElementById("executionHistoryLegend"), data)
+            new Chart(ctx).Line(line,options)
+            legend(document.getElementById("executionHistoryLegend"), line)
+
+            bar = {
+              labels: data['lastExecutionLabel'],
+              datasets: [
+                  {
+                      label: "pass",
+                      title: 'Passed'
+                      fillColor: pass_color,
+                      strokeColor: pass_color,
+                      highlightFill: pass_color,
+                      highlightStroke: pass_color,
+                      data: data['lastExecutionPass']
+                  },
+                  {
+                      label: "My Second dataset",
+                      title: 'Failed'
+                      fillColor: red_color,
+                      strokeColor: red_color,
+                      highlightFill: red_color,
+                      highlightStroke: red_color,
+                      data: data['lastExecutionFail']
+                  }
+              ]
+              }
+
+            ctx2 = document.getElementById("latestExecutionChart").getContext("2d")
+            new Chart(ctx2).Bar(bar,options)
+            legend(document.getElementById("latestExecutionLegend"), bar)
+
           else
             console.log("Error")
         error:(data) ->
