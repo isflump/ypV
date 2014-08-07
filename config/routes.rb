@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  get 'report_detail/index'
   get 'home/index'
 
   post 'store/storeSession'
@@ -10,6 +9,10 @@ Rails.application.routes.draw do
   resources :execution do
     post 'getSpira', on: :member
     post 'getHistoryTrend', on: :member
+  end
+
+  resources :session do
+    post 'getStatus', on: :member
   end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

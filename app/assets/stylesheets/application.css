@@ -15,3 +15,29 @@
  *= require_tree ../../../vendor/assets/stylesheets
 *= require jquery-ui
  */
+
+/* scroll*/
+::-webkit-scrollbar {
+  background: #9bb7fc;
+  border-radius:10px;
+    width: 10.5px;
+    height: 10.5px;
+    margin-left:5px;
+    margin-right:5px;
+
+}
+
+::-webkit-scrollbar-track {
+    width:55px;
+    padding-left:5px;
+    padding-right:5px;
+    background: #111;
+}
+
+::-webkit-scrollbar-thumb {
+    width:15px;
+    outline: 1px solid #101214;
+    border-radius: 2.5px;
+    border-left: 1px solid #3e444c;
+    background-image: linear-gradient(#3a3f44, #202328 70%, #202328);
+}

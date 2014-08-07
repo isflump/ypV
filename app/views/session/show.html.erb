@@ -1,0 +1,52 @@
+<% content_for :title, "Session" %>
+<div class="tonberry"></div>
+<div class="main_container">
+
+  <%= render "shared/side_menu" %>
+
+  <div class="header_container">
+    hello
+  </div>
+
+
+
+  <div class='info_container'>
+    <div class="report_graph_container">
+        <canvas id="sessionStatusChart" height="255px" width="350px" onclick="filterBySessionStatus(event)"></canvas>
+        <canvas id="sessionFolderChart" height="255px" width="550px" onclick="filterBySessionLocation(event)"></canvas>
+        <div id="sessionStatusLegend" style="width:850px"></div>
+    </div>
+
+    <div class="home_report_list_container">
+      <!--==============================================================================================-->
+      <div id="session_table_tag_view" class="" style="color:white;margin-bottom:10px;"></div>
+      <table id="sessionTable" class="display" cellspacing="0" width="100%">
+          <thead>
+              <tr>
+                <th>Case Name</th>
+                <th>Method Name</th>
+                <th>Duration(sec)</th>
+                <th>Spira ID</th>
+                <th>Status</th>
+                <th>Location</th>
+              </tr>
+          </thead>
+          <tbody id="sessionTableBody">
+            <% @executions.each do |exec| %>
+              <tr rel="tooltip" title="Double click to see execution detail" style="cursor:pointer" ondblclick="window.open('/execution/<%=exec.id%>','_blank')">
+                  <td><%=exec.case_id%></td>
+                  <td><%=exec.case_name%></td>
+                  <td><%=exec.duration.round()%></td>
+                  <td><%= exec.spira_case_id.empty? ? "N/A" : exec.spira_case_id %></td>
+                  <% if exec.result =~/passed/i %>
+                    <td style="color:rgba(70, 191, 189,0.5)"><%=exec.result.capitalize %></td>
+                  <%else%>
+                    <td style="color:rgba(247, 70, 74,0.9)"><%=exec.result.capitalize %></td>
+                  <%end%>
+                  <td style="text-align:center" rel="tooltip" title="<%=exec.location%>"><i class="fa fa-folder-o"></i></td>
+              </tr>
+            <%end%>
+          </tbody>
+        </table>
+    </div>
+  </div>
