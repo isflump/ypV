@@ -81,6 +81,19 @@
   min-height:725px;
   border-radius:5px;
 }
+.home_graph_container{
+
+}
+.home_report_list_container{
+  width:calc(100% - 50px);
+  position:relative;
+  background:rgba(0,0,0,0.5);
+  padding:25px 25px 25px 25px;
+  border-radius:5px;
+}
+
+
+
 .side_bar_cell{
   position:relative;
   text-align:center;
