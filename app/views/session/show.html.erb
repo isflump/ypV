@@ -25,24 +25,17 @@
 
 
   <div class='info_container' onmouseover="dismiss_detail_exec_time()">
-    <div class="report_graph_container">
+    <div id="sessionGraph" class="report_graph_container">
         <canvas id="sessionStatusChart" height="255px" width="350px" onclick="filterBySessionStatus(event)"></canvas>
-        <canvas id="sessionFolderChart" height="255px" width="550px" onclick="filterBySessionLocation(event)"></canvas>
+        <canvas id="sessionFolderChart" height="255px" width="550px" onclick="filterBySessionLocation(event,true,'NONE')"></canvas>
         <div id="sessionStatusLegend" style="width:850px"></div>
     </div>
 
     <div class="home_report_list_container">
       <!--==============================================================================================-->
       <div id="session_table_tag_view" class="session_table_tag_view" >
-          <div id="session_status_tag" class="pass_fail_tag_container" onclick="removeSessionStatusFilter()">PASSED</div>
-          <!--<div id="session_status_tag" class="pass_fail_tag_container fail" onclick="removeSessionStatusFilter()">Fail</div>-->
-          <div id="session_status_tag" class="path_tag_container">
-            <div class="path_tag" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">test</div>
-            <div class="path_tag" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">test</div>
-            <div class="path_tag" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">test</div>
-            <div class="path_tag" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">test</div>
-            <div class="path_tag" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">test</div>
-          </div>
+          <div id="session_status_tag" class="pass_fail_tag_container" onclick="removeSessionStatusFilter()"></div>
+          <div id="session_path_tag" class="path_tag_container"></div>
       </div>
       <!--==============================================================================================-->
       <table id="sessionTable" class="display" cellspacing="0" width="100%">
