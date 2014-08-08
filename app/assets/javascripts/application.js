@@ -13,7 +13,8 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require Chart
 //= require_tree ../../../vendor/assets/javascripts
 //= require_tree .
-//= require Chart
+
 //= require jquery-ui

@@ -91,6 +91,7 @@ $(document).ready ->
 
             #showError('Error on request',data)
         })
+        $("#sessionTable").dataTable()
 @filterBySessionStatus = (evt) ->
   activePoints = pieChart.getSegmentsAtEvent(evt)
   table=""
@@ -112,8 +113,12 @@ $(document).ready ->
   $('#sessionTable').DataTable()
 
   #=================================================================================
-  $('#session_table_tag_view').html('<div id="session_status_tag" class="" onclick="removeSessionStatusFilter()">'+activePoints[0].label.toUpperCase();+'</div>')
-
+  if /pass/i.test(activePoints[0].label.toUpperCase())
+    $('#session_table_tag_view').html('<div id="session_status_tag" class="pass_fail_tag_container" onclick="removeSessionStatusFilter()">' + activePoints[0].label.toUpperCase() + '</div>')
+  else
+    $('#session_table_tag_view').html('<div id="session_status_tag" class="pass_fail_tag_container fail" onclick="removeSessionStatusFilter()">' + activePoints[0].label.toUpperCase() + '</div>')
+  $('#session_status_tag').width($('#session_status_tag').width())
+  $('#session_status_tag').show("drop", { direction: "right" },600)
 @removeSessionStatusFilter = () ->
   for exec in sessionDataHolder
     table = table + '<tr rel="tooltip" title="Double click to see execution detail" style="cursor:pointer" ondblclick="window.open(\'/execution/'+exec.id+'\',\'_blank\')">'
@@ -134,6 +139,17 @@ $(document).ready ->
   $('#session_table_tag_view').html("")
 
 isArrayContain = (arr,elm) ->
+
+@highlight_path_tag = (tag) ->
+  path_tag = $(tag)
+  while path_tag.length > 0
+    path_tag.addClass('active')
+    path_tag = path_tag.next()
+@lowlight_path_tag = (tag) ->
+  path_tag = $(tag)
+  while path_tag.length > 0
+    path_tag.removeClass('active')
+    path_tag = path_tag.next()
 
 @filterBySessionLocation = (evt) ->
   activePoints = barChart.getBarsAtEvent(evt)

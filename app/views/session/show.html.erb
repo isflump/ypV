@@ -19,7 +19,18 @@
 
     <div class="home_report_list_container">
       <!--==============================================================================================-->
-      <div id="session_table_tag_view" class="" style="color:white;margin-bottom:10px;"></div>
+      <div id="session_table_tag_view" class="session_table_tag_view" >
+          <div id="session_status_tag" class="pass_fail_tag_container" onclick="removeSessionStatusFilter()">PASSED</div>
+          <!--<div id="session_status_tag" class="pass_fail_tag_container fail" onclick="removeSessionStatusFilter()">Fail</div>-->
+          <div id="session_status_tag" class="path_tag_container">
+            <div class="path_tag" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">test</div>
+            <div class="path_tag" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">test</div>
+            <div class="path_tag" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">test</div>
+            <div class="path_tag" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">test</div>
+            <div class="path_tag" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">test</div>
+          </div>
+      </div>
+      <!--==============================================================================================-->
       <table id="sessionTable" class="display" cellspacing="0" width="100%">
           <thead>
               <tr>

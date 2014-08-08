@@ -84,6 +84,52 @@
 .home_graph_container{
 
 }
+.session_table_tag_view{
+  position:relative;
+  width:100%;
+  height:25px;
+  margin-top:-10px;
+  margin-bottom:20px;
+}
+.pass_fail_tag_container{
+  position:relative;
+  display:inline-block;
+  padding:5px 20px 5px 20px;
+  color:#5AD3D1;
+	background: #272B30;
+	border-right:2px solid #272B30;
+	outline: 1px solid #101214;
+	border-right: 1px solid #3e444c;
+	border-radius: 2.5px;
+  cursor:pointer;
+  display:none;
+}
+.pass_fail_tag_container.fail{
+  color:#FF5A5E;
+}
+.path_tag_container{
+  position:relative;
+  display:inline-block;
+  margin-left:10px;
+}
+.path_tag{
+  position:relative;
+  display:inline-block;
+  padding:5px 20px 5px 20px;
+  border-top-right-radius:50px;
+  border-bottom-right-radius:50px;
+  color:#999;
+  background: #272B30;
+  border-right:2px solid #272B30;
+  outline: 1px solid #101214;
+  border-right: 1px solid #3e444c;
+  border-radius: 2.5px;
+  margin-left:-2px;
+  cursor:pointer
+}
+.path_tag.active{
+  color:#caf0ff;
+}
 .home_report_list_container{
   width:calc(100% - 50px);
   position:relative;
