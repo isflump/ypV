@@ -22,7 +22,10 @@ pieChart=null
 barChart=null
 pass_color="rgba(70, 191, 189,0.5)"
 red_color="rgba(247, 70, 74,0.5)"
+
 currentPath=null
+#holds a endPoints path name that cannot click into anymore
+endPoint=[]
 $(document).ready ->
   if $('body').find('.tonberry').length > 0
     $.ajax({
@@ -97,49 +100,43 @@ $(document).ready ->
 @filterBySessionStatus = (evt) ->
   activePoints = pieChart.getSegmentsAtEvent(evt)
   table=""
+
   for exec in sessionDataHolder
     if exec.result is activePoints[0].label
-      table = table + '<tr rel="tooltip" title="Double click to see execution detail" style="cursor:pointer" ondblclick="window.open(\'/execution/'+exec.id+'\',\'_blank\')">'
-      table = table + '<td>' + exec.case_id + '</td>'
-      table = table + '<td>' + exec.case_name + '</td>'
-      table = table + '<td>' + Math.round(exec.duration) + '</td>'
-      table = table + '<td>' + exec.spira_case_id + '</td>'
-      if exec.result is "passed"
-        table = table + '<td style="color:rgba(70, 191, 189,0.5)">'+ exec.result + '</td>'
+      if currentPath is null
+        table += construct_table(exec)
       else
-        table = table + '<td style="color:rgba(247, 70, 74,0.9)">'+ exec.result + '</td>'
-      table = table + '<td style="text-align:center" rel="tooltip" title="'+exec.location+'"><i class="fa fa-folder-o"></i></td>'
-      table = table + '</tr>'
+        if exec.location.indexOf(currentPath) >= 0
+          table += construct_table(exec)
+
   $('#sessionTable').DataTable().destroy()
   $('#sessionTableBody').html(table)
   $('#sessionTable').DataTable()
 
   #=================================================================================
   if /pass/i.test(activePoints[0].label.toUpperCase())
-    $('#session_table_tag_view').html('<div id="session_status_tag" class="pass_fail_tag_container" onclick="removeSessionStatusFilter()">' + activePoints[0].label.toUpperCase() + '</div>')
+    $('#session_status_tag_view').html('<div id="session_status_tag" class="pass_fail_tag_container" onclick="removeSessionStatusFilter()">' + activePoints[0].label.toUpperCase() + '</div>')
+    # $('#session_table_tag_view').html('<div id="session_status_tag" class="pass_fail_tag_container" onclick="removeSessionStatusFilter()">' + activePoints[0].label.toUpperCase() + '</div>')
   else
-    $('#session_table_tag_view').html('<div id="session_status_tag" class="pass_fail_tag_container fail" onclick="removeSessionStatusFilter()">' + activePoints[0].label.toUpperCase() + '</div>')
+    $('#session_status_tag_view').html('<div id="session_status_tag" class="pass_fail_tag_container fail" onclick="removeSessionStatusFilter()">' + activePoints[0].label.toUpperCase() + '</div>')
+    # $('#session_table_tag_view').html('<div id="session_status_tag" class="pass_fail_tag_container fail" onclick="removeSessionStatusFilter()">' + activePoints[0].label.toUpperCase() + '</div>')
   $('#session_status_tag').width($('#session_status_tag').width())
   $('#session_status_tag').show("drop", { direction: "right" },600)
 
 @removeSessionStatusFilter = () ->
+  table=""
   for exec in sessionDataHolder
-    table = table + '<tr rel="tooltip" title="Double click to see execution detail" style="cursor:pointer" ondblclick="window.open(\'/execution/'+exec.id+'\',\'_blank\')">'
-    table = table + '<td>' + exec.case_id + '</td>'
-    table = table + '<td>' + exec.case_name + '</td>'
-    table = table + '<td>' + Math.round(exec.duration) + '</td>'
-    table = table + '<td>' + exec.spira_case_id + '</td>'
-    if exec.result is "passed"
-      table = table + '<td style="color:rgba(70, 191, 189,0.5)">'+ exec.result + '</td>'
+    if currentPath is null
+      table += construct_table(exec)
     else
-      table = table + '<td style="color:rgba(247, 70, 74,0.9)">'+ exec.result + '</td>'
-    table = table + '<td style="text-align:center" rel="tooltip" title="'+exec.location+'"><i class="fa fa-folder-o"></i></td>'
-    table = table + '</tr>'
+      if exec.location.indexOf(currentPath) >= 0
+        table += construct_table(exec)
+
   $('#sessionTable').DataTable().destroy()
   $('#sessionTableBody').html(table)
   $('#sessionTable').DataTable()
 
-  $('#session_table_tag_view').html("")
+  $('#session_status_tag_view').html("")
 
 @highlight_path_tag = (tag) ->
   path_tag = $(tag)
@@ -169,8 +166,12 @@ $(document).ready ->
   passed=[]
   failed=[]
   isTopLevel=null
+  statusFilter = $('#session_status_tag').text()
+
   if isForward
     path=barChart.getBarsAtEvent(evt)[0].label
+    if endPoint.indexOf(currentPath + "\\" + path) isnt -1
+      return
     if currentPath
       currentPath += "\\" + path
       isTopLevel=true
@@ -193,6 +194,7 @@ $(document).ready ->
         if /py$/.test(currentPath)
           icon="<i class=\"fa fa-file-text-o\"></i>"
           tempLoc = exec.case_name
+          endPoint.push(currentPath+'\\'+exec.case_name)
         else
           icon="<i class=\"fa fa-folder-open-o\"></i>"
           removeParent = exec.location.replace(currentPath+'\\', "")
@@ -215,17 +217,11 @@ $(document).ready ->
         else
           obj[tempLoc]={passed : 0,failed : 1}
 
-      table = table + '<tr rel="tooltip" title="Double click to see execution detail" style="cursor:pointer" ondblclick="window.open(\'/execution/'+exec.id+'\',\'_blank\')">'
-      table = table + '<td>' + exec.case_id + '</td>'
-      table = table + '<td>' + exec.case_name + '</td>'
-      table = table + '<td>' + Math.round(exec.duration) + '</td>'
-      table = table + '<td>' + exec.spira_case_id + '</td>'
-      if exec.result is "passed"
-        table = table + '<td style="color:rgba(70, 191, 189,0.5)">'+ exec.result + '</td>'
+      if statusFilter.length isnt 0
+        if exec.result is statusFilter.toLowerCase()
+          table += construct_table(exec)
       else
-        table = table + '<td style="color:rgba(247, 70, 74,0.9)">'+ exec.result + '</td>'
-      table = table + '<td style="text-align:center" rel="tooltip" title="'+exec.location+'"><i class="fa fa-folder-o"></i></td>'
-      table = table + '</tr>'
+        table += construct_table(exec)
   #end of for loop
 
   if isForward
@@ -308,3 +304,18 @@ $(document).ready ->
   $('#sessionTable').DataTable().destroy()
   $('#sessionTableBody').html(table)
   $('#sessionTable').DataTable()
+
+construct_table = (exec) ->
+  temp = ""
+  temp = temp + '<tr rel="tooltip" title="Double click to see execution detail" style="cursor:pointer" ondblclick="window.open(\'/execution/'+exec.id+'\',\'_blank\')">'
+  temp = temp + '<td>' + exec.case_id + '</td>'
+  temp = temp + '<td>' + exec.case_name + '</td>'
+  temp = temp + '<td>' + Math.round(exec.duration) + '</td>'
+  temp = temp + '<td>' + exec.spira_case_id + '</td>'
+  if exec.result is "passed"
+    temp = temp + '<td style="color:rgba(70, 191, 189,0.5)">'+ exec.result + '</td>'
+  else
+    temp = temp + '<td style="color:rgba(247, 70, 74,0.9)">'+ exec.result + '</td>'
+  temp = temp + '<td style="text-align:center" rel="tooltip" title="'+exec.location+'"><i class="fa fa-folder-o"></i></td>'
+  temp = temp + '</tr>'
+  return temp
