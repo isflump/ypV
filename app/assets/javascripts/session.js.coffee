@@ -150,7 +150,16 @@ isArrayContain = (arr,elm) ->
   while path_tag.length > 0
     path_tag.removeClass('active')
     path_tag = path_tag.next()
-
+@show_detail_exec_time = (id) ->
+  rightPos = $('#' + id).offset().left + $('#' + id).outerWidth() + 5
+  topPos = $('#' + id).offset().top +  parseInt($('#' + id).css('height')) / 2 - 10
+  console.log rightPos
+  console.log topPos
+  $('#detail_exec_time_block').css('top' , topPos)
+  $('#detail_exec_time_block').css('left' , rightPos)
+  $('#detail_exec_time_block').show()
+@dismiss_detail_exec_time = () ->
+  $('#detail_exec_time_block').hide()
 @filterBySessionLocation = (evt) ->
   activePoints = barChart.getBarsAtEvent(evt)
   console.log(activePoints)

@@ -27,6 +27,103 @@
   width:50px;
   border-radius:5px;
 }
+.time_selection_bar{
+  position:absolute;
+  bottom:0px;
+  width:100%;
+}
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,900);
+.time_year{
+  position:relative;
+  padding-top:10px;
+  padding-bottom:5px;
+  color:#aaa;
+  text-align:center;
+  border-bottom:1px solid #666;
+  font-weight:bold;
+  font-family: 'Roboto', sans-serif;
+}
+.time_month{
+  position:relative;
+  padding-top:10px;
+  padding-bottom:5px;
+  color:#fff200;
+  text-align:center;
+  border-bottom:1px solid #666;
+  font-weight:bold;
+  font-family: 'Roboto', sans-serif;
+}
+.time_date{
+  position:relative;
+  padding-top:5px;
+  padding-bottom:5px;
+  color:#bbb;
+  text-align:center;
+  font-size:15.5px;
+  font-weight:bold;
+  font-family: 'Roboto', sans-serif;
+  cursor:pointer;
+}
+.time_date:hover{
+  color:#01AEF2;
+}
+.time_extra{
+  position:relative;
+  padding-top:5px;
+  padding-bottom:5px;
+  color:#bbb;
+  text-align:center;
+  font-size:27.5px;
+  font-weight:bold;
+  font-family: 'Roboto', sans-serif;
+  cursor:pointer;
+  margin-bottom:25px;
+}
+.time_extra:hover{
+  color:#fff200;
+}
+.detail_exec_time_block{
+  position:absolute;
+  width:225px;
+  left:50px;
+  padding:7.5px 0px 7.5px 0px;
+  background:#151A1E;
+  border-radius:5px;
+  z-index:995;
+  box-shadow: 2.5px 2.5px 5px #000;
+}
+.detail_exec_time_block::after{
+  z-index:995;
+  content:"";
+	width: 0;
+	height: 0;
+  position:absolute;
+  margin-left:-11.5px;
+  top:12.5px;
+	border-top: 7.5px solid transparent;
+	border-bottom: 7.5px solid transparent;
+	border-right:12.5px solid #151A1E;
+}
+.one_single_exec{
+  position:relative;
+  padding:5px 15px 5px 15px;
+  width:calc(100% - 30px);
+  font-size:15.5px;
+  color:#aaa;
+  font-family: 'Roboto', sans-serif;
+  cursor:pointer;
+}
+.one_single_exec:hover{
+  color:#fff200;
+}
+.exec_time{
+  display:inline-block;
+}
+.exec_pass_fail{
+  display:inline-block;
+  float:right;
+  margin-right:10px;
+}
 .header_container{
   position:relative;
   //background:#FEF200;

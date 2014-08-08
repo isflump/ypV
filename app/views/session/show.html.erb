@@ -1,6 +1,20 @@
 <% content_for :title, "Session" %>
 <div class="tonberry"></div>
-<div class="main_container">
+<div class="detail_exec_time_block" id="detail_exec_time_block">
+  <div class="one_single_exec">
+    <div class="exec_time"><font color="#01AEF2">Time:</font> 15:32</div>
+    <div class="exec_pass_fail"><font color="#5AD3D1">53</font> <font color="#999">/</font> <font color="#ccc">155</font></div>
+  </div>
+  <div class="one_single_exec">
+    <div class="exec_time"><font color="#01AEF2">Time:</font> 15:32</div>
+    <div class="exec_pass_fail"><font color="#5AD3D1">53</font> <font color="#999">/</font> <font color="#ccc">155</font></div>
+  </div>
+  <div class="one_single_exec">
+    <div class="exec_time"><font color="#01AEF2">Time:</font> 15:32</div>
+    <div class="exec_pass_fail"><font color="#5AD3D1">53</font> <font color="#999">/</font> <font color="#ccc">155</font></div>
+  </div>
+</div>
+<div class="main_container" >
 
   <%= render "shared/side_menu" %>
 
@@ -10,7 +24,7 @@
 
 
 
-  <div class='info_container'>
+  <div class='info_container' onmouseover="dismiss_detail_exec_time()">
     <div class="report_graph_container">
         <canvas id="sessionStatusChart" height="255px" width="350px" onclick="filterBySessionStatus(event)"></canvas>
         <canvas id="sessionFolderChart" height="255px" width="550px" onclick="filterBySessionLocation(event)"></canvas>
