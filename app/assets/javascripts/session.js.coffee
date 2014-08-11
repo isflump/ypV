@@ -97,33 +97,35 @@ $(document).ready ->
         })
     $("#sessionTable").dataTable()
 
-
-@testData = [
-    {
-      title: "test1"
-      start: "2014-08-01"
-      id: "test1_id"
-    }
-    {
-      title: "event2"
-      start: "2014-08-09"
-      end: "2014-08-09"
-      id: "test2_id"
-    }
-    {
-      title: "event3"
-      start: "2014-08-19T12:30:00"
-      allDay: false # will make the time show
-      id: "test3_id"
-    }
-  ]
 @show_full_calendar = () ->
-  $('#exec_time_full_screen_grey_layer').show()
-  if !($(".fc-header").length > 0)
-    $("#full_calendar").fullCalendar events: @testData, eventClick: (calEvent, jsEvent, view) ->
-      console.log(calEvent.title,calEvent.id)
-      return
-  $('body').css('overflow','hidden')
+  fullSessions = []
+  $.ajax({
+        type: "POST",
+        url: document.URL+"/getAllSessions",
+        data: ''
+        success:(data) ->
+          console.log(data)
+          if data['error'] isnt null
+            for ses in data["sessions"]
+              fullSessions.push({
+                title: "1"
+                start: ses.start_time
+                end: ses.end_time
+                id: ses.id
+                })
+            $('#exec_time_full_screen_grey_layer').show()
+            if !($(".fc-header").length > 0)
+              $("#full_calendar").fullCalendar events: fullSessions, eventClick: (calEvent, jsEvent, view) ->
+                console.log(calEvent.title,calEvent.id)
+                return
+            $('body').css('overflow','hidden')
+          else
+            console.log(data["trace"])
+        error:(data) ->
+          console.log(data["trace"])
+          #showError('Error on request',data)
+      })
+
 @close_full_calendar = () ->
   $('#exec_time_full_screen_grey_layer').hide()
   $('body').css('overflow','auto')
@@ -178,16 +180,15 @@ $(document).ready ->
   while path_tag.length > 0
     path_tag.removeClass('active')
     path_tag = path_tag.next()
-@show_detail_exec_time = (id) ->
+@show_detail_exec_time = (id,display_id) ->
   rightPos = $('#' + id).offset().left + $('#' + id).outerWidth() + 5
-  topPos = $('#' + id).offset().top +  parseInt($('#' + id).css('height')) / 2 - 10
-  console.log rightPos
+  topPos = $('#' + id).offset().top +  parseInt($('#' + id).css('height')) - 30
   console.log topPos
   $('#detail_exec_time_block').css('top' , topPos)
   $('#detail_exec_time_block').css('left' , rightPos)
-  $('#detail_exec_time_block').show()
-@dismiss_detail_exec_time = () ->
-  $('#detail_exec_time_block').hide()
+  $('#'+display_id).show()
+@dismiss_detail_exec_time = (display_id) ->
+  $('#'+display_id).hide()
 
 @filterBySessionLocation = (evt,isForward,removePath) ->
   table=""

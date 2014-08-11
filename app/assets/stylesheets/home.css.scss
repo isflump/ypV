@@ -93,7 +93,7 @@
   box-shadow: 2.5px 2.5px 5px #000;
 }
 .detail_exec_time_block::after{
-  z-index:995;
+  z-index:9999999;
   content:"";
 	width: 0;
 	height: 0;

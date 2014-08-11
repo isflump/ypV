@@ -139,13 +139,25 @@ class ExecutionController < ApplicationController
         data['tcSteps'] = []
         stepsInfo = driver.TestCase_RetrieveById({testCaseId: @execution.spira_case_id}).testCase_RetrieveByIdResult.testSteps.remoteTestStep
         if stepsInfo
-          stepsInfo.each_with_index{|step ,index|
-            tempStep = {}
-            tempStep['tsExpectedResult'] = step.expectedResult.gsub('"','\'').gsub('<div>',"\n").gsub(/\<[^>]*>/,'').strip
-            tempStep['tsDescription'] = step.description.gsub('"','\'').gsub('<div>',"\n").gsub(/<[^>]*>/,'').strip
-            tempStep['tsSample'] = step.sampleData ?  step.sampleData : "N/A"
-            data['tcSteps'].push tempStep
-          }
+          tempStep = {}
+          if stepsInfo.kind_of?(Array)
+      		  stepsInfo.each_with_index{ |step ,index|
+        			tempStep['tsExpectedResult'] = step.expectedResult.gsub('"','\'').gsub('<div>',"\n").gsub(/\<[^>]*>/,'').strip
+        			tempStep['tsDescription'] = step.description.gsub('"','\'').gsub('<div>',"\n").gsub(/<[^>]*>/,'').strip
+        			steps.push tempStep
+      		  }
+      	   else
+        		tempStep['tsExpectedResult'] = stepsInfo.expectedResult.gsub('"','\'').gsub('<div>',"\n").gsub(/\<[^>]*>/,'').strip
+        		tempStep['tsDescription'] = stepsInfo.description.gsub('"','\'').gsub('<div>',"\n").gsub(/<[^>]*>/,'').strip
+        		steps.push tempStep
+      	   end
+          # stepsInfo.each_with_index{|step ,index|
+          #   tempStep = {}
+          #   tempStep['tsExpectedResult'] = step.expectedResult.gsub('"','\'').gsub('<div>',"\n").gsub(/\<[^>]*>/,'').strip
+          #   tempStep['tsDescription'] = step.description.gsub('"','\'').gsub('<div>',"\n").gsub(/<[^>]*>/,'').strip
+          #   tempStep['tsSample'] = step.sampleData ?  step.sampleData : "N/A"
+          #   data['tcSteps'].push tempStep
+          # }
         end
       else
         data[:foundCase]=false

@@ -1,21 +1,22 @@
   <nav class="side_bar" >
     <img src="/assets/WF-EN-C-L-W.gif" alt="some_text" width=60% style="margin-top:10px;margin-left:10px">
     <div class="time_selection_bar" >
-      <div class='time_year'>2014</div>
-      <div class='time_month'>Jul</div>
-      <div class="time_date" id="time_jul_1" onmouseover="show_detail_exec_time(this.id)">1</div>
-      <div class="time_date" id="time_jul_2" onmouseover="show_detail_exec_time(this.id)">2</div>
-      <div class="time_date" id="time_jul_3" onmouseover="show_detail_exec_time(this.id)">3</div>
-      <div class="time_date" id="time_jul_4">4</div>
-      <div class="time_date" id="time_jul_5">5</div>
-      <div class="time_date" id="time_jul_6">6</div>
-      <div class="time_date" id="time_jul_7">7</div>
-      <div class='time_month'>Aug</div>
-      <div class="time_date">1</div>
-      <div class="time_date">2</div>
-      <div class="time_date">3</div>
-      <div class="time_date">4</div>
-      <div class='time_extra' onclick="show_full_calendar()"><i class="fa fa-ellipsis-v"></i></div>
+      <% if @sessionHistory %>
+        <% @sessionHistory.keys.sort.each do |m_key| %>
+          <div class='time_month'><%=parse_month(m_key)%></div>
+          <% @sessionHistory[m_key].keys.sort.each do |d_key| %>
+            <div class="time_date" id="time_<%=m_key%>_<%=d_key%>" onmouseout="dismiss_detail_exec_time('display_<%=m_key%>_<%=d_key%>')" onmouseover="show_detail_exec_time(this.id,'display_<%=m_key%>_<%=d_key%>')"><%=parse_day(d_key)%></div>
+            <% @sessionHistory[m_key][d_key].each do |ses| %>
+            <div class="detail_exec_time_block" id="display_<%=m_key%>_<%=d_key%>" style="display:none">
+              <div class="one_single_exec">
+                <div class="exec_time"><i class="fa fa-clock-o" color="#01AEF2"></i> <%=parse_time(ses.start_time)%></div>
+                <div class="exec_pass_fail"><font color="#5AD3D1">53</font> <font color="#999">/</font> <font color="#ccc">155</font></div>
+              </div>
+            </div>
+        <% end end
+        end %>
+      <div class='time_extra' onclick="show_full_calendar()"><i class="fa fa-calendar-o"></i></div>
+      <% end %>
     </div>
 
   </nav>
