@@ -5,7 +5,7 @@
         <% @sessionHistory.keys.sort.each do |m_key| %>
           <div class='time_month'><%=parse_month(m_key)%></div>
           <% @sessionHistory[m_key].keys.sort.each do |d_key| %>
-            <div class="time_date" id="time_<%=m_key%>_<%=d_key%>" onmouseout="dismiss_detail_exec_time('display_<%=m_key%>_<%=d_key%>')" onmouseover="show_detail_exec_time(this.id,'display_<%=m_key%>_<%=d_key%>')"><%=parse_day(d_key)%></div>
+            <div class="time_date" id="time_<%=m_key%>_<%=d_key%>" onmouseover="show_detail_exec_time(this.id,'display_<%=m_key%>_<%=d_key%>')"><%=parse_day(d_key)%></div>
             <% @sessionHistory[m_key][d_key].each do |ses| %>
             <div class="detail_exec_time_block" id="display_<%=m_key%>_<%=d_key%>" style="display:none">
               <div class="one_single_exec">

@@ -181,14 +181,16 @@ $(document).ready ->
     path_tag.removeClass('active')
     path_tag = path_tag.next()
 @show_detail_exec_time = (id,display_id) ->
+  dismiss_detail_exec_time()
   rightPos = $('#' + id).offset().left + $('#' + id).outerWidth() + 5
-  topPos = $('#' + id).offset().top +  parseInt($('#' + id).css('height')) - 30
-  console.log topPos
-  $('#detail_exec_time_block').css('top' , topPos)
-  $('#detail_exec_time_block').css('left' , rightPos)
-  $('#'+display_id).show()
-@dismiss_detail_exec_time = (display_id) ->
-  $('#'+display_id).hide()
+  topPos = $('#' + id).offset().top +  parseInt($('#' + id).css('height')) - 21.5
+  $('#' + display_id).css('top' , topPos)
+  $('#' + display_id).css('left' , rightPos)
+
+  $('#' + display_id).show()
+  console.log "here"
+@dismiss_detail_exec_time = () ->
+  $('.detail_exec_time_block').hide()
 
 @filterBySessionLocation = (evt,isForward,removePath) ->
   table=""
