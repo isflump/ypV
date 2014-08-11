@@ -262,3 +262,32 @@
   color:#55ACEE;
   border-left: 3px #55ACEE solid;
 }
+.exec_time_full_screen_grey_layer{
+  position:fixed;
+  display:none;
+  top:0px;
+  bottom:0px;
+  right:0px;
+  left:0px;
+  z-index:999;
+  background:rgba(0,0,0,0.75)
+}
+.full_calendar{
+
+  position:absolute;
+  z-index:999;
+  width:50%;
+  margin-top:3.5%;
+  margin-left:25%;
+}
+.full_calendar_close_btn{
+  position:fixed;
+  top:25px;
+  right:50px;
+  font-size:35px;
+  color:#aaa;
+  cursor:pointer;
+}
+.full_calendar_close_btn:hover{
+  color: #FEF200;
+}

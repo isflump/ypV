@@ -97,6 +97,36 @@ $(document).ready ->
         })
     $("#sessionTable").dataTable()
 
+
+@testData = [
+    {
+      title: "test1"
+      start: "2014-08-01"
+      id: "test1_id"
+    }
+    {
+      title: "event2"
+      start: "2014-08-09"
+      end: "2014-08-09"
+      id: "test2_id"
+    }
+    {
+      title: "event3"
+      start: "2014-08-19T12:30:00"
+      allDay: false # will make the time show
+      id: "test3_id"
+    }
+  ]
+@show_full_calendar = () ->
+  $('#exec_time_full_screen_grey_layer').show()
+  if !($(".fc-header").length > 0)
+    $("#full_calendar").fullCalendar events: @testData, eventClick: (calEvent, jsEvent, view) ->
+      console.log(calEvent.title,calEvent.id)
+      return
+  $('body').css('overflow','hidden')
+@close_full_calendar = () ->
+  $('#exec_time_full_screen_grey_layer').hide()
+  $('body').css('overflow','auto')
 @filterBySessionStatus = (evt) ->
   activePoints = pieChart.getSegmentsAtEvent(evt)
   table=""
