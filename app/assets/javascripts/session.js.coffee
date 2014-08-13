@@ -338,17 +338,25 @@ $(document).ready ->
   $('#sessionTableBody').html(table)
   $('#sessionTable').DataTable()
 
+pre_hightLight=null
+@highlight_session_row = (id) ->
+  return if pre_hightLight is id
+  $("#"+id).css("color","#FFF200")
+  if pre_hightLight
+    $("#"+pre_hightLight).css("color","#aaa")
+  pre_hightLight = id
+
 construct_table = (exec) ->
   temp = ""
-  temp = temp + '<tr rel="tooltip" title="Double click to see execution detail" style="cursor:pointer" ondblclick="window.open(\'/execution/'+exec.id+'\',\'_blank\')">'
+  temp = temp + '<tr id="ses_' + exec.id + '" rel="tooltip" title="Double click to see execution detail" style="cursor:pointer" onclick="highlight_session_row(this.id)"  ondblclick="window.open(\'/execution/'+exec.id+'\',\'_blank\')">'
   temp = temp + '<td>' + exec.case_id + '</td>'
-  temp = temp + '<td>' + exec.case_name + '</td>'
+  temp = temp + '<td rel="tooltip" title="'+exec.location+'">' + exec.case_name + '</td>'
   temp = temp + '<td>' + Math.round(exec.duration) + '</td>'
   temp = temp + '<td>' + exec.spira_case_id + '</td>'
   if exec.result is "passed"
     temp = temp + '<td style="color:rgba(70, 191, 189,0.5)">'+ exec.result + '</td>'
   else
     temp = temp + '<td style="color:rgba(247, 70, 74,0.9)">'+ exec.result + '</td>'
-  temp = temp + '<td style="text-align:center" rel="tooltip" title="'+exec.location+'"><i class="fa fa-folder-o"></i></td>'
+  #temp = temp + '<td style="text-align:center" rel="tooltip" title="'+exec.location+'"><i class="fa fa-folder-o"></i></td>'
   temp = temp + '</tr>'
   return temp
