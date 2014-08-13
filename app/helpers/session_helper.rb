@@ -1,5 +1,9 @@
 module SessionHelper
 
+  def parse_date(date)
+    Time.parse(date).strftime('%Y-%m-%d %H:%M:%S')
+  end
+
   def parse_month(key)
     return Date::MONTHNAMES[key][0...3]
   end
@@ -10,7 +14,8 @@ module SessionHelper
   end
 
   def parse_time(time)
-    time.gsub(/.*_/,"")
+    temp = time.gsub(/.*_/,"")
+    temp[0..1]+":"+temp[2..3]+":"+temp[4..5]
   end
 
 end

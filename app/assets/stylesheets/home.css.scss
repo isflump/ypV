@@ -328,7 +328,7 @@
   vertical-align:top;
 }
 .detail_header_info_block{
-  width:calc(20.5% - 10px);
+  width:calc(25.5% - 10px);
   display:inline-block;
   float:right;
   background:rgba(0,0,0,0.2);
@@ -343,4 +343,5 @@
   font-size:13.5px;
   font-weight: normal;
   vertical-align:top;
+  margin-left:5px;
 }

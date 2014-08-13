@@ -7,10 +7,10 @@
           <% @sessionHistory[m_key].keys.sort.each do |d_key| %>
             <div class="time_date" id="time_<%=m_key%>_<%=d_key%>" onmouseover="show_detail_exec_time(this.id,'display_<%=m_key%>_<%=d_key%>')"><%=parse_day(d_key)%></div>
             <% @sessionHistory[m_key][d_key].each do |ses| %>
-            <div class="detail_exec_time_block" id="display_<%=m_key%>_<%=d_key%>" style="display:none">
+            <div class="detail_exec_time_block"  id="display_<%=m_key%>_<%=d_key%>" style="display:none">
               <div class="one_single_exec">
                 <div class="exec_time"><i class="fa fa-clock-o" color="#01AEF2"></i> <%=parse_time(ses.start_time)%></div>
-                <div class="exec_pass_fail"><font color="#5AD3D1">53</font> <font color="#999">/</font> <font color="#ccc">155</font></div>
+                <div class="exec_pass_fail"><font color="#5AD3D1"><%=ses.executions.collect{|e| e.result=~/pass/i ? 1 : 0}.sum%></font> <font color="#999">/</font> <font color="#ccc"><%=ses.executions.size%></font></div>
               </div>
             </div>
         <% end end
@@ -22,8 +22,24 @@
         <% @executionHistory.keys.sort.each do |m_key| %>
           <div class='time_month'><%=parse_month(m_key)%></div>
           <% @executionHistory[m_key].keys.sort.each do |d_key| %>
-            <div class="time_date" id="time_<%=m_key%>_<%=d_key%>"><%=parse_day(d_key)%></div>
+            <%if d_key == @execution.created_at.day%>
+              <div class="time_date" style="color:red" id="time_<%=m_key%>_<%=d_key%>" onmouseover="show_detail_exec_time(this.id,'display_<%=m_key%>_<%=d_key%>')"><%=parse_day(d_key)%></div>
+            <%else%>
+              <div class="time_date" id="time_<%=m_key%>_<%=d_key%>" onmouseover="show_detail_exec_time(this.id,'display_<%=m_key%>_<%=d_key%>')"><%=parse_day(d_key)%></div>
+            <%end%>
             <% @executionHistory[m_key][d_key].each do |x| %>
+              <div class="detail_exec_time_block" id="display_<%=m_key%>_<%=d_key%>" style="display:none">
+                <div class="one_single_exec">
+                  <div class="exec_time"><i class="fa fa-clock-o" color="#01AEF2"></i></div>
+                  <div class="exec_pass_fail">
+                    <% if x.result=~/pass/i %>
+                      <font color="#5AD3D1"><%=x.result%></font>
+                    <%else%>
+                      <font color="#BF3B3F"><%=x.result%></font>
+                    <%end%>
+                  </div>
+                </div>
+              </div>
             <%end%>
           <%end%>
         <% end %>

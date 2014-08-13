@@ -12,22 +12,22 @@
 
   <div class="detail_header_container">
     <div class="detail_header_text_block">
-
-        <div class="project_name_block">
-          <i class="fa fa-rocket" style="font-size:22.5px;margin-right:5px;color:#55DAE1"></i> RFDAND
-        </div>
-        <div class="project_execution_time_block">
-          Execution Started At: 15:30:25
-        </div>
-
+        <div class="project_name_block"><i class="fa fa-rocket" style="font-size:22.5px;margin-right:5px;color:#55DAE1"></i> <%=@session.project.name%></div>
+        <div class="project_execution_time_block"><i class="fa fa-clock-o" color="#01AEF2"></i> <%=parse_date(@session.start_time)%></div>
     </div>
     <div class="detail_header_info_block">
-
-        <img src='/assets/Google_Chrome_logo.png' class='detail_execution_device'></img>
-
+        <% if @session.browser =~ /chrome/i %>
+          <img src='/assets/chrome-icon.png' class='detail_execution_device'></img>
+        <% elsif @session.browser =~ /(firefox|firefox_no_js)/i%>
+          <img src='/assets/firefox-icon.png' class='detail_execution_device'></img>
+        <% elsif @session.browser =~ /ie/i%>
+          <img src='/assets/ie-icon.png' class='detail_execution_device'></img>
+        <% elsif @session.browser =~ /android/i%>
+          <img src='/assets/Android.png' class='detail_execution_device'></img>
+        <% end %>
       <div class="detail_execution_env_info">
-          <div class="detail_execution_text_box">Tlib version: 1.3.0</div>
-          <div class="detail_execution_text_box">Tlib version: 1.3.0</div>
+          <div class="detail_execution_text_box">Selenuim: v<%=@session.selenium_version%></div>
+          <div class="detail_execution_text_box">Tlib: v<%=@session.tlib_version%></div>
       </div>
     </div>
   </div>
