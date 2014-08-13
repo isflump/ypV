@@ -6,6 +6,52 @@ class ExecutionController < ApplicationController
   def show
     @execution = Execution.find_by(id: params[:id])
     @sshots = @execution.screenshots
+
+    executions = Execution.select(:created_at,:id).where(case_name: @execution.case_name).order('executions.created_at ASC')
+    calendarMap={}
+    executions.each_with_index{ |s,i|
+      if s.id == params[:id].to_i
+        calendarMap[s.created_at.strftime("%Y-%m-%d")] = [s]
+
+        start_subindex=i
+        end_subindex=i
+        while calendarMap.keys.size < 7
+          break if (start_subindex < 0 && end_subindex >= executions.size)
+          if start_subindex == 0
+            start_subindex -= 1
+          elsif start_subindex > 0
+            start_subindex -= 1
+            if calendarMap.has_key?(executions[start_subindex].created_at.strftime("%Y-%m-%d"))
+              calendarMap[executions[start_subindex].created_at.strftime("%Y-%m-%d")] << executions[start_subindex]
+            else
+              calendarMap[executions[start_subindex].created_at.strftime("%Y-%m-%d")] = [executions[start_subindex]]
+            end
+          end
+
+          if end_subindex == (executions.size-1)
+            end_subindex += 1
+          elsif end_subindex < (executions.size-1)
+            end_subindex += 1
+            if calendarMap.has_key?(executions[end_subindex].created_at.strftime("%Y-%m-%d"))
+              calendarMap[executions[end_subindex].created_at.strftime("%Y-%m-%d")] << executions[start_subindex]
+            else
+              calendarMap[executions[end_subindex].created_at.strftime("%Y-%m-%d")] = [executions[start_subindex]]
+            end
+          end
+        end
+        break
+      end
+    }
+    puts calendarMap
+    @executionHistory = {}
+    calendarMap.each{|key, value|
+      if @executionHistory.has_key?(Time.parse(key).month)
+        @executionHistory[Time.parse(key).month][Time.parse(key).day] = value
+      else
+        @executionHistory[Time.parse(key).month] = {Time.parse(key).day => value}
+      end
+    }
+
   end
 
 
@@ -82,7 +128,7 @@ class ExecutionController < ApplicationController
       data[:lastExecutionLabel] = data[:lastExecutionLabel][0...Date.today.month]
       data[:lastExecutionPass] = [0]*Date.today.month
       data[:lastExecutionFail] = [0]*Date.today.month
-      puts map[Date.today.year.to_s].each{|k,arr|
+      map[Date.today.year.to_s].each{|k,arr|
         data[:lastExecutionFail][k.to_i-1]= arr.collect{|o| o.result =~ /failed/i ? 1 : 0}.sum
         data[:lastExecutionPass][k.to_i-1] = arr.collect{|o| o.result =~ /passed/i ? 1 : 0}.sum
       }

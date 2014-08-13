@@ -17,6 +17,16 @@
         end %>
       <div class='time_extra' onclick="show_full_calendar()"><i class="fa fa-calendar-o"></i></div>
       <% end %>
-    </div>
 
+      <% if @executionHistory %>
+        <% @executionHistory.keys.sort.each do |m_key| %>
+          <div class='time_month'><%=parse_month(m_key)%></div>
+          <% @executionHistory[m_key].keys.sort.each do |d_key| %>
+            <div class="time_date" id="time_<%=m_key%>_<%=d_key%>"><%=parse_day(d_key)%></div>
+            <% @executionHistory[m_key][d_key].each do |x| %>
+            <%end%>
+          <%end%>
+        <% end %>
+      <% end %>
+    </div>
   </nav>
