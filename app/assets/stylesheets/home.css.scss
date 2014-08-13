@@ -144,7 +144,7 @@
   color:#DCDCDC;
   margin-top:10px;
   width:calc(100% - 60px);
-  margin-bottom:-12.5px;
+  margin-bottom:5px;
   float:right;
   border-radius:5px;
   display:block;
@@ -154,8 +154,9 @@
   display:inline-block;
 }
 .detail_header_author_block{
-  width:30%;
+  width:29.5%;
   display:inline-block;
+  float:right;
 }
 .detail_header_case_name_block{
   width:calc(100%);
@@ -292,4 +293,54 @@
 }
 .full_calendar_close_btn:hover{
   color: #FEF200;
+}
+.project_name_block{
+  width:calc(100%);
+  font-family: 'Roboto', sans-serif;
+  font-size:18.5px;
+  font-weight:bold;
+  color:white;
+  padding-bottom:2.5px;
+}
+.project_execution_time_block{
+  width:calc(100%);
+  font-family: 'Roboto', sans-serif;
+  font-size:13.5px;
+  color:#aaa;
+}
+.detail_execution_device{
+  width:37.5px;
+  height:37.5px;
+  font-family: 'Roboto', sans-serif;
+  font-size:15px;
+  font-weight:bold;
+  color:white;
+  display:inline-block;
+  vertical-align:top;
+}
+.detail_execution_env_info{
+  font-family: 'Roboto', sans-serif;
+  font-size:15px;
+  width: calc(100% - 47.5px);
+  font-weight:bold;
+  color:white;
+  display:inline-block;
+  vertical-align:top;
+}
+.detail_header_info_block{
+  width:calc(20.5% - 10px);
+  display:inline-block;
+  float:right;
+  background:rgba(0,0,0,0.2);
+  border-radius:5px;
+  padding:5px 5px 5px 5px;
+}
+.detail_execution_text_box{
+  position:relative;
+  width:calc(100% - 32.5px);
+  font-family: 'Roboto', sans-serif;
+  color:#777;
+  font-size:13.5px;
+  font-weight: normal;
+  vertical-align:top;
 }
