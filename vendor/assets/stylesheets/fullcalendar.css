@@ -268,14 +268,14 @@ html .fc,
 
 .fc-event {
 	color: transparent;               /* default TEXT color */
-	font-size: 5.5px;
+	font-size: 6.5px;
 	cursor: pointer;
 	background: rgba(255,255,255,0.7);
   	box-shadow: inset 0px 0px 10px 2px rgba(117,182,255,0.5), 0px 0px 25px rgba(117,182,214,0.5);
 	}
 .fc-event.whitePulse{
-  	-webkit-animation: sssWhite 1s alternate infinite;
-  	-moz-animation: sssWhite 1s alternate infinite;
+  	-webkit-animation: sssWhite 1.5s alternate infinite;
+  	-moz-animation: sssWhite 1.5s alternate infinite;
 }
 .fc-event.selected{
   	background: #202328;

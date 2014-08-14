@@ -99,5 +99,24 @@ class SessionController < ApplicationController
       render json: data
     end
   end
-
+  def getSessionInfoById
+    data = Hash.new()
+    id = params['sid']
+    begin
+      session =  Session.find(id)
+      data[:start_at] = session.start_time.split('_')[1].insert(2,':').insert(5,':')
+      data[:end_at] = session.end_time.split('_')[1].insert(2,':').insert(5,':')
+      data[:device] = session.browser
+      data[:os] = session.os
+      data[:ip] = session.ip
+      puts "=============================="
+      puts data
+      render json: data
+    rescue Exception => e
+      puts e
+      data[:error] = e.message.strip
+      data[:trace] = e.backtrace.join("<br>")
+      render json: data
+    end
+  end
 end

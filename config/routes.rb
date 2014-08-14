@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   resources :session do
     post 'getStatus', on: :member
     post 'getAllSessions', on: :member
+    post 'getSessionInfoById', on: :member
   end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

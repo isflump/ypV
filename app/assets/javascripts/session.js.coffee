@@ -106,17 +106,35 @@ $(document).ready ->
         success:(data) ->
           console.log(data)
           if data['error'] isnt null
+            temp_url_ary = $(location).attr('href').split('/')
+            current_id = temp_url_ary[temp_url_ary.length-1]
+            console.log current_id
             for ses in data["sessions"]
-              fullSessions.push({
-                title: "1"
-                start: ses.start_time
-                end: ses.end_time
-                id: ses.id
-                })
+              if String(ses.id) == String(current_id)
+                fullSessions.push({
+                  title: "1"
+                  start: ses.start_time
+                  end: ses.end_time
+                  id: ses.id
+                  class: 'whitePulse'
+                  })
+              else
+                fullSessions.push({
+                  title: "1"
+                  start: ses.start_time
+                  end: ses.end_time
+                  id: ses.id
+                  })
             $('#exec_time_full_screen_grey_layer').show()
             if !($(".fc-header").length > 0)
-              $("#full_calendar").fullCalendar events: fullSessions, eventClick: (calEvent, jsEvent, view) ->
-                console.log(calEvent.title,calEvent.id)
+              $("#full_calendar").fullCalendar events: fullSessions, eventMouseover: (calEvent, jsEvent, view) ->
+                show_calendar_info(calEvent.title,calEvent.id)
+                return
+              ,eventClick: (calEvent, jsEvent, view) ->
+                console.log "here"
+                return
+              ,eventMouseout: (calEvent, jsEvent, view) ->
+                hide_calendar_info()
                 return
             $('body').css('overflow','hidden')
           else
@@ -125,6 +143,45 @@ $(document).ready ->
           console.log(data["trace"])
           #showError('Error on request',data)
       })
+@show_calendar_info = (title,id) ->
+  $('#full_calendar_execution_info_detail_text1').attr('src' , '')
+  $('#full_calendar_execution_info_detail_text2').html('<font style="color:#55DAE1;font-weight:bold">Start At:</font> ' )
+  $('#full_calendar_execution_info_detail_text3').html('<font style="color:#55DAE1;font-weight:bold">End At:</font> ')
+  $('#full_calendar_execution_info_detail_text4').html('<font style="color:#55DAE1;font-weight:bold">OS:</font> ')
+  $('#full_calendar_execution_info_detail_text5').html('<font style="color:#55DAE1;font-weight:bold">IP:</font> ' )
+  #fill info here
+  data = {}
+  data['sid'] = id
+  $.ajax({
+        type: "POST",
+        url: document.URL+"/getSessionInfoById",
+        data: data
+        success:(data) ->
+          $('#full_calendar_execution_info_detail_text2').html('<font style="color:#55DAE1;font-weight:bold">Start At:</font> ' + data['start_at'])
+          $('#full_calendar_execution_info_detail_text3').html('<font style="color:#55DAE1;font-weight:bold">End At:</font> ' + data['end_at'])
+          $('#full_calendar_execution_info_detail_text4').html('<font style="color:#55DAE1;font-weight:bold">OS:</font> ' + data['os'])
+          $('#full_calendar_execution_info_detail_text5').html('<font style="color:#55DAE1;font-weight:bold">IP:</font> ' + data['ip'])
+          console.log data['device']
+          if /chrome/i.test data['device']
+            $('#full_calendar_execution_info_detail_text1').attr('src' , '/assets/chrome-icon.png')
+          else if /firefox|firefox_no_js/i.test data['device']
+            $('#full_calendar_execution_info_detail_text1').attr('src' , '/assets/firefox-icon.png')
+          else if /ie/i.test data['device']
+            $('#full_calendar_execution_info_detail_text1').attr('src' , '/assets/ie-icon.png')
+          else if /android/i.test data['device']
+            $('#full_calendar_execution_info_detail_text1').attr('src' , '/assets/Android-icon.png')
+        error:(data) ->
+          console.log(data["trace"])
+          #showError('Error on request',data)
+      })
+
+  rightPos = $('#' + id).offset().left + $('#' + id).outerWidth() + 5
+  topPos = $('#' + id).offset().top +  parseInt($('#' + id).css('height')) - 22.5
+  $('#full_calendar_execution_info').css('top' , topPos)
+  $('#full_calendar_execution_info').css('left' , rightPos)
+  $('#full_calendar_execution_info').show()
+@hide_calendar_info = () ->
+  $('#full_calendar_execution_info').hide()
 
 @close_full_calendar = () ->
   $('#exec_time_full_screen_grey_layer').hide()
