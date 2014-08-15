@@ -52,6 +52,9 @@ class ExecutionController < ApplicationController
       end
     }
 
+    #save this as viewd
+    @execution.isViewed = true
+    @execution.save
   end
 
 

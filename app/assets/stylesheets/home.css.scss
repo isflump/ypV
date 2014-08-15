@@ -445,3 +445,12 @@
 .spira_logo:hover {
   transform: rotate(10deg) scale(1.1);
 }
+
+
+.sessionTablePassHistoryTrace:hover{
+  color:rgba(70, 191, 189,0.5)
+}
+
+.sessionTableFailHistoryTrace:hover{
+  color:rgba(247, 70, 74,0.9)
+}

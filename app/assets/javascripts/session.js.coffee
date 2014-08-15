@@ -400,39 +400,47 @@ $(document).ready ->
   $('#sessionTable').DataTable()
 
 pre_hightLight=null
+pre_hightLightColor=null
 @highlight_session_row = (id) ->
   return if pre_hightLight is id
+  temp_color = $("#"+id).css("color")
   $("#"+id).css("color","#FFF200")
+
   if pre_hightLight
-    $("#"+pre_hightLight).css("color","#aaa")
+    #if pre_hightLightColor
+
+    $("#"+pre_hightLight).css("color",pre_hightLightColor)
+
+  pre_hightLightColor = temp_color
   pre_hightLight = id
 
 construct_table = (exec) ->
   temp = ""
-  temp = temp + '<tr id="ses_' + exec.id + '" rel="tooltip" title="Double click to see execution detail" style="cursor:pointer" onclick="highlight_session_row(this.id)"  ondblclick="window.open(\'/execution/'+exec.id+'\',\'_blank\')">'
+  if exec.isViewed
+    temp = temp + '<tr id="ses_' + exec.id + '" style="cursor:pointer;color:#666" onclick="highlight_session_row(this.id)"  ondblclick="window.open(\'/execution/'+exec.id+'\',\'_blank\')">'
+  else
+    temp = temp + '<tr id="ses_' + exec.id + '" style="cursor:pointer" onclick="highlight_session_row(this.id)"  ondblclick="window.open(\'/execution/'+exec.id+'\',\'_blank\');$(this.id).css(\'color\',\'#666\')">'
+
   temp = temp + '<td>' + exec.case_id + '</td>'
   temp = temp + '<td rel="tooltip" title="'+exec.location+'">' + exec.case_name + '</td>'
   temp = temp + '<td>' + Math.round(exec.duration) + '</td>'
   temp = temp + '<td>' + exec.spira_case_id + '</td>'
-  if exec.result is "passed"
-    temp = temp + '<td style="color:rgba(70, 191, 189,0.5)">'+ exec.result.toUpperCase() + '</td>'
-  else
-    temp = temp + '<td style="color:rgba(247, 70, 74,0.9)">'+ exec.result.toUpperCase() + '</td>'
+
   temp = temp + '<td style="text-align:center">'
   if sessionShortHistoryMap
     if sessionShortHistoryMap[exec.id] isnt null
       if sessionShortHistoryMap[exec.id].length isnt 0
         for his in sessionShortHistoryMap[exec.id]
           if his.result is "passed"
-            temp = temp + '<i rel="tooltip" title="' + his.created_at + '" style="color:rgba(70, 191, 189,0.5)" class="fa fa-check-circle"></i> '
+            temp = temp + '<i rel="tooltip" title="' + his.created_at + '" class="fa fa-check-circle sessionTablePassHistoryTrace"></i> '
           else
-            temp = temp + '<i rel="tooltip" title="' + his.created_at + '" style="color:rgba(247, 70, 74,0.9)" class="fa fa-times-circle"></i> '
+            temp = temp + '<i rel="tooltip" title="' + his.created_at + '" class="fa fa-times-circle sessionTableFailHistoryTrace"></i> '
+
+  temp = temp + '</td>'
 
   if exec.result is "passed"
-    temp = temp + '<i style="color:rgba(70, 191, 189,0.5);font-size:20px" class="fa fa-check-circle"></i>'
+    temp = temp + '<td style="color:rgba(70, 191, 189,0.5)">'+ exec.result.toUpperCase() + '</td>'
   else
-    temp = temp + '<i style="color:rgba(247, 70, 74,0.9);font-size:20px" class="fa fa-times-circle"></i>'
-  temp = temp + '</td>'
-  #temp = temp + '<td style="text-align:center" rel="tooltip" title="'+exec.location+'"><i class="fa fa-folder-o"></i></td>'
+    temp = temp + '<td style="color:rgba(247, 70, 74,0.9)">'+ exec.result.toUpperCase() + '</td>'
   temp = temp + '</tr>'
   return temp

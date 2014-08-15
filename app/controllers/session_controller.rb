@@ -54,7 +54,7 @@ class SessionController < ApplicationController
   def getStatus
     data = Hash.new
     begin
-      data[:executions] = Session.find_by(id: params[:id]).executions.select(:case_id,:case_name,:scenario,:duration,:spira_case_id,:location,:result,:id,:created_at)
+      data[:executions] = Session.find_by(id: params[:id]).executions.select(:case_id,:case_name,:scenario,:duration,:spira_case_id,:location,:result,:id,:created_at,:isViewed)
       #find the lastest five executions
       data[:shortHistoryMap]={}
       for exec in data[:executions]
