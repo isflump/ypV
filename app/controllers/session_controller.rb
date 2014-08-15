@@ -2,7 +2,7 @@ class SessionController < ApplicationController
 
   def show
     @session = Session.find_by(id: params[:id])
-    @executions = @session.executions.select(:case_id,:case_name,:scenario,:duration,:spira_case_id,:location,:result,:id)
+    #@executions = @session.executions.select(:case_id,:case_name,:scenario,:duration,:spira_case_id,:location,:result,:id)
 
     sessions = Session.select(:start_time,:id).order('sessions.created_at ASC')
 
@@ -54,7 +54,12 @@ class SessionController < ApplicationController
   def getStatus
     data = Hash.new
     begin
-      data[:executions] = Session.find_by(id: params[:id]).executions.select(:case_id,:case_name,:scenario,:duration,:spira_case_id,:location,:result,:id)
+      data[:executions] = Session.find_by(id: params[:id]).executions.select(:case_id,:case_name,:scenario,:duration,:spira_case_id,:location,:result,:id,:created_at)
+      #find the lastest five executions
+      data[:shortHistoryMap]={}
+      for exec in data[:executions]
+        data[:shortHistoryMap][exec.id] = Execution.select(:result,:id,:created_at).where(case_name: exec.case_name).where("created_at < ?", exec.created_at).order('executions.created_at DESC').limit(4).reverse
+      end
       data[:sessionStatusPass]=0
       data[:sessionStatusFail]=0
       data[:executions].group_by{|e| e.result }.each{|k,v|

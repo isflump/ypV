@@ -18,6 +18,7 @@ bar_options = {
   }
 
 sessionDataHolder=null
+sessionShortHistoryMap=null
 pieChart=null
 barChart=null
 pass_color="rgba(70, 191, 189,0.5)"
@@ -35,7 +36,12 @@ $(document).ready ->
           success:(data) ->
             console.log(data)
             sessionDataHolder=data["executions"]
-
+            sessionShortHistoryMap=data["shortHistoryMap"]
+            table=""
+            for exec in sessionDataHolder
+                table += construct_table(exec)
+            $('#sessionTableBody').html(table)
+            $("#sessionTable").dataTable()
 
             if data['error'] isnt null
               pieData = [
@@ -95,7 +101,6 @@ $(document).ready ->
 
             #showError('Error on request',data)
         })
-    $("#sessionTable").dataTable()
 
 @show_full_calendar = () ->
   fullSessions = []
@@ -410,9 +415,24 @@ construct_table = (exec) ->
   temp = temp + '<td>' + Math.round(exec.duration) + '</td>'
   temp = temp + '<td>' + exec.spira_case_id + '</td>'
   if exec.result is "passed"
-    temp = temp + '<td style="color:rgba(70, 191, 189,0.5)">'+ exec.result + '</td>'
+    temp = temp + '<td style="color:rgba(70, 191, 189,0.5)">'+ exec.result.toUpperCase() + '</td>'
   else
-    temp = temp + '<td style="color:rgba(247, 70, 74,0.9)">'+ exec.result + '</td>'
+    temp = temp + '<td style="color:rgba(247, 70, 74,0.9)">'+ exec.result.toUpperCase() + '</td>'
+  temp = temp + '<td style="text-align:center">'
+  if sessionShortHistoryMap
+    if sessionShortHistoryMap[exec.id] isnt null
+      if sessionShortHistoryMap[exec.id].length isnt 0
+        for his in sessionShortHistoryMap[exec.id]
+          if his.result is "passed"
+            temp = temp + '<i rel="tooltip" title="' + his.created_at + '" style="color:rgba(70, 191, 189,0.5)" class="fa fa-check-circle"></i> '
+          else
+            temp = temp + '<i rel="tooltip" title="' + his.created_at + '" style="color:rgba(247, 70, 74,0.9)" class="fa fa-times-circle"></i> '
+
+  if exec.result is "passed"
+    temp = temp + '<i style="color:rgba(70, 191, 189,0.5);font-size:20px" class="fa fa-check-circle"></i>'
+  else
+    temp = temp + '<i style="color:rgba(247, 70, 74,0.9);font-size:20px" class="fa fa-times-circle"></i>'
+  temp = temp + '</td>'
   #temp = temp + '<td style="text-align:center" rel="tooltip" title="'+exec.location+'"><i class="fa fa-folder-o"></i></td>'
   temp = temp + '</tr>'
   return temp

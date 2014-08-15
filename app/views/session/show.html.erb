@@ -75,25 +75,10 @@
                 <th>Duration(sec)</th>
                 <th>Spira ID</th>
                 <th>Status</th>
-                <!--th>Location</th-->
+                <th>Prev Result Trace</th>
               </tr>
           </thead>
-          <tbody id="sessionTableBody">
-            <% @executions.each do |exec| %>
-              <tr id="ses_<%=exec.id%>" rel="tooltip" title="Double click to see execution detail" style="cursor:pointer" onclick="highlight_session_row(this.id)" ondblclick="window.open('/execution/<%=exec.id%>','_blank')">
-                  <td><%=exec.case_id%></td>
-                  <td rel="tooltip" title="<%=exec.location%>"><%=exec.case_name%></td>
-                  <td><%=exec.duration.round()%></td>
-                  <td><%= exec.spira_case_id.empty? ? "N/A" : exec.spira_case_id %></td>
-                  <% if exec.result =~/passed/i %>
-                    <td style="color:rgba(70, 191, 189,0.5)"><%=exec.result.capitalize %></td>
-                  <%else%>
-                    <td style="color:rgba(247, 70, 74,0.9)"><%=exec.result.capitalize %></td>
-                  <%end%>
-                  <!--td style="text-align:center" rel="tooltip" title="<%=exec.location%>"><i class="fa fa-folder-o"></i></td-->
-              </tr>
-            <%end%>
-          </tbody>
+          <tbody id="sessionTableBody"></tbody>
         </table>
     </div>
   </div>
