@@ -55,7 +55,8 @@ class SessionController < ApplicationController
     data = Hash.new
     begin
       data[:executions] = Session.find_by(id: params[:id]).executions.select(:case_id,:case_name,:scenario,:duration,:spira_case_id,:location,:result,:id)
-
+      data[:sessionStatusPass]=0
+      data[:sessionStatusFail]=0
       data[:executions].group_by{|e| e.result }.each{|k,v|
         if k =~/passed/i
           data[:sessionStatusPass] = v.count

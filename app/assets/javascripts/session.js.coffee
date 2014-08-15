@@ -131,12 +131,13 @@ $(document).ready ->
                 show_calendar_info(calEvent.title,calEvent.id)
                 return
               ,eventClick: (calEvent, jsEvent, view) ->
-                console.log "here"
+                window.open('/session/'+calEvent.id,'_blank')
                 return
               ,eventMouseout: (calEvent, jsEvent, view) ->
                 hide_calendar_info()
                 return
             $('body').css('overflow','hidden')
+            $("#spira_logo").hide()
           else
             console.log(data["trace"])
         error:(data) ->
@@ -182,10 +183,11 @@ $(document).ready ->
   $('#full_calendar_execution_info').show()
 @hide_calendar_info = () ->
   $('#full_calendar_execution_info').hide()
-
 @close_full_calendar = () ->
   $('#exec_time_full_screen_grey_layer').hide()
   $('body').css('overflow','auto')
+  $("#spira_logo").show()
+
 @filterBySessionStatus = (evt) ->
   activePoints = pieChart.getSegmentsAtEvent(evt)
   table=""
@@ -204,11 +206,9 @@ $(document).ready ->
 
   #=================================================================================
   if /pass/i.test(activePoints[0].label.toUpperCase())
-    $('#session_status_tag_view').html('<div id="session_status_tag" class="pass_fail_tag_container" onclick="removeSessionStatusFilter()">' + activePoints[0].label.toUpperCase() + '</div>')
-    # $('#session_table_tag_view').html('<div id="session_status_tag" class="pass_fail_tag_container" onclick="removeSessionStatusFilter()">' + activePoints[0].label.toUpperCase() + '</div>')
+    $('#session_status_tag_view').html('<div id="session_status_tag" class="pass_fail_tag_container" onclick="removeSessionStatusFilter()">' + activePoints[0].label.toUpperCase() + ' <i class="fa fa-times-circle"></i></div>')
   else
-    $('#session_status_tag_view').html('<div id="session_status_tag" class="pass_fail_tag_container fail" onclick="removeSessionStatusFilter()">' + activePoints[0].label.toUpperCase() + '</div>')
-    # $('#session_table_tag_view').html('<div id="session_status_tag" class="pass_fail_tag_container fail" onclick="removeSessionStatusFilter()">' + activePoints[0].label.toUpperCase() + '</div>')
+    $('#session_status_tag_view').html('<div id="session_status_tag" class="pass_fail_tag_container fail" onclick="removeSessionStatusFilter()">' + activePoints[0].label.toUpperCase() + ' <i class="fa fa-times-circle"></i></div>')
   $('#session_status_tag').width($('#session_status_tag').width())
   $('#session_status_tag').show("drop", { direction: "right" },600)
 
@@ -245,7 +245,6 @@ $(document).ready ->
   $('#' + display_id).css('left' , rightPos)
 
   $('#' + display_id).show()
-  console.log "here"
 @dismiss_detail_exec_time = () ->
   $('.detail_exec_time_block').hide()
 

@@ -23,7 +23,7 @@
     </div>
   </div>
 
-  <div class='info_container'>
+  <div class='info_container' onmouseover='dismiss_detail_exec_time()'>
     <% if @sshots.size != 0 %>
       <div class="report_image_container">
         <% @sshots.each_with_index  do |page,index|

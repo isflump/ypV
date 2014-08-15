@@ -93,11 +93,14 @@ $(document).ready ->
 				success:(data) ->
           console.log(data)
           if data['foundCase'] is false
-            $("#spiralog").html("<div class=\"spira_description\">
+            $("#spiralog").html("<div class=\"spira_description\" >
               <font style=\"font-size:17px; font-weight:bold;color:#ddd\">Cannot find Spira case corespond to this test:</font>
               </div>")
           else
-            content = "<div class=\"spira_description\">
+            content = "<div class=\"spira_description\" style=\"margin-bottom:10px;margin-top:5px\">
+                  <font style=\"font-size:17px; font-weight:bold;color:#ddd\">Name:</font> "+data['tcName']+"</font>  <i style=\"color:white;cursor:pointer\" class=\"fa fa-external-link\" onclick=\"window.open('" + data['tcLink'] + "','_blank')\"></i>
+                  </div>
+                  <div class=\"spira_description\">
                   <font style=\"font-size:17px; font-weight:bold;color:#ddd\">Description:</font><br><pre>"+data['tcDescription']+"</pre></font>
                   </div>
                   <table class=\"spira_step_table\">
@@ -123,12 +126,13 @@ $(document).ready ->
 				error:(data) ->
 					showError('Error on request',data)
      })
-    pytestCase = CodeMirror.fromTextArea(document.getElementById('code'), {
-      lineNumbers: true,
-      mode: "text/x-cython",
-      theme: 'monokai'
-    });
 
+    if document.getElementById('code')
+      pytestCase = CodeMirror.fromTextArea(document.getElementById('code'), {
+        lineNumbers: true,
+        mode: "text/x-cython",
+        theme: 'monokai'
+      });
 
 @legend = (parent, data) ->
   parent.className = "legend"

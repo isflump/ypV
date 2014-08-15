@@ -177,16 +177,25 @@ class ExecutionController < ApplicationController
       driver.Connection_ConnectToProject({projectId: projectId}).connection_ConnectToProjectResult
       testCaseId=nil
 
-      if @execution.spira_case_id && !@execution.spira_case_id.empty?
+      if !@execution.spira_case_id && @execution.spira_case_id.empty?
         testCaseNo = driver.TestCase_Count({}).testCase_CountResult.to_i
         puts testCaseNo
-    		driver.TestCase_Retrieve({startingRow: 1,numberOfRows: testCaseNo}).testCase_RetrieveResult.remoteTestCase.each_with_index{ |tc,i|
-    		    puts "#{tc.name.strip}    #{@execution.case_id.strip}"
-      			if tc.name.strip == @execution.case_id.strip
-      				testCaseId = tc.testCaseId
-      				break
-      			end
-    		}
+        for i in 1..((testCaseNo / 250).to_i + 1)
+    			i == 1 ? startPos =  1 : startPos = (i - 1) * 250
+    			driver.TestCase_Retrieve({startingRow: startPos,numberOfRows: 250}).testCase_RetrieveResult.remoteTestCase.each_with_index{|tc,i|
+    			if tc.name.strip == @execution.case_id.strip
+    				testCaseId = tc.testCaseId
+    				break
+    			end
+    			}
+    		end
+    		# driver.TestCase_Retrieve({startingRow: 1,numberOfRows: testCaseNo}).testCase_RetrieveResult.remoteTestCase.each_with_index{ |tc,i|
+    		#     puts "#{tc.name.strip}    #{@execution.case_id.strip}"
+      	# 		if tc.name.strip == @execution.case_id.strip
+      	# 			testCaseId = tc.testCaseId
+      	# 			break
+      	# 		end
+    		# }
       else
         testCaseId = @execution.spira_case_id
       end
@@ -195,29 +204,30 @@ class ExecutionController < ApplicationController
         data[:foundCase]=true
         # #get the description
         tcObj = driver.TestCase_RetrieveById({testCaseId: @execution.spira_case_id}).testCase_RetrieveByIdResult
+        data['tcName'] = tcObj.name.strip
+        data['tcLink'] = "http://spirateam.ypg.com/"+projectId.to_s+"/TestCase/"+testCaseId.to_s+".aspx"
         data['tcDescription'] = tcObj.description ?  tcObj.description.strip : "No Description found"
-
         # #get the steps
-        data['tcSteps'] = []
+
+        steps = []
         stepsInfo = tcObj.testSteps.remoteTestStep
         if stepsInfo
-          tempStep = {}
            if stepsInfo.kind_of?(Array)
       		  stepsInfo.each_with_index{ |step ,index|
-        			tempStep['tsExpectedResult'] = step.expectedResult.gsub('"','\'').gsub('<div>',"\n").gsub(/\<[^>]*>/,'').strip
-        			tempStep['tsDescription'] = step.description.gsub('"','\'').gsub('<div>',"\n").gsub(/<[^>]*>/,'').strip
-        			steps.push tempStep
+        			steps << {:tsExpectedResult => "#{step.expectedResult.gsub('"','\'').gsub('<div>',"\n").gsub(/\<[^>]*>/,'').strip}" ,
+                        :tsDescription => "#{step.description.gsub('"','\'').gsub('<div>',"\n").gsub(/<[^>]*>/,'').strip}" }
       		  }
       	   else
+            tempStep = {}
         		tempStep['tsExpectedResult'] = stepsInfo.expectedResult.gsub('"','\'').gsub('<div>',"\n").gsub(/\<[^>]*>/,'').strip
         		tempStep['tsDescription'] = stepsInfo.description.gsub('"','\'').gsub('<div>',"\n").gsub(/<[^>]*>/,'').strip
         		steps.push tempStep
       	   end
+           data['tcSteps'] = steps
         else
           data[:foundCase]=false
         end
       end
-
 
       render json: data
 		rescue Exception => e
