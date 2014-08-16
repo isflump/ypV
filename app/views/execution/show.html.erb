@@ -12,10 +12,10 @@
         <div class="detail_header_case_name_block"><i class="fa fa-bug" style="font-size:22.5px;margin-right:5px;color:red"></i><%=@execution.case_name.upcase%></div>
       <%end%>
       <div class="detail_header_case_path_block">
-        <%=@execution.location%>
+        <i class="fa fa-folder-open"></i> <%=@execution.location%>
       </div>
       <div class="detail_header_case_path_block">
-        <%=@execution.created_at%>
+        <i class="fa fa-clock-o"></i> <%=@execution.created_at%>
       </div>
     </div>
     <div class="detail_header_author_block">

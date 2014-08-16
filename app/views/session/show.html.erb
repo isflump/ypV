@@ -34,7 +34,10 @@
   <div class="detail_header_container">
     <div class="detail_header_text_block">
         <div class="project_name_block"><i class="fa fa-rocket" style="font-size:22.5px;margin-right:5px;color:#55DAE1"></i> <%=@session.project.name%></div>
-        <div class="project_execution_time_block"><i class="fa fa-clock-o" color="#01AEF2"></i> <%=parse_date(@session.start_time)%></div>
+        <div class="project_execution_time_block"><i class="fa fa-clock-o" color="#01AEF2"></i> <%=parse_date(@session.start_time)%>
+          <%if @session.project.name =~ /SFDC/%>
+            <i class="fa fa-external-link-square"></i> <%=@session.base_url%></div>
+            <%end%>
     </div>
     <div class="detail_header_info_block">
         <% if @session.browser =~ /chrome/i %>
