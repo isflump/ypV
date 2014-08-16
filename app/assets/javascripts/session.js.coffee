@@ -414,12 +414,18 @@ pre_hightLightColor=null
   pre_hightLightColor = temp_color
   pre_hightLight = id
 
+@navigate_to_execution = (row_id,execution_id,isViewed) ->
+  window.open('/execution/' + execution_id,'_blank')
+  if not isViewed
+    $("#"+row_id).css('color','#666')
+    pre_hightLightColor = $("#"+row_id).css("color")
+
 construct_table = (exec) ->
   temp = ""
   if exec.isViewed
-    temp = temp + '<tr id="ses_' + exec.id + '" style="cursor:pointer;color:#666" onclick="highlight_session_row(this.id)"  ondblclick="window.open(\'/execution/'+exec.id+'\',\'_blank\')">'
+    temp = temp + '<tr id="ses_' + exec.id + '" style="cursor:pointer;color:#666" onclick="highlight_session_row(this.id)"  ondblclick="navigate_to_execution(this.id,\''+exec.id+'\',true)">'
   else
-    temp = temp + '<tr id="ses_' + exec.id + '" style="cursor:pointer" onclick="highlight_session_row(this.id)"  ondblclick="window.open(\'/execution/'+exec.id+'\',\'_blank\');$(this.id).css(\'color\',\'#666\')">'
+    temp = temp + '<tr id="ses_' + exec.id + '" style="cursor:pointer" onclick="highlight_session_row(this.id)"  ondblclick="navigate_to_execution(this.id,\''+exec.id+'\',false)">'
 
   temp = temp + '<td>' + exec.case_id + '</td>'
   temp = temp + '<td rel="tooltip" title="'+exec.location+'">' + exec.case_name + '</td>'

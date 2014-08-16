@@ -30,12 +30,12 @@
             <% @executionHistory[m_key][d_key].each do |x| %>
               <div class="detail_exec_time_block" id="display_<%=m_key%>_<%=d_key%>" style="display:none">
                 <div class="one_single_exec">
-                  <div class="exec_time"><i class="fa fa-clock-o" color="#01AEF2"></i></div>
+                  <div class="exec_time"><i class="fa fa-clock-o" color="#01AEF2"></i> <%=x.created_at.strftime("%H:%M:%S")%></div>
                   <div class="exec_pass_fail">
                     <% if x.result=~/pass/i %>
-                      <font color="#5AD3D1"><%=x.result%></font>
+                      <font color="#5AD3D1"><i class="fa fa-check-circle"></i></font>
                     <%else%>
-                      <font color="#BF3B3F"><%=x.result%></font>
+                      <font color="#BF3B3F"><i class="fa fa-times-circle"></i></font>
                     <%end%>
                   </div>
                 </div>
@@ -43,6 +43,7 @@
             <%end%>
           <%end%>
         <% end %>
+        <div class='time_extra'></div>
       <% end %>
     </div>
   </nav>
