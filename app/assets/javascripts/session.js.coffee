@@ -41,7 +41,9 @@ $(document).ready ->
             for exec in sessionDataHolder
                 table += construct_table(exec)
             $('#sessionTableBody').html(table)
-            $("#sessionTable").dataTable()
+            $("#sessionTable").dataTable({
+              "pageLength": 50
+              })
 
             if data['error'] isnt null
               pieData = [
@@ -94,6 +96,41 @@ $(document).ready ->
               bar = document.getElementById("sessionFolderChart").getContext("2d")
               barChart = new Chart(bar).Bar(barData,bar_options)
 
+
+
+
+#===============reserved for spira chart==============================
+              spData = {
+                    labels: ["January", "February", "March", "April", "May", "June", "July","January", "February", "March", "April", "May", "June", "July","January", "February", "March", "April", "May", "June", "July","January", "February", "March", "April", "May", "June", "July"],
+                    datasets: [
+                        {
+                            label: "My First dataset",
+                            fillColor: "rgba(255,255,255,0.5)",
+                            strokeColor: "rgba(255,255,255,0.8)",
+                            highlightFill: "rgba(255,255,255,0.75)",
+                            highlightStroke: "rgba(255,255,255,1)",
+                            data: [65, 59, 80, 81, 56, 55, 40,65, 59, 80, 81, 56, 55, 40,65, 59, 80, 81, 56, 55, 40,65, 59, 80, 81, 56, 55, 40]
+                        },
+                        {
+                            label: "My Second dataset",
+                            fillColor: "rgba(0, 173, 243,0.5)",
+                            strokeColor: "rgba(0, 173, 243,0.8)",
+                            highlightFill: "rgba(0, 173, 243,0.75)",
+                            highlightStroke: "rgba(0, 173, 243,1)",
+                            data: [28, 48, 40, 19, 86, 27, 90,28, 48, 40, 19, 86, 27, 90,28, 48, 40, 19, 86, 27, 90,28, 48, 40, 19, 86, 27, 90]
+                        }
+                    ]
+                };
+              $('#spiraChart').attr('width', $(window).width() * 0.8)
+              bar = document.getElementById("spiraChart").getContext("2d")
+              barChart = new Chart(bar).Bar(spData,bar_options)
+#===============reserved for spira dataTable==============================
+              sp_table = $("#spiraTable").dataTable({
+                "ordering": false,
+                "paging": false
+                })
+
+
             else
               console.log(data["trace"])
           error:(data) ->
@@ -101,6 +138,14 @@ $(document).ready ->
 
             #showError('Error on request',data)
         })
+
+@show_spira_info = () ->
+  $('body').css('overflow','hidden')
+  $('#spira_full_screen_grey_layer').show( "fold", {}, 'slow' );
+
+@hide_spira_info = () ->
+  $('#spira_full_screen_grey_layer').hide( "fold", {}, 'slow' );
+  $('body').css('overflow','auto')
 
 @show_full_calendar = () ->
   fullSessions = []
@@ -245,7 +290,8 @@ $(document).ready ->
 @show_detail_exec_time = (id,display_id) ->
   dismiss_detail_exec_time()
   rightPos = $('#' + id).offset().left + $('#' + id).outerWidth() + 5
-  topPos = $('#' + id).offset().top +  parseInt($('#' + id).css('height')) - 21.5
+  console.log $(window).scrollTop()
+  topPos = $('#' + id).offset().top +  parseInt($('#' + id).css('height')) - 21.5 - parseInt($(window).scrollTop())
   $('#' + display_id).css('top' , topPos)
   $('#' + display_id).css('left' , rightPos)
 

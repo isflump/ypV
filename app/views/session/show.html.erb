@@ -17,6 +17,80 @@
   </div>
 </div>
 
+<div class="spira_full_screen_grey_layer" id='spira_full_screen_grey_layer'>
+  <div class="spira_close_btn"><i class="fa fa-times-circle-o" onclick="hide_spira_info()"></i></div>
+  <canvas id="spiraChart" height="325px" style="margin-left:10%; margin-top:25px;"></canvas>
+  <div class="spira_table_container">
+    <table id="spiraTable" class="display" cellspacing="0" width="100%" >
+        <thead>
+            <tr>
+              <th>Name</th>
+              <th>Author</th>
+
+              <th>Total/Automated</th>
+              <th>Coverage Rate</th>
+            </tr>
+        </thead>
+
+        <tfoot>
+            <tr>
+              <th>Name</th>
+              <th>Author</th>
+
+              <th>Total/Automated</th>
+              <th>Coverage Rate</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            <tr style="color:#777 !important">
+                <td>PC-TestCaseFu</td>
+                <td>System Architect</td>
+                <td>50 / 150</td>
+                <td class="spira_td_25">0%</td>
+            </tr>
+            <tr style='color:#a5e5ff !important'>
+                <td><i class="fa fa-folder"></i> PC-TestCaseFu</td>
+                <td>System Architect</td>
+                <td>50 / 150</td>
+                <td class="spira_td_50">25%</td>
+            </tr >
+            <tr style='color:#56cfff !important'>
+                <td><i class="fa fa-folder"></i> PC-TestCaseFu</td>
+                <td>System Architect</td>
+                <td>50 / 150</td>
+                <td class="spira_td_75">50%</td>
+            </tr >
+            <tr style="color:rgb(0, 173, 243) !important">
+                <td><i class="fa fa-folder-open"></i> PC-TestCaseFu</td>
+                <td>System Architect</td>
+                <td>50 / 150</td>
+                <td class="spira_td_100">75%</td>
+            </tr>
+
+            <tr style="color:rgb(0, 173, 243)">
+                <td><div class="tab"/><i class="fa fa-file"></i> PC-001</td>
+                <td>System aaa</td>
+                <td>1 / 1</td>
+                <td>100%</td>
+            </tr>
+            <tr  style="color:rgb(0, 173, 243)">
+                <td><div class="tab"/><i class="fa fa-file"></i> PC-001</td>
+                <td>System aaa</td>
+                <td>1 / 1</td>
+                <td>100%</td>
+            </tr>
+            <tr style="color:#777">
+                <td><div class="tab"/><i class="fa fa-file"></i> PC-001</td>
+                <td>System aaa</td>
+                <td>0 / 1</td>
+                <td>0%</td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
+</div>
+
+
 <div class="main_container" >
 
   <%= render "shared/side_menu" %>
@@ -46,7 +120,7 @@
       </div>
     </div>
 
-    <div id="spira_logo" class="spira_logo">
+    <div id="spira_logo" class="spira_logo" onclick='show_spira_info()'>
        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve" class="logo"><path d="M50.07,0.212c-27.614,0-50,22.384-50,49.999c0,9.157,2.474,17.731,6.77,25.111L2.044,98.237l22.917-4.796
       c7.381,4.297,15.954,6.768,25.109,6.768c27.614,0,50-22.385,50-49.999C100.07,22.596,77.684,0.212,50.07,0.212z" class="bubble"/><path d="M30.991,65.689c-0.594,0-1.188-0.227-1.642-0.681L16.192,51.852c-0.436-0.436-0.679-1.024-0.679-1.642
       c0-0.616,0.245-1.206,0.679-1.642l13.158-13.157c0.906-0.906,2.376-0.906,3.282,0s0.906,2.376,0,3.282L21.116,50.21l11.517,11.518
@@ -84,6 +158,6 @@
               </tr>
           </thead>
           <tbody id="sessionTableBody"></tbody>
-        </table>
+      </table>
     </div>
   </div>

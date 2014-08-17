@@ -10,6 +10,21 @@
   -o-background-size: cover;
   background-size: cover;
 }
+.spira_td_25{
+  color:#777 !important
+}
+.spira_td_50{
+  color:#a5e5ff !important
+}
+.spira_td_75{
+  color:#56cfff !important
+}
+.spira_td_100{
+  color:rgb(0, 173, 243) !important
+}
+.tab{
+  margin-left:15px;
+}
 .main_container{
   position:absolute;
 
@@ -167,10 +182,12 @@
   padding-bottom:5px;
 }
 .detail_header_case_path_block{
-  width:calc(100%);
+
   font-family: 'Roboto', sans-serif;
   font-size:12px;
   color:#aaa;
+  display:inline-block;
+  margin-right:10px;
 }
 
 .info_container{
@@ -274,6 +291,17 @@
   left:0px;
   z-index:999;
   background:rgba(0,0,0,0.75)
+}
+.spira_full_screen_grey_layer{
+  position:fixed;
+  overflow:auto;
+  top:0px;
+  bottom:0px;
+  right:0px;
+  left:0px;
+  z-index:999;
+  background:rgba(0,0,0,0.875);
+  display:none
 }
 .full_calendar{
 
@@ -446,8 +474,23 @@
 .spira_logo:hover {
   transform: rotate(10deg) scale(1.1);
 }
-
-
+.spira_table_container{
+  margin-top:25px;
+  width:80%;
+  margin-left:10%;
+  margin-bottom:55px;
+}
+.spira_close_btn{
+  position:fixed;
+  top:25px;
+  right:50px;
+  font-size:35px;
+  color:#ff28a7;
+  cursor:pointer;
+}
+.spira_close_btn:hover{
+  color: #ec008c;
+}
 .sessionTablePassHistoryTrace:hover{
   color:rgba(70, 191, 189,0.5)
 }
