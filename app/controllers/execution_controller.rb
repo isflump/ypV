@@ -242,4 +242,9 @@ class ExecutionController < ApplicationController
 		end
   end
 
+  def getImgName
+    puts Screenshot.find(params['img_id']).execution.case_name
+     render text: Screenshot.find(params['img_id']).execution.case_name
+  end
+
 end

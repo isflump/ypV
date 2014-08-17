@@ -150,7 +150,7 @@
   display:block;
 }
 .detail_header_text_block{
-  width: 70%;
+  width: 65%;
   display:inline-block;
 }
 .detail_header_author_block{
@@ -328,7 +328,7 @@
   vertical-align:top;
 }
 .detail_header_info_block{
-  width:calc(25.5% - 10px);
+  width:calc(23.5% - 10px);
   display:inline-block;
   float:right;
   background:rgba(0,0,0,0.2);
@@ -395,8 +395,8 @@
 
 
 .logo {
-  width: 2.5em;
-  height: 2.5em;
+  width: 2em;
+  height: 2em;
   animation: bounceIn 0.6s;
   transform: rotate(0deg) scale(1) translateZ(0);
   transition: all 0.4s cubic-bezier(.8,1.8,.75,.75);
@@ -430,15 +430,16 @@
 }
 
 .spira_logo{
-  position:fixed;
-  width:55px;
-  height:65px;
+  position:relative;
+  width:50px;
+  height:48px;
   right:0px;
-  top:12.5px;
-  z-index:99999
+  float:right;
+  display:inline-block;
+  vertical-align:top
 }
 .spira_name{
-  font-size:13.5px;
+  font-size:11.5px;
   font-weight:bold;
   color:white;
 }

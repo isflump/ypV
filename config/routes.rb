@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :execution do
     post 'getSpira', on: :member
     post 'getHistoryTrend', on: :member
+    post 'getImgName', on: :member
   end
 
   resources :session do

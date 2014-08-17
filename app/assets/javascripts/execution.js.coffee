@@ -163,6 +163,7 @@ current_image_view_id = ''
 go_next_id=null
 
 @enlarge_report_image = (id) ->
+
   current_image_view_id = id
   go_next_id = null
   $('#report_image_large_view_box').show()
@@ -183,6 +184,22 @@ go_next_id=null
   $('#report_image_large_view_grey_layer').append('<div class="report_image_large_view_max_btn" onclick="maximize_report_image()" id="report_image_large_view_max_btn"><i class="fa fa-expand"></i></div><div class="report_image_large_view_max_btn hide" onclick="reg_report_image()" id="report_image_large_view_reg_btn"><i class="fa fa-compress"></i></div> <div class="report_image_large_view_close_btn" onclick="hide_report_image_large_view()" id="report_image_large_view_close_btn"><i class="fa fa-times-circle-o"></i></div>')
   $('#report_image_large_view_grey_layer').append('<div class="report_image_next" onclick="report_image_next()" id="report_image_next"><i class="fa fa-chevron-right"></i></div>')
   $('#report_image_large_view_grey_layer').append('<div class="report_image_prev" onclick="report_image_prev()" id="report_image_prev"><i class="fa fa-chevron-left"></i></div>')
+  text = {}
+  imgInfoAry = $('#' + id).attr('src').split('/')
+  text['img_id'] = imgInfoAry[imgInfoAry.length - 2]
+  img_name = text['img_id'] = imgInfoAry[imgInfoAry.length - 1]
+
+  $.ajax({
+    type: "POST",
+    url: document.URL+"/getImgName",
+    data: text
+    success:(data) ->
+      $('#report_image_large_view_grey_layer').append('<div class="report_image_banner"><font color="#01AEF2">' + data + ': </font>' + img_name + '</div>')
+    error:(data) ->
+      $('#report_image_large_view_grey_layer').append('<div class="report_image_banner">Cant Load Img Info</div>')
+  })
+
+
   if !$('#report_image_' + String(parseInt(current_image_view_id.split('_')[current_image_view_id.split('_').length-1]) + 1)).length > 0
     $('#report_image_next').hide()
   if parseInt(current_image_view_id.split('_')[current_image_view_id.split('_').length-1]) == 0
@@ -219,6 +236,7 @@ go_next_id=null
   $('#report_image_large_view_close_btn').remove()
   $('#report_image_next').remove()
   $('#report_image_prev').remove()
+  $('.report_image_banner').remove()
   if !$('#report_image_large_view_max_btn').hasClass('hide')
     $('#report_image_large_view_max_btn').addClass('hide')
   if !$('#report_image_large_view_reg_btn').hasClass('hide')
@@ -257,6 +275,23 @@ go_next_id=null
     $('#enlarged_img').show("drop", { direction: "right" })
     ), 450
 
+  text = {}
+  imgInfoAry = nextSrc.attr('src').split('/')
+  text['img_id'] = imgInfoAry[imgInfoAry.length - 2]
+  img_name = text['img_id'] = imgInfoAry[imgInfoAry.length - 1]
+
+  $.ajax({
+    type: "POST",
+    url: document.URL+"/getImgName",
+    data: text
+    success:(data) ->
+      $('.report_image_banner').remove('')
+      $('#report_image_large_view_grey_layer').append('<div class="report_image_banner"><font color="#01AEF2">' + data + ': </font>' + img_name + '</div>')
+    error:(data) ->
+      $('.report_image_banner').remove('')
+      $('#report_image_large_view_grey_layer').append('<div class="report_image_banner">Cant Load Img Info</div>')
+  })
+
   if $('#report_image_prev').css("display") is "none"
     $('#report_image_prev').show()
 
@@ -289,6 +324,23 @@ go_next_id=null
     $('#enlarged_img').attr('src', prevSrc.attr('src'))
     $('#enlarged_img').show("drop")
     ), 450
+
+  text = {}
+  imgInfoAry = prevSrc.attr('src').split('/')
+  text['img_id'] = imgInfoAry[imgInfoAry.length - 2]
+  img_name = text['img_id'] = imgInfoAry[imgInfoAry.length - 1]
+
+  $.ajax({
+    type: "POST",
+    url: document.URL+"/getImgName",
+    data: text
+    success:(data) ->
+      $('.report_image_banner').remove('')
+      $('#report_image_large_view_grey_layer').append('<div class="report_image_banner"><font color="#01AEF2">' + data + ': </font>' + img_name + '</div>')
+    error:(data) ->
+      $('.report_image_banner').remove('')
+      $('#report_image_large_view_grey_layer').append('<div class="report_image_banner">Cant Load Img Info</div>')
+  })
 
   if $('#report_image_next').css("display") is "none"
     $('#report_image_next').show()
