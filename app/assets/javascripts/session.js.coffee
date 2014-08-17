@@ -122,8 +122,8 @@ $(document).ready ->
                     ]
                 };
               $('#spiraChart').attr('width', $(window).width() * 0.8)
-              bar = document.getElementById("spiraChart").getContext("2d")
-              barChart = new Chart(bar).Bar(spData,bar_options)
+              neC = document.getElementById("spiraChart").getContext("2d")
+              newChart = new Chart(neC).Bar(spData,bar_options)
 #===============reserved for spira dataTable==============================
               sp_table = $("#spiraTable").dataTable({
                 "ordering": false,
