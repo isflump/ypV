@@ -227,7 +227,7 @@ $(document).ready ->
       })
 
   rightPos = $('#' + id).offset().left + $('#' + id).outerWidth() + 5
-  topPos = $('#' + id).offset().top +  parseInt($('#' + id).css('height')) - 22.5
+  topPos = $('#' + id).offset().top +  parseInt($('#' + id).css('height')) - 22.5 - parseInt($(window).scrollTop())
   $('#full_calendar_execution_info').css('top' , topPos)
   $('#full_calendar_execution_info').css('left' , rightPos)
   $('#full_calendar_execution_info').show()
