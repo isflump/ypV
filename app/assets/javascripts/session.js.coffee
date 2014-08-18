@@ -14,15 +14,16 @@ bar_options = {
   scaleGridLineColor : "#444",
   scaleGridLineWidth : 1,
   scaleLineColor: "rgba(240,240,240,1)",
-  scaleFontColor: "#aaa"
+  scaleFontColor: "#aaa",
+  legendTemplate :"hello ooooooooooooooooo"
   }
 
 sessionDataHolder=null
 sessionShortHistoryMap=null
 pieChart=null
 barChart=null
-pass_color="rgba(70, 191, 189,0.5)"
-red_color="rgba(247, 70, 74,0.5)"
+pass_color="rgba(70, 191, 189,0.6)"
+red_color="rgba(247, 70, 74,0.6)"
 
 currentPath=null
 #holds a endPoints path name that cannot click into anymore
@@ -77,7 +78,7 @@ $(document).ready ->
                         title: 'Passed'
                         fillColor: pass_color,
                         strokeColor: pass_color,
-                        highlightFill: "rgba(70, 191, 189,0.75)",
+                        highlightFill: "#5AD3D1",
                         highlightStroke: "rgba(70, 191, 189,1)",
                         data: data['sessionLocationPass']
                     },
@@ -86,7 +87,7 @@ $(document).ready ->
                         title: 'Failed'
                         fillColor: red_color,
                         strokeColor: red_color,
-                        highlightFill: "rgba(247, 70, 74,0.75)",
+                        highlightFill: "#FF5A5E",
                         highlightStroke: "rgba(247, 70, 74,1)",
                         data: data['sessionLocationFail']
                     }
@@ -101,23 +102,23 @@ $(document).ready ->
 
 #===============reserved for spira chart==============================
               spData = {
-                    labels: ["January", "February", "March", "April", "May", "June", "July","January", "February", "March", "April", "May", "June", "July","January", "February", "March", "April", "May", "June", "July","January", "February", "March", "April", "May", "June", "July"],
+                    labels: ["January", "February", "March", "April", "May", "June", "July","January", "February", "March"],
                     datasets: [
                         {
                             label: "My First dataset",
-                            fillColor: "rgba(255,255,255,0.5)",
-                            strokeColor: "rgba(255,255,255,0.8)",
-                            highlightFill: "rgba(255,255,255,0.75)",
-                            highlightStroke: "rgba(255,255,255,1)",
-                            data: [65, 59, 80, 81, 56, 55, 40,65, 59, 80, 81, 56, 55, 40,65, 59, 80, 81, 56, 55, 40,65, 59, 80, 81, 56, 55, 40]
+                            fillColor: "rgba(220,220,220,0.5)",
+                            strokeColor: "rgba(220,220,220,0.8)",
+                            highlightFill: "rgba(220,220,220,0.75)",
+                            highlightStroke: "rgba(220,220,220,1)",
+                            data: [65, 59, 80, 81, 56, 55, 40,65, 59, 80]
                         },
                         {
                             label: "My Second dataset",
-                            fillColor: "rgba(0, 173, 243,0.5)",
-                            strokeColor: "rgba(0, 173, 243,0.8)",
-                            highlightFill: "rgba(0, 173, 243,0.75)",
-                            highlightStroke: "rgba(0, 173, 243,1)",
-                            data: [28, 48, 40, 19, 86, 27, 90,28, 48, 40, 19, 86, 27, 90,28, 48, 40, 19, 86, 27, 90,28, 48, 40, 19, 86, 27, 90]
+                            fillColor: "rgba(151,187,205,0.5)",
+                            strokeColor: "rgba(151,187,205,0.8)",
+                            highlightFill: "rgba(151,187,205,0.75)",
+                            highlightStroke: "rgba(151,187,205,1)",
+                            data: [28, 48, 40, 19, 86, 27, 90,28, 48, 40]
                         }
                     ]
                 };
