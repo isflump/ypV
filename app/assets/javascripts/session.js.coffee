@@ -451,11 +451,15 @@ pre_hightLightColor=null
   return if pre_hightLight is id
   temp_color = $("#"+id).css("color")
   $("#"+id).css("color","#FFF200")
+  for i in [0...5]
+    if $("#"+id+"_trace_"+i)
+      $("#"+id+"_trace_"+i).addClass("active")
 
   if pre_hightLight
-    #if pre_hightLightColor
-
     $("#"+pre_hightLight).css("color",pre_hightLightColor)
+    for i in [0...5]
+      if $("#"+pre_hightLight+"_trace_"+i)
+        $("#"+pre_hightLight+"_trace_"+i).removeClass("active")
 
   pre_hightLightColor = temp_color
   pre_hightLight = id
@@ -478,21 +482,21 @@ construct_table = (exec) ->
   temp = temp + '<td>' + Math.round(exec.duration) + '</td>'
   temp = temp + '<td>' + exec.spira_case_id + '</td>'
 
-  temp = temp + '<td style="text-align:center">'
+  temp = temp + '<td  style="text-align:center">'
   if sessionShortHistoryMap
     if sessionShortHistoryMap[exec.id] isnt null
       if sessionShortHistoryMap[exec.id].length isnt 0
-        for his in sessionShortHistoryMap[exec.id]
+        for his , i in sessionShortHistoryMap[exec.id]
           if his.result is "passed"
-            temp = temp + '<i rel="tooltip" title="' + his.created_at + '" class="fa fa-check-circle sessionTablePassHistoryTrace"></i> '
+            temp = temp + '<i id="ses_' + exec.id + '_trace_' + i + '" rel="tooltip" title="' + his.created_at + '" class="fa fa-check-circle sessionTablePassHistoryTrace"></i> '
           else
-            temp = temp + '<i rel="tooltip" title="' + his.created_at + '" class="fa fa-times-circle sessionTableFailHistoryTrace"></i> '
+            temp = temp + '<i id="ses_' + exec.id + '_trace_' + i + '" rel="tooltip" title="' + his.created_at + '" class="fa fa-bug sessionTableFailHistoryTrace"></i> '
 
   temp = temp + '</td>'
 
   if exec.result is "passed"
-    temp = temp + '<td style="color:rgba(70, 191, 189,0.5)">'+ exec.result.toUpperCase() + '</td>'
+    temp = temp + '<td style="color:' + pass_color + '">'+ exec.result.toUpperCase() + '</td>'
   else
-    temp = temp + '<td style="color:rgba(247, 70, 74,0.9)">'+ exec.result.toUpperCase() + '</td>'
+    temp = temp + '<td style="color:' + red_color + '">'+ exec.result.toUpperCase() + '</td>'
   temp = temp + '</tr>'
   return temp

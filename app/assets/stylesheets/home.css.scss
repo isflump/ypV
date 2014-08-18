@@ -491,10 +491,23 @@
 .spira_close_btn:hover{
   color: #ec008c;
 }
+
+.sessionTablePassHistoryTrace.active{
+  color:rgba(70, 191, 189,0.5) !important
+}
 .sessionTablePassHistoryTrace:hover{
   color:rgba(70, 191, 189,0.5)
 }
-
+.sessionTableFailHistoryTrace.active{
+  color:rgba(247, 70, 74,0.9) !important
+}
 .sessionTableFailHistoryTrace:hover{
   color:rgba(247, 70, 74,0.9)
+}
+
+.sessionGraphTitle{
+  width:400px;
+  display:inline-block;
+  text-align:center;
+  color:#999;
 }
