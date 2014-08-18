@@ -370,7 +370,8 @@ prevPanelId=null
   if prevPanelId
     $("#"+prevPanelId).css('display','none')
   else
-    $("#errorlog").css('display','none')
+    if id isnt "errorTab"
+      $("#errorlog").css('display','none')
 
   prevTabId=id
   prevPanelId=panelId
