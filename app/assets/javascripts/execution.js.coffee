@@ -124,6 +124,7 @@ $(document).ready ->
               content += "<tr><td>No Steps found</td></tr>"
             content += "</tbody></table>"
             $("#spiralog").html(content)
+            $("#compare_execution_spira").html(content)
 				error:(data) ->
 					showError('Error on request',data)
      })
@@ -412,3 +413,31 @@ prevPanelId=null
     $("#execution_parsed_log").css("display","block")
     $("#raw_log_icon").removeClass("fa-bars")
     $("#raw_log_icon").addClass("fa-file-code-o")
+
+
+@execution_compare_with = (id) ->
+  $('body').css('overflow','hidden')
+  $('#compare_full_screen_grey_layer').show( "fold", {}, 'slow' );
+  #$("#report_log_container").detach().appendTo('#compare_current_case')
+  params={}
+  params['compare_id']=id
+  $.ajax({
+    type: "POST",
+    url: document.URL+"/getCompareExecution",
+    data: params
+    success:(data) ->
+      console.log data
+      cur_content = ""
+      cur_content += "<pre>" + data['current_execution'].exception + "</pre>"
+      com_content = ""
+      com_content += "<pre>" + data['current_execution'].exception + "</pre>"
+      $("#compare_current_case_content").html(cur_content)
+      $("#compare_selected_case_content").html(com_content)
+    error:(data) ->
+      console.log data
+  })
+
+@close_execution_compare_with = () ->
+  $('#compare_full_screen_grey_layer').hide( "fold", {}, 'slow' );
+  $('body').css('overflow','auto')
+  #$("#report_log_container").detach().appendTo('#info_container')

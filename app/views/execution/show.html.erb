@@ -23,7 +23,7 @@
     </div>
   </div>
 
-  <div class='info_container' onmouseover='dismiss_detail_exec_time()'>
+  <div id="info_container" class='info_container' onmouseover='dismiss_detail_exec_time()'>
     <% if @sshots.size != 0 %>
       <div class="report_image_container">
         <% @sshots.each_with_index  do |page,index|
@@ -64,7 +64,7 @@
         <div id="latestExecutionLegend"></div>
     </div>
 
-    <div class="report_log_container">
+    <div id="report_log_container" class="report_log_container">
       <!-- TAB TEMPLATE -->
       <svg height="0" width="0" style="position: absolute; margin-left: -100%;">
         <path id="tab-shape" class="tab-shape" d="M116.486,29.036c-23.582-8-14.821-29-42.018-29h-62.4C5.441,0.036,0,5.376,0,12.003v28.033h122v-11H116.486
@@ -178,7 +178,30 @@
   </div>
 </div>
 
+<div class="spira_full_screen_grey_layer" id='compare_full_screen_grey_layer'>
+  <div class="compare_close_btn"><i class="fa fa-times-circle-o" onclick="close_execution_compare_with()"></i></div>
 
+  <div class="compare_blcok">
+    <div id="compare_current_case_info">
+      <div class="compare_info">asfasdf</div>
+      <div class="compare_info">asfasdf</div>
+      <div class="compare_info">asfasdf</div>
+      <div class="compare_info">asfasdf</div>
+    </div>
+    <div id="compare_current_case_content" class="compare_content"></div>
+  </div>
+
+  <div class="compare_blcok">
+    <div id="compare_selected_case_info" class="compare_info"></div>
+    <div id="compare_selected_case_content" class="compare_content"></div>
+  </div>
+
+  <div id="compare_execution_select" class="compare_execution_select">
+  </div>
+
+  <div id="compare_execution_spira" class="compare_execution_spira">
+  </div>
+</div>
 
 <div class="report_image_large_view_box" id="report_image_large_view_box"></div>
 <% if @sshots %>

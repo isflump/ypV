@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     post 'getSpira', on: :member
     post 'getHistoryTrend', on: :member
     post 'getImgName', on: :member
+    post 'getCompareExecution', on: :member
   end
 
   resources :session do

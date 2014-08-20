@@ -174,12 +174,15 @@ class ExecutionController < ApplicationController
       @execution = Execution.find_by(id: params[:id])
 
       projectName=@execution.session.project.name
+      projectId=@execution.session.project.spira_id
       # #set up driver
-      #driver = SOAP::WSDLDriverFactory.new("http://spirateam.ypg.com/Services/v4_0/ImportExport.svc?wsdl").create_rpc_driver
+      driver = SOAP::WSDLDriverFactory.new("http://spirateam.ypg.com/Services/v4_0/ImportExport.svc?wsdl").create_rpc_driver
       # #set up connection
-      #response =  driver.Connection_Authenticate({userName: YpV::Application::SPIRA_USER_NAME, password: YpV::Application::SPIRA_PASSWORD})
-      #driver.Connection_ConnectToProject({projectId: projectId}).connection_ConnectToProjectResult
+      response =  driver.Connection_Authenticate({userName: YpV::Application::SPIRA_USER_NAME, password: YpV::Application::SPIRA_PASSWORD})
+      driver.Connection_ConnectToProject({projectId: projectId}).connection_ConnectToProjectResult
       testCaseId=nil
+      puts "asdfasdf"
+      puts @execution.spira_case_id
       if !@execution.spira_case_id || @execution.spira_case_id.empty?
         if YpV::Application::SPIRA_TC_NAME_MAP[projectName].has_key?(@execution.case_name)
           testCaseId = YpV::Application::SPIRA_TC_NAME_MAP[projectName][@execution.case_name].testCaseId
@@ -191,7 +194,7 @@ class ExecutionController < ApplicationController
       if testCaseId
         data[:foundCase]=true
         # #get the description
-        tcObj = driver.TestCase_RetrieveById({testCaseId: @execution.spira_case_id}).testCase_RetrieveByIdResult
+        tcObj = driver.TestCase_RetrieveById({testCaseId: testCaseId}).testCase_RetrieveByIdResult
         data['tcName'] = tcObj.name.strip
         data['tcLink'] = "http://spirateam.ypg.com/"+projectId.to_s+"/TestCase/"+testCaseId.to_s+".aspx"
         data['tcDescription'] = tcObj.description ?  tcObj.description.strip : "No Description found"
@@ -219,6 +222,7 @@ class ExecutionController < ApplicationController
 
       render json: data
 		rescue Exception => e
+      data[:foundCase]=false
 			data[:error] = e.message.strip
 			data[:trace] = e.backtrace.join("<br>")
 			render json: data
@@ -226,7 +230,20 @@ class ExecutionController < ApplicationController
   end
 
   def getImgName
-     render text: Execution.select(:case_name).where(id: params['id'])[0].case_name
+     render text: Execution.select(:case_name).where(id: params[:id])[0].case_name
+  end
+
+  def getCompareExecution
+    data = Hash.new
+    begin
+      data[:current_execution]=Execution.find_by(id: params[:id])
+      data[:compare_execution]=Execution.find_by(id: params[:compare_id])
+      render json: data
+    rescue Exception => e
+      data[:error] = e.message.strip
+      data[:trace] = e.backtrace.join("<br>")
+      render json: data
+    end
   end
 
 end
