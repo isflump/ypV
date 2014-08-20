@@ -1,6 +1,10 @@
 # Place all the behaviors and hooks related to the matching controller here.
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
+pass_color="rgba(152, 198, 50,0.6)"
+pass_hightlight="rgba(126, 178, 109,0.9)"
+fail_color="rgba(206, 43, 43,0.6)"
+fail_hightlight="#df6666"
 $(document).ready ->
   if $('body').find('.odin').length > 0
     console.log(document.URL)
@@ -18,15 +22,12 @@ $(document).ready ->
               scaleLineColor: "rgba(240,240,240,1)",
               scaleFontColor: "#aaa"
               }
-            #"rgba(220,220,220,1)"
-            pass_color="rgba(70, 191, 189,0.5)"
-            red_color="rgba(247, 70, 74,0.5)"
             line = {
               labels: data['label'],
               datasets: [
                   {
                       title: "Accumulated"
-                      label: "My First dataset",
+                      label: "Accumulated",
                       fillColor: "rgba(220,220,220,0.2)",
                       strokeColor: "rgba(220,220,220,1)",
                       pointColor: "rgba(220,220,220,1)",
@@ -36,7 +37,7 @@ $(document).ready ->
                       data: data['executionNumber']
                   },
                   {
-                      label: "My Second dataset",
+                      label: "Passed",
                       fillColor: pass_color,
                       strokeColor: pass_color,
                       pointColor: pass_color,
@@ -60,17 +61,17 @@ $(document).ready ->
                       title: 'Passed'
                       fillColor: pass_color,
                       strokeColor: pass_color,
-                      highlightFill: "rgba(70, 191, 189,0.75)",
-                      highlightStroke: "rgba(70, 191, 189,1)",
+                      highlightFill: pass_hightlight,
+                      highlightStroke: pass_hightlight,
                       data: data['lastExecutionPass']
                   },
                   {
                       label: "My Second dataset",
                       title: 'Failed'
-                      fillColor: red_color,
-                      strokeColor: red_color,
-                      highlightFill: "rgba(247, 70, 74,0.75)",
-                      highlightStroke: "rgba(247, 70, 74,1)",
+                      fillColor: fail_color,
+                      strokeColor: fail_color,
+                      highlightFill: fail_hightlight,
+                      highlightStroke: fail_hightlight,
                       data: data['lastExecutionFail']
                   }
               ]
@@ -277,8 +278,7 @@ go_next_id=null
 
   text = {}
   imgInfoAry = nextSrc.attr('src').split('/')
-  text['img_id'] = imgInfoAry[imgInfoAry.length - 2]
-  img_name = text['img_id'] = imgInfoAry[imgInfoAry.length - 1]
+  img_name = imgInfoAry[imgInfoAry.length - 1]
 
   $.ajax({
     type: "POST",
@@ -327,8 +327,7 @@ go_next_id=null
 
   text = {}
   imgInfoAry = prevSrc.attr('src').split('/')
-  text['img_id'] = imgInfoAry[imgInfoAry.length - 2]
-  img_name = text['img_id'] = imgInfoAry[imgInfoAry.length - 1]
+  img_name = imgInfoAry[imgInfoAry.length - 1]
 
   $.ajax({
     type: "POST",

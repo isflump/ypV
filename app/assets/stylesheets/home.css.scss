@@ -1,6 +1,12 @@
 // Place all the styles related to the home controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.ypv_pass{
+  color:rgba(152, 198, 50,0.6)
+}
+.ypv_fail{
+  color:rgba(206, 43, 43,0.6)
+}
 @import url(http://fonts.googleapis.com/css?family=Roboto);
 .bg{
   background-color: rgb(28, 34, 39);
@@ -493,16 +499,16 @@
 }
 
 .sessionTablePassHistoryTrace.active{
-  color:rgba(70, 191, 189,0.5) !important
+  color:rgba(152, 198, 50,0.6) !important
 }
 .sessionTablePassHistoryTrace:hover{
-  color:rgba(70, 191, 189,0.5)
+  color:rgba(152, 198, 50,0.6)
 }
 .sessionTableFailHistoryTrace.active{
-  color:rgba(247, 70, 74,0.9) !important
+  color:rgba(206, 43, 43,0.6) !important
 }
 .sessionTableFailHistoryTrace:hover{
-  color:rgba(247, 70, 74,0.9)
+  color:rgba(206, 43, 43,0.6)
 }
 
 .sessionGraphTitle{

@@ -22,7 +22,7 @@ class StoreController < ApplicationController
     if @exc.save
       render :text => @exc.id, :status => 200
     else
-      render :text => "ERROR", :status => 400
+      render :text => "ERROR: #{@exc.errors.full_messages.join()}", :status => 400
     end
   end
 

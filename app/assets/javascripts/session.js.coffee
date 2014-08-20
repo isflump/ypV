@@ -22,9 +22,10 @@ sessionDataHolder=null
 sessionShortHistoryMap=null
 pieChart=null
 barChart=null
-pass_color="rgba(70, 191, 189,0.6)"
-red_color="rgba(247, 70, 74,0.6)"
-
+pass_color="rgba(152, 198, 50,0.6)"
+pass_hightlight="rgba(126, 178, 109,0.9)"
+fail_color="rgba(206, 43, 43,0.6)"
+fail_hightlight="#df6666"
 currentPath=null
 #holds a endPoints path name that cannot click into anymore
 endPoint=[]
@@ -50,8 +51,8 @@ $(document).ready ->
               pieData = [
                 {
                     value:data["sessionStatusFail"],
-                    color:red_color,
-                    highlight: "#FF5A5E",
+                    color:fail_color,
+                    highlight: fail_hightlight,
                     label: "failed",
                     title: "Failed"
 
@@ -59,7 +60,7 @@ $(document).ready ->
                 {
                     value: data["sessionStatusPass"],
                     color: pass_color,
-                    highlight: "#5AD3D1",
+                    highlight: pass_hightlight,
                     label: "passed",
                     title: "Passed"
                 }
@@ -78,17 +79,17 @@ $(document).ready ->
                         title: 'Passed'
                         fillColor: pass_color,
                         strokeColor: pass_color,
-                        highlightFill: "#5AD3D1",
-                        highlightStroke: "rgba(70, 191, 189,1)",
+                        highlightFill: pass_hightlight,
+                        highlightStroke: pass_hightlight,
                         data: data['sessionLocationPass']
                     },
                     {
                         label: "failed",
                         title: 'Failed'
-                        fillColor: red_color,
-                        strokeColor: red_color,
-                        highlightFill: "#FF5A5E",
-                        highlightStroke: "rgba(247, 70, 74,1)",
+                        fillColor: fail_color,
+                        strokeColor: fail_color,
+                        highlightFill: fail_hightlight,
+                        highlightStroke: fail_hightlight,
                         data: data['sessionLocationFail']
                     }
                 ]
@@ -395,8 +396,8 @@ $(document).ready ->
   updatePieData = [
     {
         value:failSum,
-        color:red_color,
-        highlight: "#FF5A5E",
+        color:fail_color,
+        highlight: fail_hightlight,
         label: "failed",
         title: "Failed"
 
@@ -404,7 +405,7 @@ $(document).ready ->
     {
         value: passSum,
         color: pass_color,
-        highlight: "#5AD3D1",
+        highlight: pass_hightlight,
         label: "passed",
         title: "Passed"
     }
@@ -418,17 +419,17 @@ $(document).ready ->
             title: 'Passed'
             fillColor: pass_color,
             strokeColor: pass_color,
-            highlightFill: "rgba(70, 191, 189,0.75)",
-            highlightStroke: "rgba(70, 191, 189,1)",
+            highlightFill: pass_hightlight,
+            highlightStroke: pass_hightlight,
             data: passed
         },
         {
             label: "failed",
             title: 'Failed'
-            fillColor: red_color,
-            strokeColor: red_color,
-            highlightFill: "rgba(247, 70, 74,0.75)",
-            highlightStroke: "rgba(247, 70, 74,1)",
+            fillColor: fail_color,
+            strokeColor: fail_color,
+            highlightFill: fail_hightlight,
+            highlightStroke: fail_hightlight,
             data: failed
         }
     ]
@@ -498,6 +499,6 @@ construct_table = (exec) ->
   if exec.result is "passed"
     temp = temp + '<td style="color:' + pass_color + '">'+ exec.result.toUpperCase() + '</td>'
   else
-    temp = temp + '<td style="color:' + red_color + '">'+ exec.result.toUpperCase() + '</td>'
+    temp = temp + '<td style="color:' + fail_color + '">'+ exec.result.toUpperCase() + '</td>'
   temp = temp + '</tr>'
   return temp

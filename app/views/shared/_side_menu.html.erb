@@ -10,7 +10,7 @@
             <div class="detail_exec_time_block"  id="display_<%=m_key%>_<%=d_key%>" style="display:none">
               <div class="one_single_exec">
                 <div class="exec_time"><i class="fa fa-clock-o" color="#01AEF2"></i> <%=parse_time(ses.start_time)%></div>
-                <div class="exec_pass_fail"><font color="#01AEF2"><i class="fa fa-bar-chart-o"></i></font> <font color="#5AD3D1"><%=ses.executions.collect{|e| e.result=~/pass/i ? 1 : 0}.sum%></font><font color="#999">/</font><font color="red"><%=ses.executions.collect{|e| e.result=~/pass/i ? 0 : 1}.sum%></font><font color="#999">/</font><font color="#ccc"><%=ses.executions.size%></font></div>
+                <div class="exec_pass_fail"><font color="#01AEF2"><i class="fa fa-bar-chart-o"></i></font> <font class="ypv_pass"><%=ses.executions.collect{|e| e.result=~/pass/i ? 1 : 0}.sum%></font><font color="#999">/</font><font class="ypv_fail"><%=ses.executions.collect{|e| e.result=~/pass/i ? 0 : 1}.sum%></font><font color="#999">/</font><font color="#ccc"><%=ses.executions.size%></font></div>
               </div>
             </div>
         <% end end
@@ -33,9 +33,9 @@
                   <div class="exec_time"><i class="fa fa-clock-o" color="#01AEF2"></i> <%=x.created_at.strftime("%H:%M:%S")%></div>
                   <div class="exec_pass_fail">
                     <% if x.result=~/pass/i %>
-                      <font color="#5AD3D1"><i class="fa fa-smile-o"></i></font>
+                      <font class="ypv_pass"><i class="fa fa-smile-o"></i></font>
                     <%else%>
-                      <font color="#BF3B3F"><i class="fa fa-bug"></i></font>
+                      <font class="ypv_fail"><i class="fa fa-bug"></i></font>
                     <%end%>
                   </div>
                 </div>

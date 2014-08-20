@@ -169,38 +169,21 @@ class ExecutionController < ApplicationController
   end
 
   def getSpira
-    puts params
 		data = Hash.new
 		begin
       @execution = Execution.find_by(id: params[:id])
 
-      projectId=@execution.session.project.spira_id
+      projectName=@execution.session.project.name
       # #set up driver
-      driver = SOAP::WSDLDriverFactory.new("http://spirateam.ypg.com/Services/v4_0/ImportExport.svc?wsdl").create_rpc_driver
+      #driver = SOAP::WSDLDriverFactory.new("http://spirateam.ypg.com/Services/v4_0/ImportExport.svc?wsdl").create_rpc_driver
       # #set up connection
-      response =  driver.Connection_Authenticate({userName: YpV::Application::SPIRA_USER_NAME, password: YpV::Application::SPIRA_PASSWORD})
-      driver.Connection_ConnectToProject({projectId: projectId}).connection_ConnectToProjectResult
+      #response =  driver.Connection_Authenticate({userName: YpV::Application::SPIRA_USER_NAME, password: YpV::Application::SPIRA_PASSWORD})
+      #driver.Connection_ConnectToProject({projectId: projectId}).connection_ConnectToProjectResult
       testCaseId=nil
-
-      if !@execution.spira_case_id && @execution.spira_case_id.empty?
-        testCaseNo = driver.TestCase_Count({}).testCase_CountResult.to_i
-        puts testCaseNo
-        for i in 1..((testCaseNo / 250).to_i + 1)
-    			i == 1 ? startPos =  1 : startPos = (i - 1) * 250
-    			driver.TestCase_Retrieve({startingRow: startPos,numberOfRows: 250}).testCase_RetrieveResult.remoteTestCase.each_with_index{|tc,i|
-    			if tc.name.strip == @execution.case_id.strip
-    				testCaseId = tc.testCaseId
-    				break
-    			end
-    			}
-    		end
-    		# driver.TestCase_Retrieve({startingRow: 1,numberOfRows: testCaseNo}).testCase_RetrieveResult.remoteTestCase.each_with_index{ |tc,i|
-    		#     puts "#{tc.name.strip}    #{@execution.case_id.strip}"
-      	# 		if tc.name.strip == @execution.case_id.strip
-      	# 			testCaseId = tc.testCaseId
-      	# 			break
-      	# 		end
-    		# }
+      if !@execution.spira_case_id || @execution.spira_case_id.empty?
+        if YpV::Application::SPIRA_TC_NAME_MAP[projectName].has_key?(@execution.case_name)
+          testCaseId = YpV::Application::SPIRA_TC_NAME_MAP[projectName][@execution.case_name].testCaseId
+        end
       else
         testCaseId = @execution.spira_case_id
       end
@@ -243,8 +226,7 @@ class ExecutionController < ApplicationController
   end
 
   def getImgName
-    puts Screenshot.find(params['img_id']).execution.case_name
-     render text: Screenshot.find(params['img_id']).execution.case_name
+     render text: Execution.select(:case_name).where(id: params['id'])[0].case_name
   end
 
 end
