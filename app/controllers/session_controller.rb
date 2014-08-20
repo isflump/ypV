@@ -115,11 +115,11 @@ class SessionController < ApplicationController
       data[:device] = session.browser
       data[:os] = session.os
       data[:ip] = session.ip
-      puts "=============================="
-      puts data
+      data[:result_pass] = session.executions.collect{|e| e.result=~/pass/i ? 1 : 0}.sum
+      data[:result_all] = session.executions.size
+
       render json: data
     rescue Exception => e
-      puts e
       data[:error] = e.message.strip
       data[:trace] = e.backtrace.join("<br>")
       render json: data

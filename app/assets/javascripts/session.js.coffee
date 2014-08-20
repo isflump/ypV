@@ -202,6 +202,7 @@ $(document).ready ->
   $('#full_calendar_execution_info_detail_text3').html('<font style="color:#55DAE1;font-weight:bold">End At:</font> ')
   $('#full_calendar_execution_info_detail_text4').html('<font style="color:#55DAE1;font-weight:bold">OS:</font> ')
   $('#full_calendar_execution_info_detail_text5').html('<font style="color:#55DAE1;font-weight:bold">IP:</font> ' )
+  $('#full_calendar_execution_info_detail_text6').html('<font style="color:#55DAE1;font-weight:bold">Result:</font> ' )
   #fill info here
   data = {}
   data['sid'] = id
@@ -210,11 +211,12 @@ $(document).ready ->
         url: document.URL+"/getSessionInfoById",
         data: data
         success:(data) ->
+          console.log data
           $('#full_calendar_execution_info_detail_text2').html('<font style="color:#55DAE1;font-weight:bold">Start At:</font> ' + data['start_at'])
           $('#full_calendar_execution_info_detail_text3').html('<font style="color:#55DAE1;font-weight:bold">End At:</font> ' + data['end_at'])
           $('#full_calendar_execution_info_detail_text4').html('<font style="color:#55DAE1;font-weight:bold">OS:</font> ' + data['os'])
           $('#full_calendar_execution_info_detail_text5').html('<font style="color:#55DAE1;font-weight:bold">IP:</font> ' + data['ip'])
-          console.log data['device']
+          $('#full_calendar_execution_info_detail_text6').html('<font style="color:#55DAE1;font-weight:bold">Result:</font> <font class="ypv_pass">' + data['result_pass'] + '</font>/<font class="ypv_fail">' + (parseInt(data['result_all']) - parseInt(data['result_pass'])) + '</font>/<font color="#ccc">' + data['result_all'] + '</font>')
           if /chrome/i.test data['device']
             $('#full_calendar_execution_info_detail_text1').attr('src' , '/assets/chrome-icon.png')
           else if /firefox|firefox_no_js/i.test data['device']
