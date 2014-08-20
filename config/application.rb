@@ -21,5 +21,7 @@ module YpV
     # config.i18n.default_locale = :de
     SPIRA_USER_NAME = 'ypgAutoTester'
     SPIRA_PASSWORD = '@ut0t3$t3r'
+    SPIRA_TC_NAME_MAP = {}
+    # SPIRA_TC_ID_MAP = {}
   end
 end

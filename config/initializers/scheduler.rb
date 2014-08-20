@@ -1,8 +1,41 @@
 require 'rufus-scheduler'
-puts "herere"
+require 'soap/rpc/driver'
+require 'soap/wsdlDriver'
+
+def refresh_spira_object
+  projects = Project.all()
+  driver = SOAP::WSDLDriverFactory.new("http://spirateam.ypg.com/Services/v4_0/ImportExport.svc?wsdl").create_rpc_driver
+  for p in projects
+    response =  driver.Connection_Authenticate({userName: YpV::Application::SPIRA_USER_NAME, password: YpV::Application::SPIRA_PASSWORD})
+    driver.Connection_ConnectToProject({projectId: p.spira_id}).connection_ConnectToProjectResult
+
+    testCaseNo = driver.TestCase_Count({}).testCase_CountResult.to_i
+    for i in 1..((testCaseNo / 250).to_i + 1)
+      i == 1 ? startPos =  1 : startPos = (i - 1) * 250
+      driver.TestCase_Retrieve({startingRow: startPos,numberOfRows: 250}).testCase_RetrieveResult.remoteTestCase.each_with_index{|tc,i|
+        if YpV::Application::SPIRA_TC_NAME_MAP.has_key?(p.name)
+          YpV::Application::SPIRA_TC_NAME_MAP[p.name][tc.name.strip]=tc
+        else
+          YpV::Application::SPIRA_TC_NAME_MAP[p.name]={tc.name.strip => tc}
+        end
+
+        # if YpV::Application::SPIRA_TC_ID_MAP.has_key?(p.name)
+        #   YpV::Application::SPIRA_TC_ID_MAP[p.name][tc.testCaseId]=tc
+        # else
+        #   YpV::Application::SPIRA_TC_ID_MAP[p.name]={tc.testCaseId => tc}
+        # end
+      }
+    end
+  end
+
+end
 
 scheduler = Rufus::Scheduler.new
+puts "Initializing Spira Case at #{Time.now}"
+puts "This operation might take few miniutes before Ypv is fully started."
+refresh_spira_object()
 
-scheduler.cron '* * * * *' do
-  puts 'Hello... Rufus'
+scheduler.cron '0 * * * *' do
+  puts "Refresh Spira Cases at #{Time.now}"
+  refresh_spira_object
 end
