@@ -225,6 +225,18 @@
   margin-bottom:20px;
 
 }
+
+.errorRawInfo{
+position:relative;
+width: calc(100% - 35px);
+padding: 5px 10px 5px 25px;
+font-family: monospace;
+font-family: 'Roboto', sans-serif;
+color:#aaa;
+overflow:auto;
+margin-bottom:20px;
+}
+
 .spira_description{
   margin-top:-10px;
   padding-left:10px;

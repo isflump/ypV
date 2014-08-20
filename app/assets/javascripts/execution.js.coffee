@@ -400,3 +400,15 @@ prevPanelId=null
 
   prevTabId=id
   prevPanelId=panelId
+
+@show_error_raw_log = () ->
+  if $("#execution_raw_log").css("display") is "none"
+    $("#execution_raw_log").css("display","block")
+    $("#execution_parsed_log").css("display","none")
+    $("#raw_log_icon").removeClass("fa-file-code-o")
+    $("#raw_log_icon").addClass("fa-bars")
+  else
+    $("#execution_raw_log").css("display","none")
+    $("#execution_parsed_log").css("display","block")
+    $("#raw_log_icon").removeClass("fa-bars")
+    $("#raw_log_icon").addClass("fa-file-code-o")

@@ -103,18 +103,25 @@
         </nav>
 
         <div id="errorlog" class="errorLog-content">
-          <div class="errorInfo">
-  <pre>
+          <div class="errorInfo" style="width:100%;margin-bottom:1px;padding: 1px 1px 1px 1px;color:#aaa;"><i rel="tooltip" title="Show raw or formatted pytest exception." id="raw_log_icon" onclick="show_error_raw_log()" class="fa fa-file-code-o" style="float: right;"></i></div>
+          <div id="execution_parsed_log">
+            <div class="errorInfo">
+<pre>
 <%=parse_exception_to_error(@execution.exception)%>
-  </pre>
-          </div>
-          <div class="errorTestCase">
-            <textarea id='code'>
+</pre>
+            </div>
+            <div class="errorTestCase">
+              <textarea id='code'>
 <%=parse_exception_to_user_case(@execution.exception)%>
-            </textarea>
+              </textarea>
+            </div>
+          </div>
+          <div id="execution_raw_log" style="display:none" class="errorRawInfo">
+<pre>
+<%=@execution.exception%>
+</pre>
           </div>
         </div>
-
         <div id="spiralog" class="spiraLog-content" style="display:none"></div>
 
         <div id="userlog" class="userLog-content" style="display:none">

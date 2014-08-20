@@ -15,4 +15,5 @@ module ExecutionHelper
     result
     #exception.split(/^\s*(_\s?)+\s*$/)[0].include?('@pytest') ? exception.split(/^\s*(_\s?)+\s*$/)[0].gsub(exception.match(/(^[^\-]*?)@pytest/)[1],'').gsub(/^@pytest/,exception.split(/^\s*(_\s?)+\s*$/)[0].match(/^.*?@pytest/)[0]) : exception.split(/^\s*(_\s?)+\s*$/)[0].gsub(exception.match(/(^[^\-]*?)def\s/)[1],'').gsub(/^def\s/,exception.split(/^\s*(_\s?)+\s*$/)[0].match(/^.*?def\s/)[0])
   end
+
 end
