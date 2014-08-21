@@ -31,15 +31,17 @@ class SessionController < ApplicationController
           elsif end_subindex < (sessions.size-1)
             end_subindex += 1
             if calendarMap.has_key?(sessions[end_subindex].start_time.gsub(/_.*/,""))
-              calendarMap[sessions[end_subindex].start_time.gsub(/_.*/,"")] << sessions[start_subindex]
+              calendarMap[sessions[end_subindex].start_time.gsub(/_.*/,"")] << sessions[end_subindex]
             else
-              calendarMap[sessions[end_subindex].start_time.gsub(/_.*/,"")] = [sessions[start_subindex]]
+              calendarMap[sessions[end_subindex].start_time.gsub(/_.*/,"")] = [sessions[end_subindex]]
             end
           end
         end
         break
       end
     }
+    puts calendarMap
+    puts "#########################"
     @sessionHistory = {}
     calendarMap.each{|key, value|
       if @sessionHistory.has_key?(Time.parse(key).month)
@@ -48,6 +50,7 @@ class SessionController < ApplicationController
         @sessionHistory[Time.parse(key).month] = {Time.parse(key).day => value}
       end
     }
+    puts @sessionHistory
   end
 
 

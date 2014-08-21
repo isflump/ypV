@@ -178,29 +178,67 @@
   </div>
 </div>
 
-<div class="spira_full_screen_grey_layer" id='compare_full_screen_grey_layer'>
-  <div class="compare_close_btn"><i class="fa fa-times-circle-o" onclick="close_execution_compare_with()"></i></div>
+<div class="compare_execution_full_screen_grey_layer" id='compare_full_screen_grey_layer' >
+  <div class="compare_close_btn" onmouseover="dismiss_execution_compare_detail_exec_time()"><i class="fa fa-times-circle-o" onclick="close_execution_compare_with()"></i></div>
 
-  <div class="compare_blcok">
-    <div id="compare_current_case_info">
-      <div class="compare_info">asfasdf</div>
-      <div class="compare_info">asfasdf</div>
-      <div class="compare_info">asfasdf</div>
-      <div class="compare_info">asfasdf</div>
+  <div id="compare_execution_select" class="compare_execution_select" >
+    <% if @executionHistory %>
+      <% @executionHistory.keys.sort.each do |m_key| %>
+        <div class='time_month'><%=parse_month(m_key)%></div>
+        <% @executionHistory[m_key].keys.sort.each do |d_key| %>
+          <%if d_key == @execution.created_at.day%>
+            <div class="time_date" style="color:red" id="compare_time_<%=m_key%>_<%=d_key%>" onmouseover="show_execution_compare_detail_exec_time(this.id,'compare_display_<%=m_key%>_<%=d_key%>')"><%=parse_day(d_key)%></div>
+          <%else%>
+            <div class="time_date" id="compare_time_<%=m_key%>_<%=d_key%>" onmouseover="show_execution_compare_detail_exec_time(this.id,'compare_display_<%=m_key%>_<%=d_key%>')"><%=parse_day(d_key)%></div>
+          <%end%>
+          <div class="compare_execution_detail_exec_time_block" id="compare_display_<%=m_key%>_<%=d_key%>" style="display:none">
+          <% @executionHistory[m_key][d_key].each do |x| %>
+              <%if x.created_at == @execution.created_at%>
+                <div class="one_single_exec">
+              <%else%>
+                <div class="one_single_exec" onclick="load_execution_compare_with(<%=x.id%>)">
+              <%end%>
+                <div class="exec_time"><i class="fa fa-clock-o" color="#01AEF2"></i> <%=x.created_at.strftime("%H:%M:%S")%></div>
+                <div class="exec_pass_fail">
+                  <% if x.result=~/pass/i %>
+                    <font class="ypv_pass"><i class="fa fa-smile-o"></i></font>
+                  <%else%>
+                    <font class="ypv_fail"><i class="fa fa-bug"></i></font>
+                  <%end%>
+                  <i style="color:white;cursor:pointer" class="fa fa-external-link" onclick="window.open('/execution/<%=x.id%>','_blank')"></i>
+                </div>
+              </div>
+          <%end%>
+          </div>
+        <%end%>
+      <% end %>
+      <div class='time_extra'></div>
+    <% end %>
+  </div>
+
+
+    <div class="compare_blcok" onmouseover="dismiss_execution_compare_detail_exec_time()">
+      <div id="compare_current_case_info"></div>
+      <div id="compare_current_case_content" class="compare_content">
+      <div class="errorInfo"><pre>
+<%=parse_exception_to_error(@execution.exception)%></pre>
+      </div>
+      <textarea id='compare_current_code'>
+    <%=parse_exception_to_user_case(@execution.exception)%>
+      </textarea>
+      </div>
     </div>
-    <div id="compare_current_case_content" class="compare_content"></div>
+
+  <div class="compare_blcok" onmouseover="dismiss_execution_compare_detail_exec_time()">
+    <div id="compare_select_case_info"></div>
+    <div id="compare_selected_case_content" class="compare_content">
+      <div id="compare_selected_case_error" class="errorInfo"></div>
+      <textarea id='compare_selected_code'></textarea>
+    </div>
   </div>
 
-  <div class="compare_blcok">
-    <div id="compare_selected_case_info" class="compare_info"></div>
-    <div id="compare_selected_case_content" class="compare_content"></div>
-  </div>
+  <div id="compare_execution_spira" class="compare_execution_spira" onmouseover="dismiss_execution_compare_detail_exec_time()"></div>
 
-  <div id="compare_execution_select" class="compare_execution_select">
-  </div>
-
-  <div id="compare_execution_spira" class="compare_execution_spira">
-  </div>
 </div>
 
 <div class="report_image_large_view_box" id="report_image_large_view_box"></div>

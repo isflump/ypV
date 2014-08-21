@@ -33,9 +33,9 @@ class ExecutionController < ApplicationController
           elsif end_subindex < (executions.size-1)
             end_subindex += 1
             if calendarMap.has_key?(executions[end_subindex].created_at.strftime("%Y-%m-%d"))
-              calendarMap[executions[end_subindex].created_at.strftime("%Y-%m-%d")] << executions[start_subindex]
+              calendarMap[executions[end_subindex].created_at.strftime("%Y-%m-%d")] << executions[end_subindex]
             else
-              calendarMap[executions[end_subindex].created_at.strftime("%Y-%m-%d")] = [executions[start_subindex]]
+              calendarMap[executions[end_subindex].created_at.strftime("%Y-%m-%d")] = [executions[end_subindex]]
             end
           end
         end

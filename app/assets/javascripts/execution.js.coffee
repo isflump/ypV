@@ -5,6 +5,8 @@ pass_color="rgba(152, 198, 50,0.6)"
 pass_hightlight="rgba(126, 178, 109,0.9)"
 fail_color="rgba(206, 43, 43,0.6)"
 fail_hightlight="#df6666"
+pytestCurrentCase = null
+pytestSelectedCase = null
 $(document).ready ->
   if $('body').find('.odin').length > 0
     console.log(document.URL)
@@ -100,10 +102,10 @@ $(document).ready ->
           else
             content = "<div class=\"spira_description\" style=\"margin-bottom:10px;margin-top:5px\">
                   <font style=\"font-size:17px; font-weight:bold;color:#ddd\">Name:</font> "+data['tcName']+"</font>  <i style=\"color:white;cursor:pointer\" class=\"fa fa-external-link\" onclick=\"window.open('" + data['tcLink'] + "','_blank')\"></i>
-                  </div>
-                  <div class=\"spira_description\">
-                  <font style=\"font-size:17px; font-weight:bold;color:#ddd\">Description:</font><br><pre>"+data['tcDescription']+"</pre></font>
-                  </div>
+                  </div>"
+            if data['tcDescription'].strip is not "No Description found"
+              content += "<div class=\"spira_description\"><font style=\"font-size:17px; font-weight:bold;color:#ddd\">Description:</font><br><pre>"+data['tcDescription']+"</pre></font></div>"
+            content += "
                   <table class=\"spira_step_table\">
                     <tr>
                       <th>Step#</th>
@@ -129,12 +131,22 @@ $(document).ready ->
 					showError('Error on request',data)
      })
 
+    if document.getElementById('compare_current_code')
+      pytestCurrentCase = CodeMirror.fromTextArea(document.getElementById('compare_current_code'), {
+        lineNumbers: true,
+        mode: "text/x-cython",
+        theme: 'monokai',
+        readOnly: true
+      });
+
     if document.getElementById('code')
       pytestCase = CodeMirror.fromTextArea(document.getElementById('code'), {
         lineNumbers: true,
         mode: "text/x-cython",
-        theme: 'monokai'
+        theme: 'monokai',
+        readOnly: true
       });
+
 
 @legend = (parent, data) ->
   parent.className = "legend"
@@ -418,7 +430,8 @@ prevPanelId=null
 @execution_compare_with = (id) ->
   $('body').css('overflow','hidden')
   $('#compare_full_screen_grey_layer').show( "fold", {}, 'slow' );
-  #$("#report_log_container").detach().appendTo('#compare_current_case')
+  pytestCurrentCase.refresh()
+  #$("#compare_selected_case_content").html("")
   params={}
   params['compare_id']=id
   $.ajax({
@@ -427,12 +440,175 @@ prevPanelId=null
     data: params
     success:(data) ->
       console.log data
-      cur_content = ""
-      cur_content += "<pre>" + data['current_execution'].exception + "</pre>"
-      com_content = ""
-      com_content += "<pre>" + data['current_execution'].exception + "</pre>"
-      $("#compare_current_case_content").html(cur_content)
-      $("#compare_selected_case_content").html(com_content)
+      cur_title = ""
+      com_title = ""
+      if data['current_execution'].result is "passed"
+        cur_title += "<div class=\"compare_info\"><i class=\"fa fa-smile-o\" style=\"font-size:22.5px;margin-right:5px;color:#55DAE1\"></i>" + data['current_execution'].case_name + " "
+      else
+        cur_title += "<div class=\"compare_info\"><i class=\"fa fa-bug\" style=\"font-size:22.5px;margin-right:5px;color:red\"></i>" + data['current_execution'].case_name + " "
+
+      if data['compare_execution'].result is "passed"
+        com_title += "<div class=\"compare_info\"><i class=\"fa fa-smile-o\" style=\"font-size:22.5px;margin-right:5px;color:#55DAE1\"></i>" + data['compare_execution'].case_name + " "
+      else
+        com_title += "<div class=\"compare_info\"><i class=\"fa fa-bug\" style=\"font-size:22.5px;margin-right:5px;color:red\"></i>" + data['compare_execution'].case_name + " "
+
+      cur_title += "<i class=\"fa fa-clock-o\"></i> " + data['current_execution'].created_at + "</div>"
+      com_title += "<i class=\"fa fa-clock-o\"></i> " + data['compare_execution'].created_at  + "</div>"
+
+      $("#compare_current_case_info").html(cur_title)
+      $("#compare_select_case_info").html(com_title)
+
+      isErrorInclude = false
+      isCodeInclude = false
+      isEndCodeInclude = false
+      result = ""
+      code = "No exception\n"
+      if data['compare_execution'].exception
+        code = ""
+        for line in data['compare_execution'].exception.split("\n")
+          if line.match(/^\s*E.*/)
+            isErrorInclude = true
+          if isErrorInclude
+            result += line + "\n"
+
+          if isEndCode
+            continue
+
+          if line.match(/^\s*(@pytest|def).*/)
+            isCodeInclude = true
+
+          if line.match(/^\s*>.*/)
+            isEndCode = true
+            isCodeInclude = false
+
+          if isCodeInclude || isEndCode
+            code += line + "\n"
+
+      $("#compare_selected_case_error").html("<pre>" + result + "</pre>")
+      $("#compare_selected_code").html(code)
+      if not pytestSelectedCase
+        if document.getElementById('compare_selected_code')
+          pytestSelectedCase = CodeMirror.fromTextArea(document.getElementById('compare_selected_code'), {
+            lineNumbers: true,
+            mode: "text/x-cython",
+            theme: 'monokai',
+            readOnly: true
+          });
+      else
+        console.log "here"
+        pytestSelectedCase.setValue(code)
+        $('#compare_selected_case_content').show()
+        pytestSelectedCase.refresh()
+    error:(data) ->
+      console.log data
+  })
+
+@load_execution_compare_with = (id) ->
+  $('#compare_selected_case_content').hide("drop", { direction: "right" }, ->
+    params={}
+    params['compare_id']=id
+    $.ajax({
+      type: "POST",
+      url: document.URL+"/getCompareExecution",
+      data: params
+      success:(data) ->
+        console.log data
+        com_title = ""
+
+        if data['compare_execution'].result is "passed"
+          com_title += "<div class=\"compare_info\"><i class=\"fa fa-smile-o\" style=\"font-size:22.5px;margin-right:5px;color:#55DAE1\"></i>" + data['compare_execution'].case_name + " "
+        else
+          com_title += "<div class=\"compare_info\"><i class=\"fa fa-bug\" style=\"font-size:22.5px;margin-right:5px;color:red\"></i>" + data['compare_execution'].case_name + " "
+
+        com_title += "<i class=\"fa fa-clock-o\"></i> " + data['compare_execution'].created_at  + "</div>"
+
+        $("#compare_select_case_info").html(com_title)
+        isErrorInclude = false
+        isCodeInclude = false
+        isEndCodeInclude = false
+        result = ""
+        code = "No Exception\n"
+        if data['compare_execution'].exception
+          code = ""
+          for line in data['compare_execution'].exception.split("\n")
+            if line.match(/^\s*E.*/)
+                isErrorInclude = true
+            if isErrorInclude
+              result += line + "\n"
+
+            if isEndCode
+              continue
+
+            if line.match(/^\s*(@pytest|def).*/)
+              isCodeInclude = true
+
+            if line.match(/^\s*>.*/)
+              isEndCode = true
+              isCodeInclude = false
+
+            if isCodeInclude || isEndCode
+              code += line + "\n"
+
+        $("#compare_selected_case_error").html("<pre>" + result + "</pre>")
+        $("#compare_selected_code").html(code)
+        pytestSelectedCase.setValue(code)
+        $('#compare_selected_case_content').show()
+        pytestSelectedCase.refresh()
+      error:(data) ->
+        console.log data
+    })
+  )
+
+render_compare_execution = (id) ->
+  params={}
+  params['compare_id']=id
+  $.ajax({
+    type: "POST",
+    url: document.URL+"/getCompareExecution",
+    data: params
+    success:(data) ->
+      console.log data
+      com_title = ""
+
+      if data['compare_execution'].result is "passed"
+        com_title += "<div class=\"compare_info\"><i class=\"fa fa-smile-o\" style=\"font-size:22.5px;margin-right:5px;color:#55DAE1\"></i>" + data['compare_execution'].case_name + " "
+      else
+        com_title += "<div class=\"compare_info\"><i class=\"fa fa-bug\" style=\"font-size:22.5px;margin-right:5px;color:red\"></i>" + data['compare_execution'].case_name + " "
+
+      com_title += "<i class=\"fa fa-clock-o\"></i> " + data['compare_execution'].created_at  + "</div>"
+
+      $("#compare_select_case_info").html(com_title)
+      isErrorInclude = false
+      isCodeInclude = false
+      isEndCodeInclude = false
+      result = ""
+      code = "No Exception\n"
+      if data['compare_execution']
+        code = ""
+        for line in data['compare_execution'].exception.split("\n")
+          if line.match(/^\s*E.*/)
+              isErrorInclude = true
+          if isErrorInclude
+            result += line + "\n"
+
+          if isEndCode
+            continue
+
+          if line.match(/^\s*(@pytest|def).*/)
+            isCodeInclude = true
+
+          if line.match(/^\s*>.*/)
+            isEndCode = true
+            isCodeInclude = false
+
+          if isCodeInclude || isEndCode
+            code += line + "\n"
+
+      $("#compare_selected_case_error").html("<pre>" + result + "</pre>")
+      $("#compare_selected_code").html(code)
+      pytestSelectedCase.setValue(code)
+      $('#compare_selected_case_content').show()
+      pytestSelectedCase.refresh()
     error:(data) ->
       console.log data
   })
@@ -440,4 +616,16 @@ prevPanelId=null
 @close_execution_compare_with = () ->
   $('#compare_full_screen_grey_layer').hide( "fold", {}, 'slow' );
   $('body').css('overflow','auto')
-  #$("#report_log_container").detach().appendTo('#info_container')
+
+@dismiss_execution_compare_detail_exec_time = () ->
+  $('.compare_execution_detail_exec_time_block').hide()
+
+@show_execution_compare_detail_exec_time = (id,display_id) ->
+  dismiss_execution_compare_detail_exec_time()
+  rightPos = $('#' + id).offset().left + $('#' + id).outerWidth() + 5
+  console.log $(window).scrollTop()
+  topPos = $('#' + id).offset().top +  parseInt($('#' + id).css('height')) - 21.5 - parseInt($(window).scrollTop())
+  $('#' + display_id).css('top' , topPos)
+  $('#' + display_id).css('right' , rightPos)
+
+  $('#' + display_id).show()

@@ -300,6 +300,7 @@ $(document).ready ->
   $('#' + display_id).css('left' , rightPos)
 
   $('#' + display_id).show()
+
 @dismiss_detail_exec_time = () ->
   $('.detail_exec_time_block').hide()
 
