@@ -237,6 +237,16 @@ overflow:auto;
 margin-bottom:20px;
 }
 
+.errorRawCompareInfo{
+position:relative;
+padding: 5px 10px 5px 25px;
+font-family: monospace;
+font-family: 'Roboto', sans-serif;
+color:#aaa;
+overflow:auto;
+height:600px;
+}
+
 .spira_description{
   margin-top:-10px;
   padding-left:10px;
@@ -437,8 +447,8 @@ margin-bottom:20px;
 
 .compare_blcok{
   width:40%;
-  min-height:70%;
-  max-height:80%;
+  min-height:400px;
+  max-height:800px;
   margin-top: 50px;
   margin-left:25px;
   margin-right:20px;

@@ -7,7 +7,7 @@
   <div class="detail_header_container">
     <div class="detail_header_text_block">
       <% if @execution.result =~/passed/ %>
-        <div class="detail_header_case_name_block"><i class="fa fa-smile-o" style="font-size:22.5px;margin-right:5px;color:#55DAE1"></i><%=@execution.case_name.upcase%></div>
+        <div class="detail_header_case_name_block"><i class="fa fa-smile-o" style="font-size:22.5px;margin-right:5px;color:#73c632"></i><%=@execution.case_name.upcase%></div>
       <%else%>
         <div class="detail_header_case_name_block"><i class="fa fa-bug" style="font-size:22.5px;margin-right:5px;color:red"></i><%=@execution.case_name.upcase%></div>
       <%end%>
@@ -103,7 +103,7 @@
         </nav>
 
         <div id="errorlog" class="errorLog-content">
-          <div class="errorInfo" style="width:100%;margin-bottom:1px;padding: 1px 1px 1px 1px;color:#aaa;"><i rel="tooltip" title="Show raw or formatted pytest exception." id="raw_log_icon" onclick="show_error_raw_log()" class="fa fa-file-code-o" style="float: right;"></i></div>
+          <div class="errorInfo" style="width:100%;margin-bottom:1px;padding: 1px 1px 1px 1px;color:#aaa;"><i rel="tooltip" title="Show raw or formatted pytest exception." id="raw_log_icon" onclick="show_error_raw_log('execution_raw_log','execution_parsed_log',this.id)" class="fa fa-file-code-o" style="float: right;"></i></div>
           <div id="execution_parsed_log">
             <div class="errorInfo">
 <pre>
@@ -219,22 +219,30 @@
 
     <div class="compare_blcok" onmouseover="dismiss_execution_compare_detail_exec_time()">
       <div id="compare_current_case_info"></div>
+      <div class="errorInfo" style="width:100%;margin-bottom:1px;padding: 1px 1px 1px 1px;color:#aaa;"><i rel="tooltip" title="Show raw or formatted pytest exception." id="raw_compare_current_log_icon" onclick="show_error_raw_log('compare_execution_current_raw_log','compare_current_case_content',this.id)" class="fa fa-file-code-o" style="float: right;"></i></div>
       <div id="compare_current_case_content" class="compare_content">
-      <div class="errorInfo"><pre>
-<%=parse_exception_to_error(@execution.exception)%></pre>
+        <div class="errorInfo" style="max-height:100px;overflow:auto">
+<pre><%=parse_exception_to_error(@execution.exception)%></pre>
+        </div>
+        <textarea id='compare_current_code'>
+          <%=parse_exception_to_user_case(@execution.exception)%>
+        </textarea>
       </div>
-      <textarea id='compare_current_code'>
-    <%=parse_exception_to_user_case(@execution.exception)%>
-      </textarea>
+      <div id="compare_execution_current_raw_log" style="display:none;" class="errorRawCompareInfo">
+<pre>
+<%=@execution.exception%>
+</pre>
       </div>
     </div>
 
   <div class="compare_blcok" onmouseover="dismiss_execution_compare_detail_exec_time()">
     <div id="compare_select_case_info"></div>
+    <div class="errorInfo" style="width:100%;margin-bottom:1px;padding: 1px 1px 1px 1px;color:#aaa;"><i rel="tooltip" title="Show raw or formatted pytest exception." id="raw_compare_select_log_icon" onclick="show_error_raw_log('compare_execution_select_raw_log','compare_selected_case_content',this.id)" class="fa fa-file-code-o" style="float: right;"></i></div>
     <div id="compare_selected_case_content" class="compare_content">
-      <div id="compare_selected_case_error" class="errorInfo"></div>
+      <div id="compare_selected_case_error" class="errorInfo" style="max-height:100px;overflow:auto"></div>
       <textarea id='compare_selected_code'></textarea>
     </div>
+    <div id="compare_execution_select_raw_log" style="display:none;" class="errorRawCompareInfo"></div>
   </div>
 
   <div id="compare_execution_spira" class="compare_execution_spira" onmouseover="dismiss_execution_compare_detail_exec_time()"></div>
