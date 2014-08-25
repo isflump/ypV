@@ -73,7 +73,6 @@ $(document).ready ->
               console.log(pieChart)
               barData = {
                 labels: data['sessionLocationLabel'],
-                stacked: true,
                 datasets: [
                     {
                         label: "passed",

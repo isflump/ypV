@@ -80,8 +80,8 @@ $(document).ready ->
               }
 
             ctx2 = document.getElementById("latestExecutionChart").getContext("2d")
-            new Chart(ctx2).Bar(bar,options)
-            legend(document.getElementById("latestExecutionLegend"), bar)
+            new Chart(ctx2).StackedBar(bar,options)
+            legend(document.getElementById("latestExecutionLegend"), StackedBar)
 
           else
             console.log("Error")
