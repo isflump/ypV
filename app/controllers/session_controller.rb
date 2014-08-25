@@ -132,12 +132,28 @@ class SessionController < ApplicationController
 
   def getSpiraStructure
     data = Hash.new()
-    data[:spira_cases] = nil
+    data[:spira_cases] = []
     session =  Session.find(params[:id])
     projectName=session.project.name
-    puts projectName
     begin
-      data[:spira_cases] = YpV::Application::SPIRA_TC_NAME_MAP[projectName] if YpV::Application::SPIRA_TC_NAME_MAP[projectName]
+      if YpV::Application::SPIRA_TC_NAME_MAP[projectName]
+        isInclude=false
+        YpV::Application::SPIRA_TC_NAME_MAP[projectName].keys.each_with_index do |key, index|
+          if YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].name == "_Sales Force"
+            isInclude=true
+          end
+
+          if isInclude
+            data[:spira_cases] << {
+              :name => key,
+              :order => index,
+              :id=> YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].testCaseId,
+              :isFolder => YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].folder,
+              :indentLevel => YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].indentLevel
+            }
+          end
+        end
+      end
       render json: data
     rescue Exception => e
       data[:error] = e.message.strip

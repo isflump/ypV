@@ -125,7 +125,7 @@ $(document).ready ->
                 };
               $('#spiraChart').attr('width', $(window).width() * 0.8)
               neC = document.getElementById("spiraChart").getContext("2d")
-              newChart = new Chart(neC).Bar(spData,bar_options)
+              newChart = new Chart(neC).StackedBar(spData,bar_options)
 #===============reserved for spira dataTable==============================
               sp_table = $("#spiraTable").dataTable({
                 "ordering": false,
@@ -150,10 +150,50 @@ $(document).ready ->
         data: ''
         success:(data) ->
           console.log(data)
-          # if data['error'] isnt null
-          #   console.log data
-          # else
-          #   console.log(data["trace"])
+          table=""
+          curLevel=null
+          indentLevel=""
+          rootFolderIncrement = 0
+          prevFolderIndex=null
+          gid=null
+          isSameLevelFodler=false
+          for c, index in data['spira_cases']
+            if c.isFolder is "true"
+              #when it is 3 it means the first level
+              indentLevel=""
+              if c.indentLevel.length is 3
+                rootFolderIncrement+=1
+                curLevel = c.indentLevel.length
+                gid = 'root_'+rootFolderIncrement+'_'+curLevel
+              else
+                if curLevel <= c.indentLevel.length
+                  if curLevel < c.indentLevel.length
+                    curLevel = c.indentLevel.length
+                    gid += '_' + curLevel + '_i' + index
+                  else
+                      temp = gid.split('_')
+                      temp[temp.length-1]='i' + index
+                      gid=temp.join('_')
+                else
+                  curLevel = c.indentLevel.length
+                  gid='root_'+rootFolderIncrement
+                  for num in [1..(curLevel/3)]
+                    gid += '_' + num*3
+                  gid += '_i' + index
+                for num in [0..curLevel]
+                  indentLevel += "&nbsp;"
+
+              prevFolderIndex=index
+              table += "<tr onclick=collapseRows('" + gid + "') data-id=\"collapse\" id=" + gid + " style=\"cursor:pointer;color:#777 !important\"><td>" + indentLevel + " <i class=\"fa fa-folder-o\"></i> "  + c.name + "</td><td>System Architect</td><td>50 / 150</td><td class=\"spira_td_25\">0%</td></tr>"
+            else
+              table += "<tr id=" + gid + "_index" + index + " style=\"cursor:pointer; color:#777 !important\"><td>" + indentLevel + "&nbsp;&nbsp;&nbsp; <i class=\"fa fa-file-o\"></i> " + c.name + "</td><td>System Architect</td><td>50 / 150</td><td class=\"spira_td_25\">0%</td></tr>"
+
+          $('#spiraTable').DataTable().destroy()
+          $("#spiraTableBody").html(table)
+          $("#spiraTable").dataTable({
+            "ordering": false,
+            "paging": false
+            })
         error:(data) ->
           console.log(data["trace"])
           #showError('Error on request',data)
@@ -162,6 +202,25 @@ $(document).ready ->
 @hide_spira_info = () ->
   $('#spira_full_screen_grey_layer').hide( "fold", {}, 'slow' );
   $('body').css('overflow','auto')
+
+@collapseRows = (id) ->
+  curAction = $("#"+id).data("id")
+  $('#spiraTable').find('tr').each( ->
+    rowId = $(this).attr('id')
+    if rowId is id
+      return
+    if rowId
+      if rowId.match(new RegExp("^"+id))
+        if curAction is 'collapse'
+          $(this).hide()
+        else
+          $(this).show()
+  )
+  if curAction is 'collapse'
+    $("#"+id).data("id",'expand')
+  else
+    $("#"+id).data("id",'collapse')
+
 
 @show_full_calendar = () ->
   fullSessions = []
@@ -466,7 +525,7 @@ $(document).ready ->
   pie = document.getElementById("sessionStatusChart").getContext("2d")
   pieChart = new Chart(pie).Pie(updatePieData,pie_options)
   bar = document.getElementById("sessionFolderChart").getContext("2d")
-  barChart = new Chart(bar).Bar(updateBarData,bar_options)
+  barChart = new Chart(bar).StackedBar(updateBarData,bar_options)
   legend(document.getElementById("sessionStatusLegend"), updatePieData)
 
   $('#sessionTable').DataTable().destroy()
