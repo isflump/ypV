@@ -114,6 +114,28 @@
 
   box-shadow: 2.5px 2.5px 5px #000;
 }
+.detail_exec_time_block_bottom{
+  position:fixed;
+  width:225px;
+  left:50px;
+  padding:7.5px 0px 7.5px 0px;
+  background:#151A1E;
+  border-radius:5px;
+
+  box-shadow: 2.5px 2.5px 5px #000;
+}
+.detail_exec_time_block_bottom::after{
+  z-index:995;
+  content:"";
+  width: 0;
+  height: 0;
+  position:absolute;
+  margin-left:-11.5px;
+  bottom:12.5px;
+  border-top: 7.5px solid transparent;
+  border-bottom: 7.5px solid transparent;
+  border-right:12.5px solid #151A1E;
+}
 .detail_exec_time_block::after{
   z-index:995;
   content:"";

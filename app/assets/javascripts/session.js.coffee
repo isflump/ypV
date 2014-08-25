@@ -309,7 +309,15 @@ $(document).ready ->
   dismiss_detail_exec_time()
   rightPos = $('#' + id).offset().left + $('#' + id).outerWidth() + 5
   console.log $(window).scrollTop()
-  topPos = $('#' + id).offset().top +  parseInt($('#' + id).css('height')) - 21.5 - parseInt($(window).scrollTop())
+
+  if ($('#' + id).offset().top + parseInt($('#' + display_id).css('height'))) >  $(window).height()
+    topPos = $('#' + id).offset().top -  parseInt($('#' + display_id).css('height')) + 21.5 - parseInt($(window).scrollTop())
+    if $('#' + display_id).hasClass('detail_exec_time_block')
+      $('#' + display_id).removeClass('detail_exec_time_block')
+    if !$('#' + display_id).hasClass('detail_exec_time_block_bottom')
+      $('#' + display_id).addClass('detail_exec_time_block_bottom')
+  else
+    topPos = $('#' + id).offset().top +  parseInt($('#' + id).css('height')) - 21.5 - parseInt($(window).scrollTop())
   $('#' + display_id).css('top' , topPos)
   $('#' + display_id).css('left' , rightPos)
 
@@ -317,6 +325,7 @@ $(document).ready ->
 
 @dismiss_detail_exec_time = () ->
   $('.detail_exec_time_block').hide()
+  $('.detail_exec_time_block_bottom').hide()
 
 @filterBySessionLocation = (evt,isForward,removePath) ->
   table=""
