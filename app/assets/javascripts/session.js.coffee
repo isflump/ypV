@@ -73,6 +73,7 @@ $(document).ready ->
               console.log(pieChart)
               barData = {
                 labels: data['sessionLocationLabel'],
+                stacked: true,
                 datasets: [
                     {
                         label: "passed",
@@ -96,7 +97,7 @@ $(document).ready ->
                 }
 
               bar = document.getElementById("sessionFolderChart").getContext("2d")
-              barChart = new Chart(bar).Bar(barData,bar_options)
+              barChart = new Chart(bar).StackedBar(barData,bar_options)
 
 
 
