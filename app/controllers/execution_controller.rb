@@ -181,8 +181,6 @@ class ExecutionController < ApplicationController
       response =  driver.Connection_Authenticate({userName: YpV::Application::SPIRA_USER_NAME, password: YpV::Application::SPIRA_PASSWORD})
       driver.Connection_ConnectToProject({projectId: projectId}).connection_ConnectToProjectResult
       testCaseId=nil
-      puts "asdfasdf"
-      puts @execution.spira_case_id
       if !@execution.spira_case_id || @execution.spira_case_id.empty?
         if YpV::Application::SPIRA_TC_NAME_MAP[projectName].has_key?(@execution.case_name)
           testCaseId = YpV::Application::SPIRA_TC_NAME_MAP[projectName][@execution.case_name].testCaseId

@@ -108,9 +108,10 @@ class SessionController < ApplicationController
       render json: data
     end
   end
+
   def getSessionInfoById
     data = Hash.new()
-    id = params['sid']
+    id = params[:sid]
     begin
       session =  Session.find(id)
       data[:start_at] = session.start_time.split('_')[1].insert(2,':').insert(5,':')
@@ -121,6 +122,22 @@ class SessionController < ApplicationController
       data[:result_pass] = session.executions.collect{|e| e.result=~/pass/i ? 1 : 0}.sum
       data[:result_all] = session.executions.size
 
+      render json: data
+    rescue Exception => e
+      data[:error] = e.message.strip
+      data[:trace] = e.backtrace.join("<br>")
+      render json: data
+    end
+  end
+
+  def getSpiraStructure
+    data = Hash.new()
+    data[:spira_cases] = nil
+    session =  Session.find(params[:id])
+    projectName=session.project.name
+    puts projectName
+    begin
+      data[:spira_cases] = YpV::Application::SPIRA_TC_NAME_MAP[projectName] if YpV::Application::SPIRA_TC_NAME_MAP[projectName]
       render json: data
     rescue Exception => e
       data[:error] = e.message.strip

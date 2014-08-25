@@ -144,6 +144,20 @@ $(document).ready ->
 @show_spira_info = () ->
   $('body').css('overflow','hidden')
   $('#spira_full_screen_grey_layer').show( "fold", {}, 'slow' );
+  $.ajax({
+        type: "POST",
+        url: document.URL+"/getSpiraStructure",
+        data: ''
+        success:(data) ->
+          console.log(data)
+          # if data['error'] isnt null
+          #   console.log data
+          # else
+          #   console.log(data["trace"])
+        error:(data) ->
+          console.log(data["trace"])
+          #showError('Error on request',data)
+      })
 
 @hide_spira_info = () ->
   $('#spira_full_screen_grey_layer').hide( "fold", {}, 'slow' );
