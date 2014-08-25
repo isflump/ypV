@@ -81,7 +81,7 @@ $(document).ready ->
 
             ctx2 = document.getElementById("latestExecutionChart").getContext("2d")
             new Chart(ctx2).StackedBar(bar,options)
-            legend(document.getElementById("latestExecutionLegend"), bar)
+            legend(document.getElementById("latestExecutionLegend"), StackedBar)
 
           else
             console.log("Error")
@@ -95,16 +95,15 @@ $(document).ready ->
 				data: ''
 				success:(data) ->
           console.log(data)
-          console.log data
           if data['foundCase'] is false
-            $("#spiralog").html("<div class=\"spira_description\" style=\"margin-bottom:10px;margin-top:5px\">
-              <font style=\"font-size:15px;font-weight:bold;color:#bbb\">Cannot find Spira case corespond to this test</font>
+            $("#spiralog").html("<div class=\"spira_description\" >
+              <font style=\"font-size:17px; font-weight:bold;color:#ddd\">Cannot find Spira case corespond to this test:</font>
               </div>")
           else
             content = "<div class=\"spira_description\" style=\"margin-bottom:10px;margin-top:5px\">
-                  <font style=\"font-size:17px; font-weight:600;color:#ddd\">Name:</font> "+data['tcName']+"</font>  <i style=\"color:white;cursor:pointer\" class=\"fa fa-external-link\" onclick=\"window.open('" + data['tcLink'] + "','_blank')\"></i>
+                  <font style=\"font-size:17px; font-weight:bold;color:#ddd\">Name:</font> "+data['tcName']+"</font>  <i style=\"color:white;cursor:pointer\" class=\"fa fa-external-link\" onclick=\"window.open('" + data['tcLink'] + "','_blank')\"></i>
                   </div>"
-            if data['tcDescription'] is not "No Description found"
+            if data['tcDescription'].strip is not "No Description found"
               content += "<div class=\"spira_description\"><font style=\"font-size:17px; font-weight:bold;color:#ddd\">Description:</font><br><pre>"+data['tcDescription']+"</pre></font></div>"
             content += "
                   <table class=\"spira_step_table\">
