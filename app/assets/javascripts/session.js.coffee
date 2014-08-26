@@ -298,8 +298,9 @@ $(document).ready ->
           else if /ie/i.test data['device']
             $('#full_calendar_execution_info_detail_text1').attr('src' , '/assets/ie-icon.png')
           else if /samsung/i.test data['device']
-            console.log "herereeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
             $('#full_calendar_execution_info_detail_text1').attr('src' , '/assets/samsung.png')
+          else if /google/i.test data['device']
+            $('#full_calendar_execution_info_detail_text1').attr('src' , '/assets/nexus.png')
         error:(data) ->
           console.log(data["trace"])
           #showError('Error on request',data)

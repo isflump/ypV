@@ -51,7 +51,9 @@
         <div class="project_execution_time_block"><i class="fa fa-clock-o" color="#01AEF2"></i> <%=parse_date(@session.start_time)%>
           <%if @session.project.name =~ /SFDC/%>
             <i class="fa fa-external-link-square"></i> <%=@session.base_url%>
-            <%end%>
+          <%elsif @session.project.name =~ /SWAN/%>
+            <i class="fa fa-mobile"></i> <%=@session.base_url%>
+          <%end%>
         </div>
     </div>
 
@@ -68,7 +70,11 @@
           <img src='/assets/nexus.png' class='detail_execution_device' ></img>
         <% end %>
       <div class="detail_execution_env_info">
+        <%if @session.project.name =~ /SWAN/%>
+          <div class="detail_execution_text_box">Device OS: v<%=@session.browser_version%></div>
+        <%else%>
           <div class="detail_execution_text_box">Selenuim: v<%=@session.selenium_version%></div>
+        <%end%>
           <div class="detail_execution_text_box">Tlib: v<%=@session.tlib_version%></div>
       </div>
     </div>
