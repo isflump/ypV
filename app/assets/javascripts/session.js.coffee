@@ -284,6 +284,7 @@ $(document).ready ->
         url: document.URL+"/getSessionInfoById",
         data: data
         success:(data) ->
+          console.log "hereeeeeeeeeeeeeeeeee"
           console.log data
           $('#full_calendar_execution_info_detail_text2').html('<font style="color:#55DAE1;font-weight:bold">Start At:</font> ' + data['start_at'])
           $('#full_calendar_execution_info_detail_text3').html('<font style="color:#55DAE1;font-weight:bold">End At:</font> ' + data['end_at'])
@@ -296,8 +297,9 @@ $(document).ready ->
             $('#full_calendar_execution_info_detail_text1').attr('src' , '/assets/firefox-icon.png')
           else if /ie/i.test data['device']
             $('#full_calendar_execution_info_detail_text1').attr('src' , '/assets/ie-icon.png')
-          else if /android/i.test data['device']
-            $('#full_calendar_execution_info_detail_text1').attr('src' , '/assets/Android-icon.png')
+          else if /samsung/i.test data['device']
+            console.log "herereeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+            $('#full_calendar_execution_info_detail_text1').attr('src' , '/assets/samsung.png')
         error:(data) ->
           console.log(data["trace"])
           #showError('Error on request',data)

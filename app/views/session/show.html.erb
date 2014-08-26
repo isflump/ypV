@@ -62,8 +62,10 @@
           <img src='/assets/firefox-icon.png' class='detail_execution_device'></img>
         <% elsif @session.browser =~ /ie/i%>
           <img src='/assets/ie-icon.png' class='detail_execution_device'></img>
-        <% elsif @session.browser =~ /android/i%>
-          <img src='/assets/Android.png' class='detail_execution_device'></img>
+        <% elsif @session.browser =~ /samsung/i%>
+          <img src='/assets/samsung.png' class='detail_execution_device' ></img>
+        <% elsif @session.browser =~ /google/i%>
+          <img src='/assets/nexus.png' class='detail_execution_device' ></img>
         <% end %>
       <div class="detail_execution_env_info">
           <div class="detail_execution_text_box">Selenuim: v<%=@session.selenium_version%></div>

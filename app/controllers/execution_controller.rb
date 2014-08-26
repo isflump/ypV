@@ -172,7 +172,6 @@ class ExecutionController < ApplicationController
 		data = Hash.new
 		begin
       @execution = Execution.find_by(id: params[:id])
-
       projectName=@execution.session.project.name
       projectId=@execution.session.project.spira_id
       # #set up driver
@@ -182,13 +181,13 @@ class ExecutionController < ApplicationController
       driver.Connection_ConnectToProject({projectId: projectId}).connection_ConnectToProjectResult
       testCaseId=nil
       if !@execution.spira_case_id || @execution.spira_case_id.empty?
-        if YpV::Application::SPIRA_TC_NAME_MAP[projectName].has_key?(@execution.case_name)
-          testCaseId = YpV::Application::SPIRA_TC_NAME_MAP[projectName][@execution.case_name].testCaseId
+        if YpV::Application::SPIRA_TC_NAME_MAP[projectName].has_key?(@execution.case_id)
+          testCaseId = YpV::Application::SPIRA_TC_NAME_MAP[projectName][@execution.case_id].testCaseId
         end
       else
         testCaseId = @execution.spira_case_id
       end
-
+      print testCaseId
       if testCaseId
         data[:foundCase]=true
         # #get the description
@@ -203,16 +202,26 @@ class ExecutionController < ApplicationController
         if stepsInfo
            if stepsInfo.kind_of?(Array)
       		  stepsInfo.each_with_index{ |step ,index|
-        			steps << {:tsExpectedResult => "#{step.expectedResult.gsub('"','\'').gsub('<div>',"\n").gsub(/\<[^>]*>/,'').strip}" ,
-                        :tsDescription => "#{step.description.gsub('"','\'').gsub('<div>',"\n").gsub(/<[^>]*>/,'').strip}" }
+        			steps << {:tsExpectedResult => "#{step.expectedResult.gsub('"','\'').gsub('<div>',"<br>").gsub(/\<[^>]*>/,'').strip.gsub("\n",'<br>')}" ,
+                        :tsDescription => "#{step.description.gsub('"','\'').gsub('<div>',"<br>").gsub(/<[^>]*>/,'').strip.gsub("\n",'<br>')}" }
       		  }
       	   else
             tempStep = {}
-        		tempStep['tsExpectedResult'] = stepsInfo.expectedResult.gsub('"','\'').gsub('<div>',"\n").gsub(/\<[^>]*>/,'').strip
-        		tempStep['tsDescription'] = stepsInfo.description.gsub('"','\'').gsub('<div>',"\n").gsub(/<[^>]*>/,'').strip
+            if stepsInfo.expectedResult
+      		    tempStep['tsExpectedResult'] = stepsInfo.expectedResult.gsub('"','\'').gsub('<div>',"<br>").gsub(/\<[^>]*>/,'').strip.gsub("\n",'<br>')
+            else
+              tempStep['tsExpectedResult'] = "undefined"
+            end
+            if stepsInfo.description
+              puts stepsInfo
+      		    tempStep['tsDescription'] = stepsInfo.description.gsub('"','\'').gsub('<div>',"<br>").gsub(/<[^>]*>/,'').strip.gsub("\n",'<br>')
+            else
+              tempStep['tsDescription'] = "undefined"
+            end
         		steps.push tempStep
       	   end
            data['tcSteps'] = steps
+           puts data
         else
           data[:foundCase]=false
         end
