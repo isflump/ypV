@@ -184,9 +184,9 @@ $(document).ready ->
                   indentLevel += "&nbsp;"
 
               prevFolderIndex=index
-              table += "<tr onclick=collapseRows('" + gid + "') data-id=\"collapse\" id=" + gid + " style=\"cursor:pointer;color:#777 !important\"><td>" + indentLevel + " <i class=\"fa fa-folder-o\"></i> "  + c.name + "</td><td>System Architect</td><td>50 / 150</td><td class=\"spira_td_25\">0%</td></tr>"
+              table += "<tr onclick=collapseRows('" + gid + "') data-id=\"collapse\" id=" + gid + " style=\"cursor:pointer;color:#777 !important\"><td>" + indentLevel + " <i class=\"fa fa-folder-o\"></i> "  + c.name + "</td><td>"  + c.author + "</td><td>50 / 150</td><td class=\"spira_td_25\">0%</td></tr>"
             else
-              table += "<tr id=" + gid + "_index" + index + " style=\"cursor:pointer; color:#777 !important\"><td>" + indentLevel + "&nbsp;&nbsp;&nbsp; <i class=\"fa fa-file-o\"></i> " + c.name + "</td><td>System Architect</td><td>50 / 150</td><td class=\"spira_td_25\">0%</td></tr>"
+              table += "<tr id=" + gid + "_index" + index + " style=\"cursor:pointer; color:#777 !important\"><td>" + indentLevel + "&nbsp;&nbsp;&nbsp; <i class=\"fa fa-file-o\"></i> " + c.name + "</td><td>"  + c.author + "</td><td>50 / 150</td><td class=\"spira_td_25\">0%</td></tr>"
 
           $('#spiraTable').DataTable().destroy()
           $("#spiraTableBody").html(table)
@@ -233,7 +233,6 @@ $(document).ready ->
           if data['error'] isnt null
             temp_url_ary = $(location).attr('href').split('/')
             current_id = temp_url_ary[temp_url_ary.length-1]
-            console.log current_id
             for ses in data["sessions"]
               if String(ses.id) == String(current_id)
                 fullSessions.push({
@@ -284,7 +283,6 @@ $(document).ready ->
         url: document.URL+"/getSessionInfoById",
         data: data
         success:(data) ->
-          console.log "hereeeeeeeeeeeeeeeeee"
           console.log data
           $('#full_calendar_execution_info_detail_text2').html('<font style="color:#55DAE1;font-weight:bold">Start At:</font> ' + data['start_at'])
           $('#full_calendar_execution_info_detail_text3').html('<font style="color:#55DAE1;font-weight:bold">End At:</font> ' + data['end_at'])
@@ -370,7 +368,6 @@ $(document).ready ->
 @show_detail_exec_time = (id,display_id) ->
   dismiss_detail_exec_time()
   rightPos = $('#' + id).offset().left + $('#' + id).outerWidth() + 5
-  console.log $(window).scrollTop()
 
   if ($('#' + id).offset().top + parseInt($('#' + display_id).css('height'))) >  $(window).height()
     topPos = $('#' + id).offset().top -  parseInt($('#' + display_id).css('height')) + 21.5 - parseInt($(window).scrollTop())
@@ -393,6 +390,7 @@ $(document).ready ->
   table=""
   obj={}
   labels=[]
+  status=[]
   passed=[]
   failed=[]
   isTopLevel=null
@@ -442,6 +440,13 @@ $(document).ready ->
           obj[tempLoc].failed += 1
       else
         labels.push(tempLoc)
+        l = tempLoc.replace(/^test_/,"")
+        # if l.length > 20
+        # #  console.log l.substring(0, 10)
+        #   labels.push(l.substring(0, 10))
+        # else
+        #   labels.push(l)
+
         if exec.result is 'passed'
           obj[tempLoc]={passed : 1,failed : 0}
         else

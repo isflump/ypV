@@ -4,7 +4,7 @@ class SessionController < ApplicationController
     @session = Session.find_by(id: params[:id])
     #@executions = @session.executions.select(:case_id,:case_name,:scenario,:duration,:spira_case_id,:location,:result,:id)
 
-    sessions = Session.select(:start_time,:id).order('sessions.created_at ASC')
+    sessions = Session.select(:start_time,:id).where(project_id: @session.project_id).order('sessions.created_at ASC')
 
     calendarMap={}
     sessions.each_with_index{ |s,i|
@@ -149,7 +149,8 @@ class SessionController < ApplicationController
               :order => index,
               :id=> YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].testCaseId,
               :isFolder => YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].folder,
-              :indentLevel => YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].indentLevel
+              :indentLevel => YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].indentLevel,
+              :author => YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].authorName
             }
           end
         end
