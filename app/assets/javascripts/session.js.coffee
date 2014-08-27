@@ -1,14 +1,7 @@
 # Place all the behaviors and hooks related to the matching controller here.
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
-pie_options =
-{
-    segmentShowStroke : true,
-    segmentStrokeColor : "#1D2328",
-    segmentStrokeWidth : 4,
-    animationSteps : 50,
-    animationEasing : "easeOutQuart",
-}
+
 bar_options = {
   bezierCurve : false,
   scaleGridLineColor : "#444",
@@ -20,15 +13,19 @@ bar_options = {
 
 sessionDataHolder=null
 sessionShortHistoryMap=null
-pieChart=null
-barChart=null
+# pieChart=null
+# barChart=null
 pass_color="rgba(152, 198, 50,0.6)"
-pass_hightlight="rgba(126, 178, 109,0.9)"
+# pass_hightlight="rgba(126, 178, 109,0.9)"
 fail_color="rgba(206, 43, 43,0.6)"
-fail_hightlight="#df6666"
+# fail_hightlight="#df6666"
 currentPath=null
+tableOptions = {
+  "pageLength": 50
+  }
 #holds a endPoints path name that cannot click into anymore
 endPoint=[]
+
 $(document).ready ->
   if $('body').find('.tonberry').length > 0
     $.ajax({
@@ -43,64 +40,11 @@ $(document).ready ->
             for exec in sessionDataHolder
                 table += construct_table(exec)
             $('#sessionTableBody').html(table)
-            $("#sessionTable").dataTable({
-              "pageLength": 50
-              })
+            $("#sessionTable").dataTable(tableOptions)
 
             if data['error'] isnt null
-              pieData = [
-                {
-                    value:data["sessionStatusFail"],
-                    color:fail_color,
-                    highlight: fail_hightlight,
-                    label: "failed",
-                    title: "Failed"
-
-                },
-                {
-                    value: data["sessionStatusPass"],
-                    color: pass_color,
-                    highlight: pass_hightlight,
-                    label: "passed",
-                    title: "Passed"
-                }
-              ]
-
-              pie = document.getElementById("sessionStatusChart").getContext("2d")
-              pieChart = new Chart(pie).Pie(pieData,pie_options)
-              legend(document.getElementById("sessionStatusLegend"), pieData)
-
-              console.log(pieChart)
-              barData = {
-                labels: data['sessionLocationLabel'],
-                datasets: [
-                    {
-                        label: "passed",
-                        title: 'Passed'
-                        fillColor: pass_color,
-                        strokeColor: pass_color,
-                        highlightFill: pass_hightlight,
-                        highlightStroke: pass_hightlight,
-                        data: data['sessionLocationPass']
-                    },
-                    {
-                        label: "failed",
-                        title: 'Failed'
-                        fillColor: fail_color,
-                        strokeColor: fail_color,
-                        highlightFill: fail_hightlight,
-                        highlightStroke: fail_hightlight,
-                        data: data['sessionLocationFail']
-                    }
-                ]
-                }
-
-              bar = document.getElementById("sessionFolderChart").getContext("2d")
-              barChart = new Chart(bar).StackedBar(barData,bar_options)
-
-
-
-
+              #construct_pieChart('#sessionStatusChart','Overall ratio',data["sessionStatusPass"],data["sessionStatusFail"])
+              construct_combChart("#sessionFolderChart",'Overall ratio at root folder',data['sessionLocationLabel'],data['sessionLocationPass'],data['sessionLocationFail'],data["sessionStatusPass"],data["sessionStatusFail"])
 #===============reserved for spira chart==============================
               spData = {
                     labels: ["January", "February", "March", "April", "May", "June", "July","January", "February", "March"],
@@ -131,8 +75,6 @@ $(document).ready ->
                 "ordering": false,
                 "paging": false
                 })
-
-
             else
               console.log(data["trace"])
           error:(data) ->
@@ -316,44 +258,36 @@ $(document).ready ->
   $('body').css('overflow','auto')
   $("#spira_logo").show()
 
-@filterBySessionStatus = (evt) ->
-  activePoints = pieChart.getSegmentsAtEvent(evt)
-  table=""
+activePoints=null
+@filterBySessionStatus_hightChart = (status,evt)->
+  if not activePoints or activePoints isnt status.toLowerCase()
+    activePoints = status.toLowerCase()
+    table=""
 
-  for exec in sessionDataHolder
-    if exec.result is activePoints[0].label
+    for exec in sessionDataHolder
+      if exec.result is activePoints
+        if currentPath is null
+          table += construct_table(exec)
+        else
+          if exec.location.indexOf(currentPath) >= 0
+            table += construct_table(exec)
+
+    $('#sessionTable').DataTable().destroy()
+    $('#sessionTableBody').html(table)
+    $('#sessionTable').DataTable(tableOptions)
+  else
+    table=""
+    for exec in sessionDataHolder
       if currentPath is null
         table += construct_table(exec)
       else
         if exec.location.indexOf(currentPath) >= 0
           table += construct_table(exec)
 
-  $('#sessionTable').DataTable().destroy()
-  $('#sessionTableBody').html(table)
-  $('#sessionTable').DataTable()
-
-  #=================================================================================
-  if /pass/i.test(activePoints[0].label.toUpperCase())
-    $('#session_status_tag_view').html('<div id="session_status_tag" class="pass_fail_tag_container" onclick="removeSessionStatusFilter()">' + activePoints[0].label.toUpperCase() + ' <i class="fa fa-times-circle"></i></div>')
-  else
-    $('#session_status_tag_view').html('<div id="session_status_tag" class="pass_fail_tag_container fail" onclick="removeSessionStatusFilter()">' + activePoints[0].label.toUpperCase() + ' <i class="fa fa-times-circle"></i></div>')
-  $('#session_status_tag').width($('#session_status_tag').width())
-  $('#session_status_tag').show("drop", { direction: "right" },600)
-
-@removeSessionStatusFilter = () ->
-  table=""
-  for exec in sessionDataHolder
-    if currentPath is null
-      table += construct_table(exec)
-    else
-      if exec.location.indexOf(currentPath) >= 0
-        table += construct_table(exec)
-
-  $('#sessionTable').DataTable().destroy()
-  $('#sessionTableBody').html(table)
-  $('#sessionTable').DataTable()
-
-  $('#session_status_tag_view').html("")
+    $('#sessionTable').DataTable().destroy()
+    $('#sessionTableBody').html(table)
+    $('#sessionTable').DataTable(tableOptions)
+    activePoints = null
 
 @highlight_path_tag = (tag) ->
   path_tag = $(tag)
@@ -386,7 +320,7 @@ $(document).ready ->
   $('.detail_exec_time_block').hide()
   $('.detail_exec_time_block_bottom').hide()
 
-@filterBySessionLocation = (evt,isForward,removePath) ->
+@filterBySessionLocation_highchart = (chart,isForward,removePath) ->
   table=""
   obj={}
   labels=[]
@@ -394,10 +328,9 @@ $(document).ready ->
   passed=[]
   failed=[]
   isTopLevel=null
-  statusFilter = $('#session_status_tag').text()
 
   if isForward
-    path=barChart.getBarsAtEvent(evt)[0].label
+    path=chart.category
     if endPoint.indexOf(currentPath + "\\" + path) isnt -1
       return
     if currentPath
@@ -441,41 +374,35 @@ $(document).ready ->
       else
         labels.push(tempLoc)
         l = tempLoc.replace(/^test_/,"")
-        # if l.length > 20
-        # #  console.log l.substring(0, 10)
-        #   labels.push(l.substring(0, 10))
-        # else
-        #   labels.push(l)
 
         if exec.result is 'passed'
           obj[tempLoc]={passed : 1,failed : 0}
         else
           obj[tempLoc]={passed : 0,failed : 1}
 
-      if statusFilter.length isnt 0
-        if exec.result is statusFilter.toLowerCase()
-          table += construct_table(exec)
-      else
-        table += construct_table(exec)
+      table += construct_table(exec)
   #end of for loop
 
   if isForward
     if isTopLevel
-      $("#session_path_tag").append('<div class="path_tag" onclick="filterBySessionLocation(this,false,\''+currentPath.replace("\\"+path,"").replace("\\","_YPVREP_")+'\')" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">'+ icon + ' ' + path + '</div>')
+      $("#session_path_tag").append('<div class="path_tag" onclick="filterBySessionLocation_highchart(this,false,\''+currentPath.replace("\\"+path,"").replace("\\","_YPVREP_")+'\')" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">'+ icon + ' ' + path + '</div>')
     else
-      $("#session_path_tag").append('<div class="path_tag" onclick="filterBySessionLocation(this,false,null)" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">'+ icon + ' '+path+'</div>')
+      $("#session_path_tag").append('<div class="path_tag" onclick="filterBySessionLocation_highchart(this,false,null)" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">'+ icon + ' '+path+'</div>')
+    title = 'Result at path' + currentPath
   else
     tempCurrentPath=null
     if currentPath
       for p in currentPath.split("\\")
         if tempCurrentPath
-          $("#session_path_tag").append('<div class="path_tag" onclick="filterBySessionLocation(this,false,\''+tempCurrentPath+'\')" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)"'+ icon + ' '+p+'</div>')
+          $("#session_path_tag").append('<div class="path_tag" onclick="filterBySessionLocation_highchart(this,false,\''+tempCurrentPath+'\')" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)"'+ icon + ' '+p+'</div>')
           tempCurrentPath += "_YPVREP_" + p
         else
-          $("#session_path_tag").html('<div class="path_tag" onclick="filterBySessionLocation(this,false,null)" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">'+ icon + ' '+p+'</div>')
+          $("#session_path_tag").html('<div class="path_tag" onclick="filterBySessionLocation_highchart(this,false,null)" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">'+ icon + ' '+p+'</div>')
           tempCurrentPath = p
+      title = 'Result at path ' + currentPath
     else
       $("#session_path_tag").html("")
+      title = 'Overall result at root folder'
 
   for l in labels
     passed.push(obj[l].passed)
@@ -486,59 +413,11 @@ $(document).ready ->
   failSum = failed.reduce((a, b) ->
     a + b)
 
-  updatePieData = [
-    {
-        value:failSum,
-        color:fail_color,
-        highlight: fail_hightlight,
-        label: "failed",
-        title: "Failed"
-
-    },
-    {
-        value: passSum,
-        color: pass_color,
-        highlight: pass_hightlight,
-        label: "passed",
-        title: "Passed"
-    }
-  ]
-
-  updateBarData = {
-    labels: labels,
-    datasets: [
-        {
-            label: "passed",
-            title: 'Passed'
-            fillColor: pass_color,
-            strokeColor: pass_color,
-            highlightFill: pass_hightlight,
-            highlightStroke: pass_hightlight,
-            data: passed
-        },
-        {
-            label: "failed",
-            title: 'Failed'
-            fillColor: fail_color,
-            strokeColor: fail_color,
-            highlightFill: fail_hightlight,
-            highlightStroke: fail_hightlight,
-            data: failed
-        }
-    ]
-    }
-  $("#sessionGraph").html("<canvas id=\"sessionStatusChart\" height=\"255px\" width=\"350px\" onclick=\"filterBySessionStatus(event)\"></canvas><canvas id=\"sessionFolderChart\" height=\"255px\" width=\"550px\"
-  onclick=\"filterBySessionLocation(event,true,'')\"></canvas><div id=\"sessionStatusLegend\" style=\"width:850px\"></div>")
-
-  pie = document.getElementById("sessionStatusChart").getContext("2d")
-  pieChart = new Chart(pie).Pie(updatePieData,pie_options)
-  bar = document.getElementById("sessionFolderChart").getContext("2d")
-  barChart = new Chart(bar).StackedBar(updateBarData,bar_options)
-  legend(document.getElementById("sessionStatusLegend"), updatePieData)
-
+  # construct_pieChart('#sessionStatusChart', title_pie ,passSum,failSum)
+  construct_combChart("#sessionFolderChart",title,labels,passed,failed,passSum,failSum)
   $('#sessionTable').DataTable().destroy()
   $('#sessionTableBody').html(table)
-  $('#sessionTable').DataTable()
+  $('#sessionTable').DataTable(tableOptions)
 
 pre_hightLight=null
 pre_hightLightColor=null
@@ -564,6 +443,120 @@ pre_hightLightColor=null
   if not isViewed
     $("#"+row_id).css('color','#666')
     pre_hightLightColor = $("#"+row_id).css("color")
+
+# construct_pieChart = (chartID, title, dataPass,dataFail) ->
+#   $(chartID).highcharts({
+#       chart:
+#           plotShadow: false
+#           width: 350
+#           height: 355
+#           backgroundColor: "transparent"
+#           style:
+#             fontFamily: 'monospace'
+#             color:"#aaa"
+#       colors: [pass_color, fail_color]
+#       title:
+#           text: title
+#       tooltip:
+#           pointFormat: '{point.percentage:.0f}%</b>'
+#       plotOptions:
+#           pie:
+#               allowPointSelect: true,
+#               cursor: 'pointer',
+#               dataLabels:
+#                 enabled: false
+#               showInLegend: true
+#
+#       series: [{
+#           type: 'pie'
+#           name: 'Pass/Fail Ratio'
+#           data: [
+#               ['Passed',   dataPass],
+#               ['Failed',   dataFail]
+#           ]
+#           point:
+#             events:
+#               click: (event) ->
+#                 filterBySessionStatus_hightChart(this,event)
+#       }]
+#     })
+construct_combChart = (chartID,title,label,dataPass,dataFail,dataPiePass,dataPieFail) ->
+  $(chartID).highcharts({
+    chart:
+        type: 'column'
+        width: 900
+        height: 355
+        backgroundColor: "transparent"
+    title:
+        text: title
+    xAxis:
+        categories: label
+        labels:
+          formatter: () ->
+              text = this.value
+              if text.replace(/^test_/,"").length > 15
+                formatted = text.replace(/^test_/,"").substring(0, 15) + '...'
+              else
+                formatted = text.replace(/^test_/,"")
+              return '<div class="js-ellipse" style="overflow:hidden" title="' + text + '">' + formatted + '</div>';
+          useHTML: true
+    yAxis:
+        min: 0,
+        title: {
+            text: ''
+        },
+        stackLabels: {
+            enabled: true,
+            style: {
+                fontWeight: 'bold',
+                color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+            }
+        }
+    colors: [pass_color, fail_color]
+    plotOptions:
+        pie:
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels:
+              enabled: false
+        column:
+            stacking: 'normal',
+            point:
+              events:
+                click: (evt) ->
+                  filterBySessionLocation_highchart(this,true,'NONE')
+            events:
+              legendItemClick: () ->
+                if this.name is 'Passed'
+                  filterBySessionStatus_hightChart('Failed',event)
+                else
+                  filterBySessionStatus_hightChart('Passed',event)
+    series: [{
+        type: 'column'
+        name: 'Passed'
+        data: dataPass
+    }, {
+        type: 'column'
+        name: 'Failed'
+        data: dataFail
+    }, {
+        type: 'pie'
+        name: 'Pass/Fail Ratio'
+        data: [{
+            name: 'Passed'
+            y: dataPiePass
+        }, {
+            name: 'Failed'
+            y: dataPieFail
+        }]
+        center: [800, 30]
+        size: 80
+        # point:
+        #   events:
+        #     click: (event) ->
+        #       filterBySessionStatus_hightChart(this,event)
+    }]
+  })
 
 construct_table = (exec) ->
   temp = ""
