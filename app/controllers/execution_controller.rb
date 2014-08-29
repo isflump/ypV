@@ -7,7 +7,7 @@ class ExecutionController < ApplicationController
     @execution = Execution.find_by(id: params[:id])
     @sshots = @execution.screenshots
 
-    executions = Execution.select(:created_at,:id,:result).where(case_name: @execution.case_name).order('executions.created_at ASC')
+    executions = Execution.select(:created_at,:id,:result,:session_id).where(case_name: @execution.case_name).order('executions.created_at ASC')
     calendarMap={}
     executions.each_with_index{ |s,i|
       if s.id == params[:id].to_i
@@ -42,7 +42,6 @@ class ExecutionController < ApplicationController
         break
       end
     }
-    puts calendarMap
     @executionHistory = {}
     calendarMap.each{|key, value|
       if @executionHistory.has_key?(Time.parse(key).month)
@@ -64,28 +63,6 @@ class ExecutionController < ApplicationController
     data = Hash.new
     @execution = Execution.find_by(id: params[:id])
     begin
-      # #We measure the interval weekly
-      # day_factor=1
-      # #construct history graph
-      # current_begining_of_week=Date.today.at_beginning_of_week
-      # time_range = (-7..-1).collect{ |i| { :start => (current_begining_of_week - day_factor * i*-1).to_s , :end => (current_begining_of_week - day_factor * (i*-1-1)).to_s } }
-      # #puts time_range
-      # #range label
-      # data[:label] = time_range.collect{|c| c[:start]}
-      #
-      # obj_arr=time_range.collect{|c|
-      #   Execution.select("case_name,result,executions.created_at").joins('JOIN sessions on executions.session_id=sessions.id').where(case_name: @execution.case_name , created_at:c[:start] .. c[:end])
-      # }
-      # value_arr = obj_arr.collect{|o| o.size }
-      # data[:executionNumber]= []
-      # value_arr.each_with_index{|a, i| data[:executionNumber] << value_arr[0..i].sum }
-      #
-      # data[:executionPassNumber]= []
-      # value_pass_var = obj_arr.collect{|o| o.size == 0 ? 0 : o.collect{|so| 1 if so.result =~ /passed/i}.sum }
-      # value_pass_var.each_with_index{|a, i| data[:executionPassNumber] << value_pass_var[0..i].sum }
-
-
-      #new alogrithm
       #overall test case run
       data[:executionNumber] = []
       data[:executionPassNumber] = []
@@ -111,6 +88,7 @@ class ExecutionController < ApplicationController
           value_arr[k.to_i-1]= arr.size
           value_pass_var[k.to_i-1] = arr.collect{|o| o.result =~ /passed/i ? 1 : 0}.sum
         }
+      #TODO: consider the case when the year changed
       end
       #delete leading 0
       start_index=0
@@ -128,7 +106,7 @@ class ExecutionController < ApplicationController
       value_pass_var.each_with_index{|a, i| data[:executionPassNumber] << value_pass_var[0..i].sum }
 
 
-      #generate bar chart
+      #generate bar chart data
       data[:lastExecutionLabel] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
       data[:lastExecutionLabel] = data[:lastExecutionLabel][0...Date.today.month]
       data[:lastExecutionPass] = [0]*Date.today.month
@@ -138,7 +116,8 @@ class ExecutionController < ApplicationController
         data[:lastExecutionPass][k.to_i-1] = arr.collect{|o| o.result =~ /passed/i ? 1 : 0}.sum
       }
 
-      #delete leading 0
+      #when it is 0, it means no cases execution found on these month
+      #delete leading 0 in the data array
       pass_start_index=0
       data[:lastExecutionPass].each_with_index{|v,i|
         if v == 0 && data[:lastExecutionPass][i+1] != 0
@@ -168,6 +147,10 @@ class ExecutionController < ApplicationController
     end
   end
 
+
+  #
+  # Post request to retreieve the data from SPIRA Soap API based on either the name or the ID of the case
+  #
   def getSpira
 		data = Hash.new
 		begin
@@ -187,7 +170,7 @@ class ExecutionController < ApplicationController
       else
         testCaseId = @execution.spira_case_id
       end
-      print testCaseId
+
       if testCaseId
         data[:foundCase]=true
         # #get the description
@@ -240,6 +223,10 @@ class ExecutionController < ApplicationController
      render text: Execution.select(:case_name).where(id: params[:id])[0].case_name
   end
 
+  #
+  # Post request to get the current execution and selected execution detail as compare execution
+  # and return to JS for comparsion rendering
+  #
   def getCompareExecution
     data = Hash.new
     begin

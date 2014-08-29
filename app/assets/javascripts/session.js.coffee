@@ -2,23 +2,11 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-bar_options = {
-  bezierCurve : false,
-  scaleGridLineColor : "#444",
-  scaleGridLineWidth : 1,
-  scaleLineColor: "rgba(240,240,240,1)",
-  scaleFontColor: "#aaa",
-  legendTemplate :"hello ooooooooooooooooo"
-  }
-
 sessionDataHolder=null
 sessionShortHistoryMap=null
-# pieChart=null
-# barChart=null
+
 pass_color="rgba(152, 198, 50,0.6)"
-# pass_hightlight="rgba(126, 178, 109,0.9)"
 fail_color="rgba(206, 43, 43,0.6)"
-# fail_hightlight="#df6666"
 currentPath=null
 tableOptions = {
   "pageLength": 50
@@ -46,30 +34,42 @@ $(document).ready ->
               #construct_pieChart('#sessionStatusChart','Overall ratio',data["sessionStatusPass"],data["sessionStatusFail"])
               construct_combChart("#sessionFolderChart",'Overall ratio at root folder',data['sessionLocationLabel'],data['sessionLocationPass'],data['sessionLocationFail'],data["sessionStatusPass"],data["sessionStatusFail"])
 #===============reserved for spira chart==============================
-              spData = {
-                    labels: ["January", "February", "March", "April", "May", "June", "July","January", "February", "March"],
-                    datasets: [
-                        {
-                            label: "My First dataset",
-                            fillColor: "rgba(220,220,220,0.5)",
-                            strokeColor: "rgba(220,220,220,0.8)",
-                            highlightFill: "rgba(220,220,220,0.75)",
-                            highlightStroke: "rgba(220,220,220,1)",
-                            data: [65, 59, 80, 81, 56, 55, 40,65, 59, 80]
-                        },
-                        {
-                            label: "My Second dataset",
-                            fillColor: "rgba(151,187,205,0.5)",
-                            strokeColor: "rgba(151,187,205,0.8)",
-                            highlightFill: "rgba(151,187,205,0.75)",
-                            highlightStroke: "rgba(151,187,205,1)",
-                            data: [28, 48, 40, 19, 86, 27, 90,28, 48, 40]
-                        }
-                    ]
-                };
-              $('#spiraChart').attr('width', $(window).width() * 0.8)
-              neC = document.getElementById("spiraChart").getContext("2d")
-              newChart = new Chart(neC).StackedBar(spData,bar_options)
+              $("#spiraChart").highcharts({
+                  chart:
+                      type: 'column'
+                      width: 1000
+                      height: 355
+                      backgroundColor: "transparent"
+                  title:
+                      text: 'Spira Coverage'
+                  xAxis:
+                      categories: ["January", "February", "March", "April", "May", "June", "July","January", "February", "March"]
+                  yAxis:
+                      min: 0,
+                      title: {
+                          text: ''
+                      },
+                      stackLabels: {
+                          enabled: true,
+                          style: {
+                              fontWeight: 'bold',
+                              color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                          }
+                      }
+                  colors: [pass_color, fail_color]
+                  plotOptions:
+                      column:
+                          stacking: 'normal',
+                  series: [{
+                        type: 'column'
+                        name: 'Passed'
+                        data: [65, 59, 80, 81, 56, 55, 40,65, 59, 80]
+                    }, {
+                        type: 'column'
+                        name: 'Failed'
+                        data: [28, 48, 40, 19, 86, 27, 90,28, 48, 40]
+                    }]
+              })
 #===============reserved for spira dataTable==============================
               sp_table = $("#spiraTable").dataTable({
                 "ordering": false,
@@ -388,7 +388,7 @@ activePoints=null
       $("#session_path_tag").append('<div class="path_tag" onclick="filterBySessionLocation_highchart(this,false,\''+currentPath.replace("\\"+path,"").replace("\\","_YPVREP_")+'\')" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">'+ icon + ' ' + path + '</div>')
     else
       $("#session_path_tag").append('<div class="path_tag" onclick="filterBySessionLocation_highchart(this,false,null)" onmouseover="highlight_path_tag(this)" onmouseout="lowlight_path_tag(this)">'+ icon + ' '+path+'</div>')
-    title = 'Result at path' + currentPath
+    title = 'Result at path ' + currentPath
   else
     tempCurrentPath=null
     if currentPath
@@ -551,10 +551,6 @@ construct_combChart = (chartID,title,label,dataPass,dataFail,dataPiePass,dataPie
         }]
         center: [800, 30]
         size: 80
-        # point:
-        #   events:
-        #     click: (event) ->
-        #       filterBySessionStatus_hightChart(this,event)
     }]
   })
 
@@ -584,7 +580,9 @@ construct_table = (exec) ->
 
   if exec.result is "passed"
     temp = temp + '<td style="color:' + pass_color + '">'+ exec.result.toUpperCase() + '</td>'
-  else
+  else if exec.result is "failed"
     temp = temp + '<td style="color:' + fail_color + '">'+ exec.result.toUpperCase() + '</td>'
+  else
+    temp = temp + '<td style="color:' + fail_color + '">ERROR</td>'
   temp = temp + '</tr>'
   return temp

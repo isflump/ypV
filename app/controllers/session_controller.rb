@@ -2,17 +2,17 @@ class SessionController < ApplicationController
 
   def show
     @session = Session.find_by(id: params[:id])
-    #@executions = @session.executions.select(:case_id,:case_name,:scenario,:duration,:spira_case_id,:location,:result,:id)
+    sessions = Session.select(:start_time,:id, :browser).where(project_id: @session.project_id).order('sessions.created_at ASC')
 
-    sessions = Session.select(:start_time,:id).where(project_id: @session.project_id).order('sessions.created_at ASC')
 
+    #this is the code to generate the side calendar candidate
+    #we will only display 7 days of executions from today.
     calendarMap={}
     sessions.each_with_index{ |s,i|
       if s.id == params[:id].to_i
         calendarMap[s.start_time.gsub(/_.*/,"")] = [s]
 
-        start_subindex=i
-        end_subindex=i
+        start_subindex=end_subindex=i
         while calendarMap.keys.size < 7
           break if (start_subindex < 0 && end_subindex >= sessions.size)
           if start_subindex == 0
@@ -40,8 +40,7 @@ class SessionController < ApplicationController
         break
       end
     }
-    puts calendarMap
-    puts "#########################"
+
     @sessionHistory = {}
     calendarMap.each{|key, value|
       if @sessionHistory.has_key?(Time.parse(key).month)
@@ -50,7 +49,6 @@ class SessionController < ApplicationController
         @sessionHistory[Time.parse(key).month] = {Time.parse(key).day => value}
       end
     }
-    puts @sessionHistory
   end
 
 
