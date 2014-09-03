@@ -90,44 +90,55 @@ $(document).ready ->
         data: ''
         success:(data) ->
           console.log(data)
-          table=""
-          curLevel=null
-          indentLevel=""
-          rootFolderIncrement = 0
-          prevFolderIndex=null
-          gid=null
+          spira_table = []
           isSameLevelFodler=false
-          for c, index in data['spira_cases']
+          status_collector = {}
+          case_collector = {}
+          curLevel = 0
+          for c, index in data['spira_cases'].reverse()
+            indentLevel = ''
+            indentLevel = c.indentLevel.length
+            indent = ''
+            #add indentation based on provided indent
+            for i  in [1..c.indentLevel.length / 3]
+              indent += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+            curLevel = c.indentLevel.length
+            #if folder
             if c.isFolder is "true"
-              #when it is 3 it means the first level
-              indentLevel=""
-              if c.indentLevel.length is 3
-                rootFolderIncrement+=1
-                curLevel = c.indentLevel.length
-                gid = 'root_'+rootFolderIncrement+'_'+curLevel
+              #get total case from the child level
+              totalCase = if case_collector[(curLevel + 3)] isnt undefined then case_collector[(curLevel + 3)] else 0
+              #get the automate case from the child level
+              autoCase = if status_collector[(curLevel + 3)] isnt undefined then  status_collector[(curLevel + 3)] else 0
+              #clear child level
+              case_collector[(curLevel + 3)] = 0
+              status_collector[(curLevel + 3)] = 0
+              #inherit data to the current level
+              if case_collector[curLevel] isnt undefined then case_collector[curLevel] += totalCase else case_collector[curLevel] = totalCase
+              if status_collector[curLevel] isnt undefined then status_collector[curLevel] += autoCase else status_collector[curLevel] = autoCase
+              percentage = if totalCase != 0 then parseInt(autoCase * 100 / totalCase ) else 0
+              if percentage > 75
+                tr_class = 'spira_td_100'
+              else if percentage > 50
+                tr_class = 'spira_td_75'
+              else if percentage > 25
+                tr_class = 'spira_td_50'
               else
-                if curLevel <= c.indentLevel.length
-                  if curLevel < c.indentLevel.length
-                    curLevel = c.indentLevel.length
-                    gid += '_' + curLevel + '_i' + index
-                  else
-                      temp = gid.split('_')
-                      temp[temp.length-1]='i' + index
-                      gid=temp.join('_')
-                else
-                  curLevel = c.indentLevel.length
-                  gid='root_'+rootFolderIncrement
-                  for num in [1..(curLevel/3)]
-                    gid += '_' + num*3
-                  gid += '_i' + index
-                for num in [0..curLevel]
-                  indentLevel += "&nbsp;"
-
-              prevFolderIndex=index
-              table += "<tr onclick=collapseRows('" + gid + "') data-id=\"collapse\" id=" + gid + " style=\"cursor:pointer;color:#777 !important\"><td>" + indentLevel + " <i class=\"fa fa-folder-open-o\"></i> "  + c.name + "</td><td>"  + c.author + "</td><td>50 / 150</td><td class=\"spira_td_25\">0%</td></tr>"
+                tr_class = 'spira_td_25'
+              spira_table.push "<tr onclick=collapseRows('') data-id=\"collapse\"  class=" + tr_class + " style=\"cursor:pointer;\"><td>" + indent + " <i class=\"fa fa-folder-open-o\"></i> "  + c.name + "</td><td>"  + c.author + "</td><td>" + autoCase + " / " + totalCase + "</td><td>" + percentage + "%</td></tr>"
+            #if test case
             else
-              table += "<tr id=" + gid + "_index" + index + " style=\"cursor:pointer; color:#777 !important\"><td>" + indentLevel + "&nbsp;&nbsp;&nbsp; <i class=\"fa fa-file-o\"></i> " + c.name + "</td><td>"  + c.author + "</td><td>50 / 150</td><td class=\"spira_td_25\">0%</td></tr>"
-          $("#spiraTableBody").html(table)
+              #add 1 to case collector
+              if case_collector[curLevel] isnt undefined then case_collector[curLevel] += 1 else case_collector[curLevel] = 1
+              # if test case has a run in the session
+              if c.name in test_case_ids
+                #add 1 to status collector
+                if status_collector[curLevel] isnt undefined then status_collector[curLevel] += 1 else status_collector[curLevel] = 1
+                spira_table.push "<tr class=\"spira_td_100\" style=\"cursor:pointer;\"><td>" + indent + " <i class=\"fa fa-file-o\"></i> " + c.name + "</td><td>"  + c.author + "</td><td>1 / 1</td><td >100%</td></tr>"
+              else
+                spira_table.push "<tr style=\"cursor:pointer; color:#777 !important\"><td>" + indent + " <i class=\"fa fa-file-o\"></i> " + c.name + "</td><td>"  + c.author + "</td><td>0 / 1</td><td class=\"spira_td_25\">0%</td></tr>"
+
+          $('#spiraTable').DataTable().destroy()
+          $("#spiraTableBody").html(spira_table.reverse().join())
           $("#spiraTable").dataTable({
             "ordering": false,
             "stripeClasses": [],
