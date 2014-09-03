@@ -13,7 +13,8 @@ tableOptions = {
   }
 #holds a endPoints path name that cannot click into anymore
 endPoint=[]
-
+#holds all test case names
+test_case_ids = []
 $(document).ready ->
   if $('body').find('.tonberry').length > 0
     $.ajax({
@@ -23,6 +24,8 @@ $(document).ready ->
           success:(data) ->
             console.log(data)
             sessionDataHolder=data["executions"]
+            for ele  in sessionDataHolder
+              test_case_ids.push ele['case_id']
             sessionShortHistoryMap=data["shortHistoryMap"]
             table=""
             for exec in sessionDataHolder
@@ -70,11 +73,6 @@ $(document).ready ->
                         data: [28, 48, 40, 19, 86, 27, 90,28, 48, 40]
                     }]
               })
-#===============reserved for spira dataTable==============================
-              sp_table = $("#spiraTable").dataTable({
-                "ordering": false,
-                "paging": false
-                })
             else
               console.log(data["trace"])
           error:(data) ->
@@ -126,14 +124,13 @@ $(document).ready ->
                   indentLevel += "&nbsp;"
 
               prevFolderIndex=index
-              table += "<tr onclick=collapseRows('" + gid + "') data-id=\"collapse\" id=" + gid + " style=\"cursor:pointer;color:#777 !important\"><td>" + indentLevel + " <i class=\"fa fa-folder-o\"></i> "  + c.name + "</td><td>"  + c.author + "</td><td>50 / 150</td><td class=\"spira_td_25\">0%</td></tr>"
+              table += "<tr onclick=collapseRows('" + gid + "') data-id=\"collapse\" id=" + gid + " style=\"cursor:pointer;color:#777 !important\"><td>" + indentLevel + " <i class=\"fa fa-folder-open-o\"></i> "  + c.name + "</td><td>"  + c.author + "</td><td>50 / 150</td><td class=\"spira_td_25\">0%</td></tr>"
             else
               table += "<tr id=" + gid + "_index" + index + " style=\"cursor:pointer; color:#777 !important\"><td>" + indentLevel + "&nbsp;&nbsp;&nbsp; <i class=\"fa fa-file-o\"></i> " + c.name + "</td><td>"  + c.author + "</td><td>50 / 150</td><td class=\"spira_td_25\">0%</td></tr>"
-
-          $('#spiraTable').DataTable().destroy()
           $("#spiraTableBody").html(table)
           $("#spiraTable").dataTable({
             "ordering": false,
+            "stripeClasses": [],
             "paging": false
             })
         error:(data) ->

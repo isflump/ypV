@@ -135,13 +135,25 @@ class SessionController < ApplicationController
     projectName=session.project.name
     begin
       if YpV::Application::SPIRA_TC_NAME_MAP[projectName]
-        isInclude=false
-        YpV::Application::SPIRA_TC_NAME_MAP[projectName].keys.each_with_index do |key, index|
-          if YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].name == "_Sales Force"
-            isInclude=true
+        if YpV::Application::SPIRA_TC_NAME_MAP[projectName] == 'SFDC'
+          isInclude=false
+          YpV::Application::SPIRA_TC_NAME_MAP[projectName].keys.each_with_index do |key, index|
+            if YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].name == "_Sales Force"
+              isInclude=true
+            end
+            if isInclude
+              data[:spira_cases] << {
+                :name => key,
+                :order => index,
+                :id=> YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].testCaseId,
+                :isFolder => YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].folder,
+                :indentLevel => YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].indentLevel,
+                :author => YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].authorName
+              }
+            end
           end
-
-          if isInclude
+        else
+          YpV::Application::SPIRA_TC_NAME_MAP[projectName].keys.each_with_index do |key, index|
             data[:spira_cases] << {
               :name => key,
               :order => index,
@@ -155,6 +167,7 @@ class SessionController < ApplicationController
       end
       render json: data
     rescue Exception => e
+      puts e
       data[:error] = e.message.strip
       data[:trace] = e.backtrace.join("<br>")
       render json: data
