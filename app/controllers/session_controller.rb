@@ -135,12 +135,12 @@ class SessionController < ApplicationController
     projectName=session.project.name
     begin
       if YpV::Application::SPIRA_TC_NAME_MAP[projectName]
-        if YpV::Application::SPIRA_TC_NAME_MAP[projectName] == 'SFDC'
+        if projectName == 'SFDC'
           isInclude=false
           YpV::Application::SPIRA_TC_NAME_MAP[projectName].keys.each_with_index do |key, index|
-            if YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].name == "_Sales Force"
-              isInclude=true
-            end
+            isInclude=true if YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].name == "_Sales Force"
+            break if YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].name == "Z_TO_DELETE"
+
             if isInclude
               data[:spira_cases] << {
                 :name => key,

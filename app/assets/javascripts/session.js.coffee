@@ -124,7 +124,7 @@ $(document).ready ->
                 tr_class = 'spira_td_50'
               else
                 tr_class = 'spira_td_25'
-              spira_table.push "<tr onclick=collapseRows('') data-id=\"collapse\"  class=" + tr_class + " style=\"cursor:pointer;\"><td>" + indent + " <i class=\"fa fa-folder-open-o\"></i> "  + c.name + "</td><td>"  + c.author + "</td><td>" + autoCase + " / " + totalCase + "</td><td>" + percentage + "%</td></tr>"
+              spira_table.push "<tr id=" + index + " onclick=collapseRows(" + index + ") data-parent='None' data-id=\"collapse\"  class=" + tr_class + " style=\"cursor:pointer;\"><td style='width:700px'>" + indent + " <i id=\"icon_" + index + "\" class=\"fa fa-folder-open-o\"></i> "  + c.name + "</td><td>"  + c.author + "</td><td>" + autoCase + " / " + totalCase + "</td><td>" + percentage + "%</td></tr>"
             #if test case
             else
               #add 1 to case collector
@@ -133,9 +133,9 @@ $(document).ready ->
               if c.name in test_case_ids
                 #add 1 to status collector
                 if status_collector[curLevel] isnt undefined then status_collector[curLevel] += 1 else status_collector[curLevel] = 1
-                spira_table.push "<tr class=\"spira_td_100\" style=\"cursor:pointer;\"><td>" + indent + " <i class=\"fa fa-file-o\"></i> " + c.name + "</td><td>"  + c.author + "</td><td>1 / 1</td><td >100%</td></tr>"
+                spira_table.push "<tr id=" + index + " data-parent=\"None\" class=\"spira_td_100\" style=\"cursor:pointer;\"><td>" + indent + " <i class=\"fa fa-file-o\"></i> " + c.name + "</td><td>"  + c.author + "</td><td>1 / 1</td><td >100%</td></tr>"
               else
-                spira_table.push "<tr style=\"cursor:pointer; color:#777 !important\"><td>" + indent + " <i class=\"fa fa-file-o\"></i> " + c.name + "</td><td>"  + c.author + "</td><td>0 / 1</td><td class=\"spira_td_25\">0%</td></tr>"
+                spira_table.push "<tr id=" + index + " data-parent=\"None\" style=\"cursor:pointer; color:#777 !important\"><td>" + indent + " <i class=\"fa fa-file-o\"></i> " + c.name + "</td><td>"  + c.author + "</td><td>0 / 1</td><td class=\"spira_td_25\">0%</td></tr>"
 
           $('#spiraTable').DataTable().destroy()
           $("#spiraTableBody").html(spira_table.reverse().join())
@@ -155,22 +155,29 @@ $(document).ready ->
 
 @collapseRows = (id) ->
   curAction = $("#"+id).data("id")
-  $('#spiraTable').find('tr').each( ->
-    rowId = $(this).attr('id')
-    if rowId is id
-      return
-    if rowId
-      if rowId.match(new RegExp("^"+id))
-        if curAction is 'collapse'
-          $(this).hide()
-        else
-          $(this).show()
-  )
+  baseLength = $("#"+id).find("td")[0].innerHTML.match(/&nbsp;/g).length
+
+  for row in $("#"+id).nextAll()
+    if $("#"+row.id).find("td")[0].innerHTML.match(/&nbsp;/g).length > baseLength
+      if curAction is 'collapse'
+        if $("#"+row.id).data("parent") is "None"
+          $("#"+row.id).data("parent",id)
+          $("#"+row.id).hide()
+      else
+        if $("#"+row.id).css("display") is "none" and $("#"+row.id).data("parent") is id
+          $("#"+row.id).show()
+          $("#"+row.id).data("parent",'None')
+    else
+      break
+
   if curAction is 'collapse'
     $("#"+id).data("id",'expand')
+    $("#icon_"+id).removeClass("fa-folder-open-o")
+    $("#icon_"+id).addClass("fa-folder-o")
   else
     $("#"+id).data("id",'collapse')
-
+    $("#icon_"+id).removeClass("fa-folder-o")
+    $("#icon_"+id).addClass("fa-folder-open-o")
 
 @show_full_calendar = () ->
   fullSessions = []

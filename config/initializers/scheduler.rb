@@ -37,5 +37,5 @@ refresh_spira_object()
 
 scheduler.cron '0 * * * *' do
   puts "Refresh Spira Cases at #{Time.now}"
-  refresh_spira_object
+  refresh_spira_object()
 end
