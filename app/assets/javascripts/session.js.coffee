@@ -46,11 +46,14 @@ $(document).ready ->
 
             #showError('Error on request',data)
         })
+    render_spira_info()
 
 
 @show_spira_info = () ->
   $('body').css('overflow','hidden')
   $('#spira_full_screen_grey_layer').show( "fold", {}, 'slow' );
+
+@render_spira_info = () ->
   $.ajax({
         type: "POST",
         url: document.URL+"/getSpiraStructure",
@@ -115,7 +118,6 @@ $(document).ready ->
               else
                 spira_table.push "<tr id=" + index + " data-parent=\"None\" style=\"cursor:pointer; color:#777 !important\"><td>" + indent + " <i class=\"fa fa-file-o\"></i> " + c.name + "</td><td>"  + c.author + "</td><td>0 / 1</td><td class=\"spira_td_25\">0%</td></tr>"
 
-          $('#spiraTable').DataTable().destroy()
           $("#spiraTableBody").html(spira_table.reverse().join())
           $("#spiraTable").dataTable({
             "ordering": false,
