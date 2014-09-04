@@ -162,10 +162,12 @@ $(document).ready ->
                     type: 'column'
                     name: 'Manual'
                     data: nAutoCase_data
+                    borderColor: '#aaa'
                 },{
                     type: 'column'
                     name: 'Automated'
                     data: autoCase_data
+                    borderColor: '#aaa'
                 }]
           })
         error:(data) ->
