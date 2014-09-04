@@ -7,6 +7,8 @@ sessionShortHistoryMap=null
 
 pass_color="rgba(152, 198, 50,0.6)"
 fail_color="rgba(206, 43, 43,0.6)"
+spira_auto_color="rgba(0, 173, 243,0.85)"
+spira_manual_color="rgba(37, 37, 48,0.5)"
 currentPath=null
 tableOptions = {
   "pageLength": 50
@@ -15,6 +17,7 @@ tableOptions = {
 endPoint=[]
 #holds all test case names
 test_case_ids = []
+
 $(document).ready ->
   if $('body').find('.tonberry').length > 0
     $.ajax({
@@ -36,43 +39,6 @@ $(document).ready ->
             if data['error'] isnt null
               #construct_pieChart('#sessionStatusChart','Overall ratio',data["sessionStatusPass"],data["sessionStatusFail"])
               construct_combChart("#sessionFolderChart",'Overall ratio at root folder',data['sessionLocationLabel'],data['sessionLocationPass'],data['sessionLocationFail'],data["sessionStatusPass"],data["sessionStatusFail"])
-#===============reserved for spira chart==============================
-              $("#spiraChart").highcharts({
-                  chart:
-                      type: 'column'
-                      width: 1000
-                      height: 355
-                      backgroundColor: "transparent"
-                  title:
-                      text: 'Spira Coverage'
-                  xAxis:
-                      categories: ["January", "February", "March", "April", "May", "June", "July","January", "February", "March"]
-                  yAxis:
-                      min: 0,
-                      title: {
-                          text: ''
-                      },
-                      stackLabels: {
-                          enabled: true,
-                          style: {
-                              fontWeight: 'bold',
-                              color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                          }
-                      }
-                  colors: [pass_color, fail_color]
-                  plotOptions:
-                      column:
-                          stacking: 'normal',
-                  series: [{
-                        type: 'column'
-                        name: 'Passed'
-                        data: [65, 59, 80, 81, 56, 55, 40,65, 59, 80]
-                    }, {
-                        type: 'column'
-                        name: 'Failed'
-                        data: [28, 48, 40, 19, 86, 27, 90,28, 48, 40]
-                    }]
-              })
             else
               console.log(data["trace"])
           error:(data) ->
@@ -80,6 +46,7 @@ $(document).ready ->
 
             #showError('Error on request',data)
         })
+
 
 @show_spira_info = () ->
   $('body').css('overflow','hidden')
@@ -95,6 +62,7 @@ $(document).ready ->
           status_collector = {}
           case_collector = {}
           curLevel = 0
+          folder_collector ={}
           for c, index in data['spira_cases'].reverse()
             indentLevel = ''
             indentLevel = c.indentLevel.length
@@ -125,6 +93,16 @@ $(document).ready ->
               else
                 tr_class = 'spira_td_25'
               spira_table.push "<tr id=" + index + " onclick=collapseRows(" + index + ") data-parent='None' data-id=\"collapse\"  class=" + tr_class + " style=\"cursor:pointer;\"><td style='width:700px'>" + indent + " <i id=\"icon_" + index + "\" class=\"fa fa-folder-open-o\"></i> "  + c.name + "</td><td>"  + c.author + "</td><td>" + autoCase + " / " + totalCase + "</td><td>" + percentage + "%</td></tr>"
+              #===============================build hash session========================================
+              temp = {}
+              if folder_collector[(curLevel + 3)] isnt undefined and folder_collector[(curLevel + 3)].length > 0
+                temp[c.name] = {"automated":autoCase,"total": totalCase,"sub_folders": folder_collector[(curLevel + 3)]}
+                if folder_collector[curLevel] isnt undefined then folder_collector[curLevel].push temp else folder_collector[curLevel] = [temp]
+                folder_collector[(curLevel + 3)] = []
+              else
+                temp[c.name] = {"automated":autoCase,"total": totalCase,"sub_folders": []}
+                if folder_collector[curLevel] isnt undefined then folder_collector[curLevel].push temp else folder_collector[curLevel] = [temp]
+              #=========================================================================================
             #if test case
             else
               #add 1 to case collector
@@ -144,6 +122,52 @@ $(document).ready ->
             "stripeClasses": [],
             "paging": false
             })
+          #===============reserved for spira chart==============================
+          category_data = []
+          autoCase_data = []
+          nAutoCase_data = []
+          console.log folder_collector
+          for f in folder_collector[3].reverse()
+            category_data.push Object.keys(f)[0]
+            autoCase_data.push f[Object.keys(f)[0]]["automated"]
+            nAutoCase_data.push f[Object.keys(f)[0]]["total"] - f[Object.keys(f)[0]]["automated"]
+          $("#spiraChart").highcharts({
+              chart:
+                  type: 'column'
+                  width: 1000
+                  height: 355
+                  backgroundColor: "transparent"
+              title:
+                  text: 'Spira Coverage'
+              xAxis:
+                  categories: category_data
+              yAxis:
+                  min: 0,
+                  title: {
+                      text: ''
+                  },
+                  stackLabels: {
+                      enabled: true,
+                      style: {
+                          fontWeight: 'bold',
+                          color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                      }
+                  }
+              colors: [spira_manual_color, spira_auto_color]
+              plotOptions:
+                  column:
+                      stacking: 'normal',
+              series: [
+                {
+                    type: 'column'
+                    name: 'Manual'
+                    data: nAutoCase_data
+                },{
+                    type: 'column'
+                    name: 'Automated'
+                    data: autoCase_data
+                }]
+          })
         error:(data) ->
           console.log(data["trace"])
           #showError('Error on request',data)
