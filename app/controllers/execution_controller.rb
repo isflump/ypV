@@ -63,81 +63,130 @@ class ExecutionController < ApplicationController
     data = Hash.new
     @execution = Execution.find_by(id: params[:id])
     begin
+
       #overall test case run
-      data[:executionNumber] = []
-      data[:executionPassNumber] = []
+      # data[:executionNumber] = []
+      # data[:executionPassNumber] = []
       map={}
-      obj_arr=Execution.select("case_name,result,executions.created_at").joins('JOIN sessions on executions.session_id=sessions.id').where(case_name: @execution.case_name).order( 'executions.created_at ASC' )
+      obj_arr=Execution.select("executions.id,case_name,result,executions.created_at").joins('JOIN sessions on executions.session_id=sessions.id').where(case_name: @execution.case_name).order( 'executions.created_at ASC' )
+
+      #just a test area to rewrite the graph rendering alogrithm
+      data[:exePassNumber] = []
+      data[:exeFailNumber] = []
+      data[:weekLabel] = []
+      data[:weekData] = {}
+      start_index=1000
       obj_arr.each{|o|
+        week = Date.new(o.created_at.year,o.created_at.month,o.created_at.day).cweek
         if map[o.created_at.year.to_s]
-          if map[o.created_at.year.to_s][o.created_at.month.to_s]
-            map[o.created_at.year.to_s][o.created_at.month.to_s] << o
+          if map[o.created_at.year.to_s][week.to_s]
+            map[o.created_at.year.to_s][week.to_s] << o
           else
-            map[o.created_at.year.to_s][o.created_at.month.to_s]=[o]
+            map[o.created_at.year.to_s][week.to_s]=[o]
           end
         else
-          map[o.created_at.year.to_s]={o.created_at.month.to_s => [o]}
+          map[o.created_at.year.to_s]={week.to_s => [o]}
         end
       }
-      # it is the same year
-      if map.size == 1
-        data[:label] = (1..Date.today.month).to_a.collect{|m| map.keys[0]+"-"+m.to_s}
-        value_arr = [0]*Date.today.month
-        value_pass_var = [0]*Date.today.month
+
+      if map.size == 1 && map.keys[0] == '2014'
+        data[:weekLabel] = (1..Date.today.cweek).to_a.collect{|w| "Week_#{Date.commercial(map.keys[0].to_i,w,1).strftime("%Y-%m-%d")}" }
+        data[:exeFailNumber] = [0]*Date.today.cweek
+        data[:exePassNumber] = [0]*Date.today.cweek
+        data[:execPassRatio] = [0]*Date.today.cweek
+
         map[map.keys[0]].each{|k,arr|
-          value_arr[k.to_i-1]= arr.size
-          value_pass_var[k.to_i-1] = arr.collect{|o| o.result =~ /passed/i ? 1 : 0}.sum
+           start_index = k.to_i-1 if k.to_i < start_index
+           pass = arr.collect{|o| o.result =~ /passed/i ? 1 : 0}.sum
+           data[:execPassRatio][k.to_i-1] = ((pass.to_f/Float(arr.size))*100).round(1)
+           data[:exeFailNumber][k.to_i-1] = arr.size - pass
+           data[:exePassNumber][k.to_i-1] = pass
+           data[:weekData]["Week_#{Date.commercial(map.keys[0].to_i,k.to_i,1).strftime("%Y-%m-%d")}"]=arr
         }
-      #TODO: consider the case when the year changed
+        data[:weekLabel] = data[:weekLabel][start_index..data[:weekLabel].size-1]
+        data[:exeFailNumber] = data[:exeFailNumber][start_index..data[:exeFailNumber].size-1]
+        data[:exePassNumber] = data[:exePassNumber][start_index..data[:exePassNumber].size-1]
+        data[:execPassRatio] = data[:execPassRatio][start_index..data[:execPassRatio].size-1]
+
+        puts data[:weekLabel].inspect
+        puts data[:execPassRatio].inspect
+        puts data[:exeFailNumber].inspect
+        puts data[:exePassNumber].inspect
+        puts data[:weekData]
       end
-      #delete leading 0
-      start_index=0
-      value_arr.each_with_index{|v,i|
-        if v == 0 && value_arr[i+1] != 0
-          start_index = i
-          break
-        end
-      }
 
-      data[:label]=data[:label][start_index...data[:label].size]
-      value_arr = value_arr[start_index...value_arr.size]
-      value_pass_var = value_pass_var[start_index...value_pass_var.size]
-      value_arr.each_with_index{|a, i| data[:executionNumber] << value_arr[0..i].sum }
-      value_pass_var.each_with_index{|a, i| data[:executionPassNumber] << value_pass_var[0..i].sum }
-
-
-      #generate bar chart data
-      data[:lastExecutionLabel] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-      data[:lastExecutionLabel] = data[:lastExecutionLabel][0...Date.today.month]
-      data[:lastExecutionPass] = [0]*Date.today.month
-      data[:lastExecutionFail] = [0]*Date.today.month
-      map[Date.today.year.to_s].each{|k,arr|
-        data[:lastExecutionFail][k.to_i-1]= arr.collect{|o| o.result =~ /failed/i ? 1 : 0}.sum
-        data[:lastExecutionPass][k.to_i-1] = arr.collect{|o| o.result =~ /passed/i ? 1 : 0}.sum
-      }
-
-      #when it is 0, it means no cases execution found on these month
-      #delete leading 0 in the data array
-      pass_start_index=0
-      data[:lastExecutionPass].each_with_index{|v,i|
-        if v == 0 && data[:lastExecutionPass][i+1] != 0
-          pass_start_index = i+1
-          break
-        end
-      }
-
-      fail_start_index=0
-      data[:lastExecutionFail].each_with_index{|v,i|
-        if v == 0 && data[:lastExecutionFail][i+1] != 0
-          fail_start_index = i+1
-          break
-        end
-      }
-
-      start_index = pass_start_index > fail_start_index ? fail_start_index : pass_start_index
-      data[:lastExecutionLabel] = data[:lastExecutionLabel][start_index...data[:lastExecutionLabel].size]
-      data[:lastExecutionPass] = data[:lastExecutionPass][start_index...data[:lastExecutionPass].size]
-      data[:lastExecutionFail] = data[:lastExecutionFail][start_index...data[:lastExecutionFail].size]
+      # map={}
+      # obj_arr.each{|o|
+      #   if map[o.created_at.year.to_s]
+      #     if map[o.created_at.year.to_s][o.created_at.month.to_s]
+      #       map[o.created_at.year.to_s][o.created_at.month.to_s] << o
+      #     else
+      #       map[o.created_at.year.to_s][o.created_at.month.to_s]=[o]
+      #     end
+      #   else
+      #     map[o.created_at.year.to_s]={o.created_at.month.to_s => [o]}
+      #   end
+      # }
+      #
+      # # it is the same year
+      # if map.size == 1
+      #   data[:label] = (1..Date.today.month).to_a.collect{|m| map.keys[0]+"-"+m.to_s}
+      #   value_arr = [0]*Date.today.month
+      #   value_pass_var = [0]*Date.today.month
+      #   map[map.keys[0]].each{|k,arr|
+      #     value_arr[k.to_i-1]= arr.size
+      #     value_pass_var[k.to_i-1] = arr.collect{|o| o.result =~ /passed/i ? 1 : 0}.sum
+      #   }
+      # #TODO: consider the case when the year changed
+      # end
+      # #delete leading 0
+      # start_index=0
+      # value_arr.each_with_index{|v,i|
+      #   if v == 0 && value_arr[i+1] != 0
+      #     start_index = i
+      #     break
+      #   end
+      # }
+      #
+      # data[:label]=data[:label][start_index...data[:label].size]
+      # value_arr = value_arr[start_index...value_arr.size]
+      # value_pass_var = value_pass_var[start_index...value_pass_var.size]
+      # value_arr.each_with_index{|a, i| data[:executionNumber] << value_arr[0..i].sum }
+      # value_pass_var.each_with_index{|a, i| data[:executionPassNumber] << value_pass_var[0..i].sum }
+      #
+      #
+      # #generate bar chart data
+      # data[:lastExecutionLabel] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+      # data[:lastExecutionLabel] = data[:lastExecutionLabel][0...Date.today.month]
+      # data[:lastExecutionPass] = [0]*Date.today.month
+      # data[:lastExecutionFail] = [0]*Date.today.month
+      # map[Date.today.year.to_s].each{|k,arr|
+      #   data[:lastExecutionFail][k.to_i-1]= arr.collect{|o| o.result =~ /failed/i ? 1 : 0}.sum
+      #   data[:lastExecutionPass][k.to_i-1] = arr.collect{|o| o.result =~ /passed/i ? 1 : 0}.sum
+      # }
+      #
+      # #when it is 0, it means no cases execution found on these month
+      # #delete leading 0 in the data array
+      # pass_start_index=0
+      # data[:lastExecutionPass].each_with_index{|v,i|
+      #   if v == 0 && data[:lastExecutionPass][i+1] != 0
+      #     pass_start_index = i+1
+      #     break
+      #   end
+      # }
+      #
+      # fail_start_index=0
+      # data[:lastExecutionFail].each_with_index{|v,i|
+      #   if v == 0 && data[:lastExecutionFail][i+1] != 0
+      #     fail_start_index = i+1
+      #     break
+      #   end
+      # }
+      #
+      # start_index = pass_start_index > fail_start_index ? fail_start_index : pass_start_index
+      # data[:lastExecutionLabel] = data[:lastExecutionLabel][start_index...data[:lastExecutionLabel].size]
+      # data[:lastExecutionPass] = data[:lastExecutionPass][start_index...data[:lastExecutionPass].size]
+      # data[:lastExecutionFail] = data[:lastExecutionFail][start_index...data[:lastExecutionFail].size]
 
       render json: data
     rescue Exception => e

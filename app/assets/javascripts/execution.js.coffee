@@ -2,9 +2,8 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 pass_color="rgba(152, 198, 50,0.6)"
-pass_hightlight="rgba(126, 178, 109,0.9)"
 fail_color="rgba(206, 43, 43,0.6)"
-fail_hightlight="#df6666"
+weeklyDataMap = null
 pytestCurrentCase = null
 pytestSelectedCase = null
 $(document).ready ->
@@ -17,72 +16,9 @@ $(document).ready ->
         success:(data) ->
           console.log(data)
           if data['error'] isnt null
-            options = {
-              bezierCurve : false,
-              scaleGridLineColor : "#444",
-              scaleGridLineWidth : 1,
-              scaleLineColor: "rgba(240,240,240,1)",
-              scaleFontColor: "#aaa"
-              }
-            line = {
-              labels: data['label'],
-              datasets: [
-                  {
-                      title: "Accumulated"
-                      label: "Accumulated",
-                      fillColor: "rgba(220,220,220,0.2)",
-                      strokeColor: "rgba(220,220,220,1)",
-                      pointColor: "rgba(220,220,220,1)",
-                      pointStrokeColor: "#fff",
-                      pointHighlightFill: "#fff",
-                      pointHighlightStroke: "rgba(240,240,240,1)",
-                      data: data['executionNumber']
-                  },
-                  {
-                      label: "Passed",
-                      fillColor: pass_color,
-                      strokeColor: pass_color,
-                      pointColor: pass_color,
-                      pointStrokeColor: "#fff",
-                      pointHighlightFill: "#fff",
-                      pointHighlightStroke: pass_color,
-                      data: data['executionPassNumber'],
-                      title: "Passed"
-                  }
-              ]
-              }
-            ctx = document.getElementById("executionHistoryChart").getContext("2d")
-            new Chart(ctx).Line(line,options)
-            legend(document.getElementById("executionHistoryLegend"), line)
-
-            bar = {
-              labels: data['lastExecutionLabel'],
-              datasets: [
-                  {
-                      label: "pass",
-                      title: 'Passed'
-                      fillColor: pass_color,
-                      strokeColor: pass_color,
-                      highlightFill: pass_hightlight,
-                      highlightStroke: pass_hightlight,
-                      data: data['lastExecutionPass']
-                  },
-                  {
-                      label: "My Second dataset",
-                      title: 'Failed'
-                      fillColor: fail_color,
-                      strokeColor: fail_color,
-                      highlightFill: fail_hightlight,
-                      highlightStroke: fail_hightlight,
-                      data: data['lastExecutionFail']
-                  }
-              ]
-              }
-
-            ctx2 = document.getElementById("latestExecutionChart").getContext("2d")
-            new Chart(ctx2).StackedBar(bar,options)
-            legend(document.getElementById("latestExecutionLegend"), bar)
-
+            weeklyDataMap = data
+            construct_executionChart("#executionChart",'Pass Ratio Trend',data['weekLabel'],data['exePassNumber'],data['exeFailNumber'],data["execPassRatio"])
+            console.log weeklyDataMap
           else
             console.log("Error")
         error:(data) ->
@@ -94,7 +30,6 @@ $(document).ready ->
 				url: document.URL+"/getSpira",
 				data: ''
 				success:(data) ->
-          console.log(data)
           console.log data
           if data['foundCase'] is false
             $("#spiralog").html("<div class=\"spira_description\" style=\"margin-bottom:10px;margin-top:5px\">
@@ -149,22 +84,132 @@ $(document).ready ->
         readOnly: true
       });
 
+construct_executionChart = (chartID,title,label,dataPass,dataFail,dataPassRatio) ->
+  $(chartID).highcharts({
+    chart:
+        type: 'column'
+        width: 900
+        height: 355
+        backgroundColor: "transparent"
+        zoomType: 'xy'
+    title:
+        text: title
+    xAxis:
+        categories: label
+    tooltip:
+        shared: true
+        borderColor: "#CCC"
+    yAxis:[{
+              min: 0
+              max: 100
+              labels:
+                  format: '{value} %'
+              title:
+                  text: 'Pass Raito'
+            },{
+              min: 0
+              title:
+                  text: 'Number of test cases'
+              labels:
+                  format: '{value}'
+              opposite: true
+            }]
+    colors: [pass_color, fail_color]
+    plotOptions:
+        column:
+            stacking: 'normal',
+            point:
+              events:
+                click: (evt) ->
+                  filterByWeeklyExecution(this)
+    series: [{
+        type: 'column'
+        yAxis: 1
+        name: 'Pass'
+        data: dataPass
+        tooltip:
+          pointFormat: '<span style="color:green">{series.name}: {point.y}</span><br/>'
+    }, {
+        type: 'column'
+        yAxis: 1
+        name: 'Fail'
+        data: dataFail
+        tooltip:
+          pointFormat: '<span style="color:red">{series.name}: {point.y}</span><br/>'
+    },{
+        type: 'spline'
+        name: 'Pass Ratio'
+        data: dataPassRatio
+        lineColor: 'white'
+        tooltip:
+          pointFormat: '<span style="color:blue">{series.name}: {point.y:.1f}%</span><br/>'
+        marker:
+            lineWidth: 2
+            lineColor: 'white'
+            fillColor: Highcharts.getOptions().colors[2]
+    }]
+  })
 
-@legend = (parent, data) ->
-  parent.className = "legend"
-  datas = (if data.hasOwnProperty("datasets") then data.datasets else data)
 
-  # remove possible children of the parent
-  parent.removeChild parent.lastChild  while parent.hasChildNodes()
-  datas.forEach (d) ->
-    title = document.createElement("div")
-    title.className = "title"
-    title.style.borderColor = (if d.hasOwnProperty("strokeColor") then d.strokeColor else d.color)
-    title.style.borderStyle = "solid"
-    parent.appendChild title
-    text = document.createTextNode(d.title)
-    title.appendChild text
+@filterByWeeklyExecution = (evt) ->
+  if weeklyDataMap['weekData']
+    if weeklyDataMap['weekData'][evt.category]
+      label=[]
+      data=[]
+      caseName=''
+      for obj in weeklyDataMap['weekData'][evt.category]
+        temp=obj.created_at.split("T")
+        label.push(temp[0]+" "+temp[1].split(".")[0])
+        caseName=obj.case_name
+        if obj.result is "passed"
+          data.push({
+                y: 1,
+                marker: {symbol: 'url(/assets/smile.png)'}})
+        else
+          data.push({
+                y: -1,
+                marker: {symbol: 'url(/assets/bug.png)'}})
+      console.log "here"
+      plot_weeklyPassFailChart("#executionChart",label,data,caseName,evt.category)
 
+@plot_weeklyChart = () ->
+  if weeklyDataMap
+    construct_executionChart("#executionChart",'Pass Ratio Trend',weeklyDataMap['weekLabel'],weeklyDataMap['exePassNumber'],weeklyDataMap['exeFailNumber'],weeklyDataMap["execPassRatio"])
+
+@plot_weeklyPassFailChart = (chartID,label,data,caseName,weekName) ->
+  $(chartID).highcharts({
+    chart:
+        plotShadow: false
+        width: 900
+        height: 355
+        backgroundColor: "transparent"
+        style:
+          fontFamily: 'monospace'
+          color:"#aaa"
+    title:
+      text: "<div><i onclick=\"plot_weeklyChart()\" ref='tooltip' title=\"Click here to go back to overall status graph\" class=\"fa fa-chevron-circle-left graph_back\"></i> " + caseName + ' at week ' + weekName.replace("Week_","") + "</div>"
+      useHTML: true
+    xAxis:
+      categories: label
+    legend:
+      enabled:false
+    yAxis:
+      min: -2
+      max: 2
+      tickInterval: 1
+      labels:
+        enabled: false
+      title:
+        text: ''
+    series:[{
+      name: 'Week ' + weekName.replace("Week_","")
+      data: data
+      marker:
+          lineWidth: 2
+          lineColor: 'white'
+          fillColor: Highcharts.getOptions().colors[2]
+    }]
+  })
 
 @show_report_image_full_panel = () ->
   $('#background_grey_layer').show('slow')

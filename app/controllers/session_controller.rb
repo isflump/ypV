@@ -135,24 +135,6 @@ class SessionController < ApplicationController
     projectName=session.project.name
     begin
       if YpV::Application::SPIRA_TC_NAME_MAP[projectName]
-        if projectName == 'SFDC'
-          isInclude=false
-          YpV::Application::SPIRA_TC_NAME_MAP[projectName].keys.each_with_index do |key, index|
-            isInclude=true if YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].name == "_Sales Force"
-            break if YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].name == "Z_TO_DELETE"
-
-            if isInclude
-              data[:spira_cases] << {
-                :name => key,
-                :order => index,
-                :id=> YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].testCaseId,
-                :isFolder => YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].folder,
-                :indentLevel => YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].indentLevel,
-                :author => YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].authorName
-              }
-            end
-          end
-        else
           YpV::Application::SPIRA_TC_NAME_MAP[projectName].keys.each_with_index do |key, index|
             data[:spira_cases] << {
               :name => key,
@@ -163,7 +145,6 @@ class SessionController < ApplicationController
               :author => YpV::Application::SPIRA_TC_NAME_MAP[projectName][key].authorName
             }
           end
-        end
       end
       render json: data
     rescue Exception => e

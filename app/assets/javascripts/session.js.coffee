@@ -93,8 +93,10 @@ $(document).ready ->
                 tr_class = 'spira_td_75'
               else if percentage > 25
                 tr_class = 'spira_td_50'
-              else
+              else if percentage > 0
                 tr_class = 'spira_td_25'
+              else
+                tr_class = 'spira_td_0'
               spira_table.push "<tr id=" + index + " onclick=collapseRows(" + index + ") data-parent='None' data-id=\"collapse\"  class=" + tr_class + " style=\"cursor:pointer;\"><td style='width:700px'>" + indent + " <i id=\"icon_" + index + "\" class=\"fa fa-folder-open-o\"></i> "  + c.name + "</td><td>"  + c.author + "</td><td>" + autoCase + " / " + totalCase + "</td><td>" + percentage + "%</td></tr>"
               #===============================build hash session========================================
               temp = {}
@@ -116,7 +118,7 @@ $(document).ready ->
                 if status_collector[curLevel] isnt undefined then status_collector[curLevel] += 1 else status_collector[curLevel] = 1
                 spira_table.push "<tr id=" + index + " data-parent=\"None\" class=\"spira_td_100\" style=\"cursor:pointer;\"><td>" + indent + " <i class=\"fa fa-file-o\"></i> " + c.name + "</td><td>"  + c.author + "</td><td>1 / 1</td><td >100%</td></tr>"
               else
-                spira_table.push "<tr id=" + index + " data-parent=\"None\" style=\"cursor:pointer; color:#777 !important\"><td>" + indent + " <i class=\"fa fa-file-o\"></i> " + c.name + "</td><td>"  + c.author + "</td><td>0 / 1</td><td class=\"spira_td_25\">0%</td></tr>"
+                spira_table.push "<tr id=" + index + " data-parent=\"None\" style=\"cursor:pointer; color:#777 !important\"><td>" + indent + " <i class=\"fa fa-file-o\"></i> " + c.name + "</td><td>"  + c.author + "</td><td>0 / 1</td><td class=\"spira_td_0\">0%</td></tr>"
 
           $("#spiraTableBody").html(spira_table.reverse().join())
           $("#spiraTable").dataTable({
@@ -162,12 +164,12 @@ $(document).ready ->
               series: [
                 {
                     type: 'column'
-                    name: 'Manual'
+                    name: 'Case Not Covered in Current Execution'
                     data: nAutoCase_data
                     borderColor: '#aaa'
                 },{
                     type: 'column'
-                    name: 'Automated'
+                    name: 'Case Covered in Current Execution'
                     data: autoCase_data
                     borderColor: '#aaa'
                 }]
