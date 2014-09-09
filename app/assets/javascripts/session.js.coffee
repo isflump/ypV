@@ -66,6 +66,7 @@ $(document).ready ->
           case_collector = {}
           curLevel = 0
           folder_collector ={}
+          tempFolderIndex=[]
           for c, index in data['spira_cases'].reverse()
             indentLevel = ''
             indentLevel = c.indentLevel.length
@@ -97,6 +98,7 @@ $(document).ready ->
                 tr_class = 'spira_td_25'
               else
                 tr_class = 'spira_td_0'
+              tempFolderIndex.push(index)
               spira_table.push "<tr id=" + index + " onclick=collapseRows(" + index + ") data-parent='None' data-id=\"collapse\"  class=" + tr_class + " style=\"cursor:pointer;\"><td style='width:700px'>" + indent + " <i id=\"icon_" + index + "\" class=\"fa fa-folder-open-o\"></i> "  + c.name + "</td><td>"  + c.author + "</td><td>" + autoCase + " / " + totalCase + "</td><td>" + percentage + "%</td></tr>"
               #===============================build hash session========================================
               temp = {}
@@ -126,11 +128,13 @@ $(document).ready ->
             "stripeClasses": [],
             "paging": false
             })
+          for index in tempFolderIndex
+            collapseRows(index)
           #===============reserved for spira chart==============================
           category_data = []
           autoCase_data = []
           nAutoCase_data = []
-          console.log folder_collector
+          
           for f in folder_collector[3].reverse()
             category_data.push Object.keys(f)[0]
             autoCase_data.push f[Object.keys(f)[0]]["automated"]

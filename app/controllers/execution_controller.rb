@@ -65,8 +65,6 @@ class ExecutionController < ApplicationController
     begin
 
       #overall test case run
-      # data[:executionNumber] = []
-      # data[:executionPassNumber] = []
       map={}
       obj_arr=Execution.select("executions.id,case_name,result,executions.created_at").joins('JOIN sessions on executions.session_id=sessions.id').where(case_name: @execution.case_name).order( 'executions.created_at ASC' )
 
@@ -107,6 +105,19 @@ class ExecutionController < ApplicationController
         data[:exeFailNumber] = data[:exeFailNumber][start_index..data[:exeFailNumber].size-1]
         data[:exePassNumber] = data[:exePassNumber][start_index..data[:exePassNumber].size-1]
         data[:execPassRatio] = data[:execPassRatio][start_index..data[:execPassRatio].size-1]
+
+        data[:execPassRatio].each_with_index{|e,i|
+          if e == 0 && data[:exeFailNumber][i] == 0
+            data[:weekLabel][i]=nil
+            data[:exeFailNumber][i]=nil
+            data[:exePassNumber][i]=nil
+            data[:execPassRatio][i]=nil
+          end
+        }
+        data[:weekLabel].delete_if{|e| e==nil}
+        data[:execPassRatio].delete_if{|e| e==nil}
+        data[:exeFailNumber].delete_if{|e| e==nil}
+        data[:exePassNumber].delete_if{|e| e==nil}
 
         puts data[:weekLabel].inspect
         puts data[:execPassRatio].inspect

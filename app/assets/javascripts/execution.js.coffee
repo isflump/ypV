@@ -18,7 +18,6 @@ $(document).ready ->
           if data['error'] isnt null
             weeklyDataMap = data
             construct_executionChart("#executionChart",'Pass Ratio Trend',data['weekLabel'],data['exePassNumber'],data['exeFailNumber'],data["execPassRatio"])
-            console.log weeklyDataMap
           else
             console.log("Error")
         error:(data) ->
