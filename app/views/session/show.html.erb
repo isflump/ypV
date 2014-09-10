@@ -1,6 +1,7 @@
 <% content_for :title, "Session" %>
+<%if @session%>
 <div class="tonberry"></div>
-
+<%end%>
 
 <div class="exec_time_full_screen_grey_layer" id='exec_time_full_screen_grey_layer'>
   <div class='full_calendar_close_btn' onclick="close_full_calendar()"><i class="fa fa-times-circle-o"></i></div>
@@ -39,7 +40,7 @@
 
 
 <div class="main_container" >
-
+  <%if @session%>
   <%= render "shared/side_menu" %>
 
   <div class="detail_header_container">
@@ -122,3 +123,16 @@
       </table>
     </div>
   </div>
+  <%else%>
+    <nav class="side_bar">
+      <img src="/assets/WF-EN-C-L-W.gif" alt="some_text" width=60% style="margin-top:10px;margin-left:10px">
+    </nav>
+    <div class="header_container">Welcome and thanks for using YPv</div>
+    <div class='info_container'>
+      <div class="home_report_list_container" style="color:white !important">
+        We cannot find the session you are looking for! <br>
+        Make sure your project pytest is connected to this server.
+      </div>
+
+    </div>
+  <%end%>

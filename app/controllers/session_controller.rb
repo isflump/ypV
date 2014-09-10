@@ -2,53 +2,55 @@ class SessionController < ApplicationController
 
   def show
     @session = Session.find_by(id: params[:id])
-    sessions = Session.select(:start_time,:id, :browser).where(project_id: @session.project_id).order('sessions.created_at ASC')
+    if @session
+      sessions = Session.select(:start_time,:id, :browser).where(project_id: @session.project_id).order('sessions.created_at ASC')
 
 
-    #this is the code to generate the side calendar candidate
-    #we will only display 7 days of executions from today.
-    calendarMap={}
-    sessions.each_with_index{ |s,i|
-      if s.id == params[:id].to_i
-        calendarMap[s.start_time.gsub(/_.*/,"")] = [s]
+      #this is the code to generate the side calendar candidate
+      #we will only display 7 days of executions from today.
+      calendarMap={}
+      sessions.each_with_index{ |s,i|
+        if s.id == params[:id].to_i
+          calendarMap[s.start_time.gsub(/_.*/,"")] = [s]
 
-        start_subindex=end_subindex=i
-        while calendarMap.keys.size < 7
-          break if (start_subindex < 0 && end_subindex >= sessions.size)
-          if start_subindex == 0
-            start_subindex -= 1
-          elsif start_subindex > 0
-            start_subindex -= 1
-            if calendarMap.has_key?(sessions[start_subindex].start_time.gsub(/_.*/,""))
-              calendarMap[sessions[start_subindex].start_time.gsub(/_.*/,"")] << sessions[start_subindex]
-            else
-              calendarMap[sessions[start_subindex].start_time.gsub(/_.*/,"")] = [sessions[start_subindex]]
+          start_subindex=end_subindex=i
+          while calendarMap.keys.size < 7
+            break if (start_subindex < 0 && end_subindex >= sessions.size)
+            if start_subindex == 0
+              start_subindex -= 1
+            elsif start_subindex > 0
+              start_subindex -= 1
+              if calendarMap.has_key?(sessions[start_subindex].start_time.gsub(/_.*/,""))
+                calendarMap[sessions[start_subindex].start_time.gsub(/_.*/,"")] << sessions[start_subindex]
+              else
+                calendarMap[sessions[start_subindex].start_time.gsub(/_.*/,"")] = [sessions[start_subindex]]
+              end
+            end
+
+            if end_subindex == (sessions.size-1)
+              end_subindex += 1
+            elsif end_subindex < (sessions.size-1)
+              end_subindex += 1
+              if calendarMap.has_key?(sessions[end_subindex].start_time.gsub(/_.*/,""))
+                calendarMap[sessions[end_subindex].start_time.gsub(/_.*/,"")] << sessions[end_subindex]
+              else
+                calendarMap[sessions[end_subindex].start_time.gsub(/_.*/,"")] = [sessions[end_subindex]]
+              end
             end
           end
-
-          if end_subindex == (sessions.size-1)
-            end_subindex += 1
-          elsif end_subindex < (sessions.size-1)
-            end_subindex += 1
-            if calendarMap.has_key?(sessions[end_subindex].start_time.gsub(/_.*/,""))
-              calendarMap[sessions[end_subindex].start_time.gsub(/_.*/,"")] << sessions[end_subindex]
-            else
-              calendarMap[sessions[end_subindex].start_time.gsub(/_.*/,"")] = [sessions[end_subindex]]
-            end
-          end
+          break
         end
-        break
-      end
-    }
+      }
 
-    @sessionHistory = {}
-    calendarMap.each{|key, value|
-      if @sessionHistory.has_key?(Time.parse(key).month)
-        @sessionHistory[Time.parse(key).month][Time.parse(key).day] = value
-      else
-        @sessionHistory[Time.parse(key).month] = {Time.parse(key).day => value}
-      end
-    }
+      @sessionHistory = {}
+      calendarMap.each{|key, value|
+        if @sessionHistory.has_key?(Time.parse(key).month)
+          @sessionHistory[Time.parse(key).month][Time.parse(key).day] = value
+        else
+          @sessionHistory[Time.parse(key).month] = {Time.parse(key).day => value}
+        end
+      }
+    end
   end
 
 

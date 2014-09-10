@@ -1,6 +1,7 @@
 class HomeController < ApplicationController
   def index
     id = Session.maximum(:id)
-    redirect_to "/session/#{id}"
+    puts id
+    redirect_to "/session/#{id}" if id
   end
 end

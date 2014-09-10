@@ -9,7 +9,7 @@ module SessionHelper
   end
 
   def parse_day(d_key)
-    return d_key if d_key > 10
+    return d_key if d_key >= 10
     return "0#{d_key}"
   end
 
