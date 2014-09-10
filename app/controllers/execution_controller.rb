@@ -245,19 +245,19 @@ class ExecutionController < ApplicationController
         if stepsInfo
            if stepsInfo.kind_of?(Array)
       		  stepsInfo.each_with_index{ |step ,index|
-        			steps << {:tsExpectedResult => "#{step.expectedResult.gsub('"','\'').gsub('<div>',"<br>").gsub(/\<[^>]*>/,'').strip.gsub("\n",'<br>')}" ,
-                        :tsDescription => "#{step.description.gsub('"','\'').gsub('<div>',"<br>").gsub(/<[^>]*>/,'').strip.gsub("\n",'<br>')}" }
+        			steps << {:tsExpectedResult => "#{step.expectedResult.gsub('#333333','#aaa').gsub('rgb(51, 51, 51)','#aaa')}" ,
+                        :tsDescription => "#{step.description.gsub('#333333','#aaa').gsub('rgb(51, 51, 51)','#aaa')}" }
       		  }
       	   else
             tempStep = {}
             if stepsInfo.expectedResult
-      		    tempStep['tsExpectedResult'] = stepsInfo.expectedResult.gsub('"','\'').gsub('<div>',"<br>").gsub(/\<[^>]*>/,'').strip.gsub("\n",'<br>')
+      		    tempStep['tsExpectedResult'] = stepsInfo.expectedResult.gsub('#333333','#aaa').gsub('rgb(51, 51, 51)','#aaa')
             else
               tempStep['tsExpectedResult'] = "undefined"
             end
             if stepsInfo.description
               puts stepsInfo
-      		    tempStep['tsDescription'] = stepsInfo.description.gsub('"','\'').gsub('<div>',"<br>").gsub(/<[^>]*>/,'').strip.gsub("\n",'<br>')
+      		    tempStep['tsDescription'] = stepsInfo.description.gsub('#333333','#aaa').gsub('rgb(51, 51, 51)','#aaa')
             else
               tempStep['tsDescription'] = "undefined"
             end
