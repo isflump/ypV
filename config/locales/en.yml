@@ -21,3 +21,4 @@
 
 en:
   hello: "Hello world"
+  time_zone_select :user, :time_zone
