@@ -1,4 +1,4 @@
-== README
+== Server Setup README
 
 0.Thank you for using ypv.
   You need to think of a name that represent your project. And it is not optional :)
@@ -26,8 +26,8 @@
   Under the folder. run the following commands in the listed order:
   
 	4.1 ruby -v
-	
-	It should display something like this => ruby 1.9.3p545 (2014-02-24) [i386-mingw32]
+        It should display something like the following
+                => ruby 1.9.3p545 (2014-02-24) [i386-mingw32]
 
 
 	4.2 gem install bundle
@@ -36,7 +36,113 @@
 	4.3 bundle install
 
 
-	If you see no error then you have your rails ready to use.
+        If you see no error then you have your rails ready to use.
+        Don't close this command prompt window yet, we will need it later :)
+        
+        
+5.Now this step is very tricky
+        Since we need to connect to SPIRA using SOAP, RUBY has a very old lib for it.
+        Certain modification need to be done manually.
 	
-	
-	Don't close this command prompt window yet, we will need it later :)
+	5.1 Go to your ruby installation folder, the default location should be in C:\Ruby193
+
+
+	5.2 Under it, navigate to lib\ruby\gems\1.9.1\gems
+
+
+	5.3 Locate the folder soap4r-1.5.8
+
+
+	5.4 Under it, go to lib/xsd and find a file xmlparser.rb
+
+
+	5.4.1 Open it with your favourite text editor and search for the line c.downcase
+
+
+	5.4.2 Changed it to c.to_s.downcase
+
+
+	5.5.1 Back to lib folder of soap4r main folder, find a folder soap
+
+
+	5.5.2 Go in and find a file property.rb
+
+
+	5.5.3 Search for # for ruby/1.6. And yes you guessed right, since we are in Ruby 1.9.3 we won't need all the code after this line. 
+                Comment out all the code comes after this line, in the end it should looks exactly like the following:
+                # for ruby/1.6.
+                #unless Enumerable.instance_methods.include?('inject')
+                #  module Enumerable
+                #    def inject(init)
+                #      result = init
+                #      each do |item|
+                #	result = yield(result, item)
+                #      end
+                #      result
+                #    end
+                #  end
+                #end
+                This is All for the tricky modification. I promise that you have just finished the most difficult setup in this readme. It will be straightforward after it
+
+
+
+6.Now you need to setup your database. It is not mandatory that the DB has to be on the same machine of the server, but it is better this way.
+        If you want to set the DB on different machine, still follow this instruction, but special settings might have to be changed accordingly after.
+   
+	6.1 Download the Postresql from 
+	http://www.postgresql.org/
+
+	6.2 Follow the Windows installer steps to install your DB
+                During the installation, you need to give a admin password. 
+                Remember the password you give as it will helpful later
+*Note: If you have trouble installing Postresql, for example getting the error: Unable to write inside TEMP environment variable path. The following link will help you solve the issue: http://www.postgresql.org/message-id/1351573815927-5730009.post@n5.nabble.com
+
+
+7.Once you finish installing your DB
+
+7.1 Go to the ypv main directory and find the config folder and go into it. 
+You will find a database.yml file. Open it with your favourite test editor.
+        At line 7:
+          default: &default
+          adapter: postgresql
+          pool: 5
+          username: postgres
+          password: YOUR_PASSWORD
+        Change the password to the password you give in step 6.2 and save the changes
+
+
+8.Go back to ypv main directory and find the folder called db
+
+8.1 Go into the db folder and locate a file seed.rb
+
+8.2 Open it with your favourite text editor. 
+
+8.3 Once it opened you will see a line like the following:
+        Project.create(name: 'SFDC', spira_id: 71)
+
+* name is the project name you created in step 0 (I hope you still remember it)
+
+* spira_id is the ID that your project on SPIRA. This id will never changed unless they wipe out data on SPIRA. 
+
+And it is very easy to find. 
+        Try to open SPIRA and go to your project main page. 
+        On the URL, you should see something like the following:
+        http://....ypg.com/71.aspx
+        Yes, you are right, 71 is the id, only in your case it will be a different number :)
+
+8.4 Change the value accordingly to your project name and ID and save the changes
+
+9.I hope you still have the cmd winodw that we use in step 4 opened.
+If so, type the following command:
+        9.1 $rake db:create:all
+        9.1 $rake db:migrate RAILS_ENV=production
+        9.2 $rake db:seed
+
+
+10.Following from step 9, type command line:
+	$rails server -e production
+
+
+Congratulation, your server should be started after few minutes 
+        (It is slow because it needs to grab the data from SPIRA for the first time)
+        You can now open your bowser and navigate to: http://localhost:3000/home/index
