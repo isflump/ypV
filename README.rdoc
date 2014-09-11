@@ -1,1 +1,42 @@
 == README
+
+0.Thank you for using ypv.
+  You need to think of a name that represent your project. And it is not optional :)
+  For example, I worked on SalesForce project, then I named my project as SFDC.
+  so please name yours now, and remember this name.
+  
+1.RUBY installation.
+  Download RUBY 1.9.3 32 bit version(not the latest 2.0 version) from the site:
+	http://rubyinstaller.org/downloads/
+
+2.Ruby development package installation
+  Download the 32 bit version of the development kit from
+	http://rubyinstaller.org/downloads/
+	
+  once download completed, please following site to config your development kit
+	https://github.com/oneclick/rubyinstaller/wiki/Development-Kit
+
+
+3.Download ypv server from https://github.com/isflump/ypV
+  Unzip it to the location of your choice.
+  Open a command prompt and navigate to this folder
+  
+  
+4.Install Rails
+  Under the folder. run the following commands in the listed order:
+  
+	4.1 ruby -v
+	
+	It should display something like this => ruby 1.9.3p545 (2014-02-24) [i386-mingw32]
+
+
+	4.2 gem install bundle
+
+
+	4.3 bundle install
+
+
+	If you see no error then you have your rails ready to use.
+	
+	
+	Don't close this command prompt window yet, we will need it later :)
