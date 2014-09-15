@@ -7,6 +7,12 @@ class StoreController < ApplicationController
       @ses = Session.new(JSON.parse(params[:session]))
       @ses.project_id = @project.id
       if @ses.save
+        if params[:tag]
+          params[:tag].split(";").each{|t|
+            Tag.create(:name => t , :session_id => @ses.id)
+          }
+        end
+
         render :text => @ses.id, :status => 200
       else
         render :text => "ERROR", :status => 400
