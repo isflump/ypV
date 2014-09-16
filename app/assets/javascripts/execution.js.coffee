@@ -485,89 +485,90 @@ prevPanelId=null
     $("#"+icon_id).addClass("fa-file-code-o")
 
 @execution_compare_with = (id) ->
-  $('body').css('overflow','hidden')
-  $('#compare_full_screen_grey_layer').show( "fold", {}, 'slow' );
-  pytestCurrentCase.refresh()
-  #$("#compare_selected_case_content").html("")
-  params={}
-  params['compare_id']=id
-  $.ajax({
-    type: "POST",
-    url: document.URL+"/getCompareExecution",
-    data: params
-    success:(data) ->
-      console.log data
-      cur_title = ""
-      com_title = ""
-      if data['current_execution'].result is "passed"
-        cur_title += "<div class=\"compare_info\"><i class=\"fa fa-smile-o\" style=\"font-size:22.5px;margin-right:5px;color:#73c632\"></i>" + data['current_execution'].case_name + " "
-      else
-        cur_title += "<div class=\"compare_info\"><i class=\"fa fa-bug\" style=\"font-size:22.5px;margin-right:5px;color:red\"></i>" + data['current_execution'].case_name + " "
-
-      if data['compare_execution'].result is "passed"
-        com_title += "<div class=\"compare_info\"><i class=\"fa fa-smile-o\" style=\"font-size:22.5px;margin-right:5px;color:#73c632\"></i>" + data['compare_execution'].case_name + " "
-      else
-        com_title += "<div class=\"compare_info\"><i class=\"fa fa-bug\" style=\"font-size:22.5px;margin-right:5px;color:red\"></i>" + data['compare_execution'].case_name + " "
-
-      cur_title += "<i class=\"fa fa-clock-o\"></i> " + data['current_execution'].created_at + "</div>"
-      com_title += "<i class=\"fa fa-clock-o\"></i> " + data['compare_execution'].created_at  + "</div>"
-
-      $("#compare_current_case_info").html(cur_title)
-      $("#compare_select_case_info").html(com_title)
-
-      isErrorInclude = false
-      isCodeInclude = false
-      isEndCodeInclude = false
-      result = ""
-      code = "No exception\n"
-      raw = ""
-      if data['compare_execution'].exception
-        code = ""
-        for line in data['compare_execution'].exception.split("\n")
-          raw += line + "\n"
-          if line.match(/^\s*E.*/)
-            isErrorInclude = true
-          if isErrorInclude
-            result += line + "\n"
-
-          if isEndCode
-            continue
-
-          if line.match(/^\s*(@pytest|def).*/)
-            isCodeInclude = true
-
-          if line.match(/^\s*>.*/)
-            isEndCode = true
-            isCodeInclude = false
-
-          if isCodeInclude || isEndCode
-            code += line + "\n"
-
-        $("#compare_execution_select_raw_log").html("<pre>" + raw.replace(/</g,'&lt;').replace(/>/g,'&gt;')  + "</pre>")
-      else
-        $("#compare_execution_select_raw_log").html('No Exception')
-
-      $("#compare_selected_case_error").html("<pre>" + result + "</pre>")
-      $("#compare_selected_code").html(code)
-      if not pytestSelectedCase
-        if document.getElementById('compare_selected_code')
-          pytestSelectedCase = CodeMirror.fromTextArea(document.getElementById('compare_selected_code'), {
-            lineNumbers: true,
-            mode: "text/x-cython",
-            theme: 'monokai',
-            readOnly: true
-          });
-      else
-        console.log "here"
-        pytestSelectedCase.setValue(code)
-        $('#compare_selected_case_content').show()
-        pytestSelectedCase.refresh()
-
-      pytestSelectedCase.setSize(null,500)
-
-    error:(data) ->
-      console.log data
-  })
+  return 0
+  # $('body').css('overflow','hidden')
+  # $('#compare_full_screen_grey_layer').show( "fold", {}, 'slow' );
+  # pytestCurrentCase.refresh()
+  # #$("#compare_selected_case_content").html("")
+  # params={}
+  # params['compare_id']=id
+  # $.ajax({
+  #   type: "POST",
+  #   url: document.URL+"/getCompareExecution",
+  #   data: params
+  #   success:(data) ->
+  #     console.log data
+  #     cur_title = ""
+  #     com_title = ""
+  #     if data['current_execution'].result is "passed"
+  #       cur_title += "<div class=\"compare_info\"><i class=\"fa fa-smile-o\" style=\"font-size:22.5px;margin-right:5px;color:#73c632\"></i>" + data['current_execution'].case_name + " "
+  #     else
+  #       cur_title += "<div class=\"compare_info\"><i class=\"fa fa-bug\" style=\"font-size:22.5px;margin-right:5px;color:red\"></i>" + data['current_execution'].case_name + " "
+  #
+  #     if data['compare_execution'].result is "passed"
+  #       com_title += "<div class=\"compare_info\"><i class=\"fa fa-smile-o\" style=\"font-size:22.5px;margin-right:5px;color:#73c632\"></i>" + data['compare_execution'].case_name + " "
+  #     else
+  #       com_title += "<div class=\"compare_info\"><i class=\"fa fa-bug\" style=\"font-size:22.5px;margin-right:5px;color:red\"></i>" + data['compare_execution'].case_name + " "
+  #
+  #     cur_title += "<i class=\"fa fa-clock-o\"></i> " + data['current_execution'].created_at + "</div>"
+  #     com_title += "<i class=\"fa fa-clock-o\"></i> " + data['compare_execution'].created_at  + "</div>"
+  #
+  #     $("#compare_current_case_info").html(cur_title)
+  #     $("#compare_select_case_info").html(com_title)
+  #
+  #     isErrorInclude = false
+  #     isCodeInclude = false
+  #     isEndCodeInclude = false
+  #     result = ""
+  #     code = "No exception\n"
+  #     raw = ""
+  #     if data['compare_execution'].exception
+  #       code = ""
+  #       for line in data['compare_execution'].exception.split("\n")
+  #         raw += line + "\n"
+  #         if line.match(/^\s*E.*/)
+  #           isErrorInclude = true
+  #         if isErrorInclude
+  #           result += line + "\n"
+  #
+  #         if isEndCode
+  #           continue
+  #
+  #         if line.match(/^\s*(@pytest|def).*/)
+  #           isCodeInclude = true
+  #
+  #         if line.match(/^\s*>.*/)
+  #           isEndCode = true
+  #           isCodeInclude = false
+  #
+  #         if isCodeInclude || isEndCode
+  #           code += line + "\n"
+  #
+  #       $("#compare_execution_select_raw_log").html("<pre>" + raw.replace(/</g,'&lt;').replace(/>/g,'&gt;')  + "</pre>")
+  #     else
+  #       $("#compare_execution_select_raw_log").html('No Exception')
+  #
+  #     $("#compare_selected_case_error").html("<pre>" + result + "</pre>")
+  #     $("#compare_selected_code").html(code)
+  #     if not pytestSelectedCase
+  #       if document.getElementById('compare_selected_code')
+  #         pytestSelectedCase = CodeMirror.fromTextArea(document.getElementById('compare_selected_code'), {
+  #           lineNumbers: true,
+  #           mode: "text/x-cython",
+  #           theme: 'monokai',
+  #           readOnly: true
+  #         });
+  #     else
+  #       console.log "here"
+  #       pytestSelectedCase.setValue(code)
+  #       $('#compare_selected_case_content').show()
+  #       pytestSelectedCase.refresh()
+  #
+  #     pytestSelectedCase.setSize(null,500)
+  #
+  #   error:(data) ->
+  #     console.log data
+  # })
 
 @load_execution_compare_with = (id) ->
   $('#compare_selected_case_content').hide("drop", { direction: "right" }, ->
