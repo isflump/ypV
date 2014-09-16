@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'status_center/show'
+
   get 'home/index'
 
   post 'store/storeSession'

@@ -11,69 +11,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140915174335) do
+ActiveRecord::Schema.define(version: 0) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "executions", force: true do |t|
-    t.string   "case_name"
-    t.string   "case_id"
-    t.string   "spira_case_id"
-    t.string   "markers"
-    t.string   "scenario"
-    t.integer  "line"
-    t.string   "location"
-    t.string   "result"
-    t.string   "keyword"
-    t.decimal  "duration"
-    t.text     "exception"
-    t.text     "log"
-    t.string   "ss_path"
-    t.integer  "session_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "isViewed"
-  end
-
-  create_table "projects", force: true do |t|
-    t.string   "name"
-    t.integer  "spira_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "screenshots", force: true do |t|
-    t.string   "avatar"
-    t.integer  "execution_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "sessions", force: true do |t|
-    t.string   "start_time"
-    t.string   "end_time"
-    t.string   "tlib_version"
-    t.string   "selenium_version"
-    t.string   "python_version"
-    t.string   "os"
-    t.string   "processor"
-    t.string   "machine"
-    t.string   "ip"
-    t.string   "browser"
-    t.string   "base_url"
-    t.integer  "project_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "browser_version"
-  end
-
-  create_table "tags", force: true do |t|
-    t.string   "name"
-    t.string   "desc"
-    t.integer  "session_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
 end
