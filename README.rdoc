@@ -136,7 +136,7 @@ And it is very easy to find.
 If so, type the following command:
         9.1 $rake db:create:all
         9.1 $rake db:migrate RAILS_ENV=production
-        9.2 $rake db:seed
+        9.2 $rake db:seed RAILS_ENV=production
 
 
 10.Following from step 9, type command line:
