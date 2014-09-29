@@ -134,7 +134,7 @@ $(document).ready ->
           category_data = []
           autoCase_data = []
           nAutoCase_data = []
-          
+
           for f in folder_collector[3].reverse()
             category_data.push Object.keys(f)[0]
             autoCase_data.push f[Object.keys(f)[0]]["automated"]
@@ -266,6 +266,8 @@ $(document).ready ->
   $('#full_calendar_execution_info_detail_text4').html('<font style="color:#55DAE1;font-weight:bold">OS:</font> ')
   $('#full_calendar_execution_info_detail_text5').html('<font style="color:#55DAE1;font-weight:bold">IP:</font> ' )
   $('#full_calendar_execution_info_detail_text6').html('<font style="color:#55DAE1;font-weight:bold">Result:</font> ' )
+  $('#full_calendar_execution_info_detail_text7').html('<font style="color:#55DAE1;font-weight:bold">URL:</font> ' )
+
   #fill info here
   data = {}
   data['sid'] = id
@@ -280,6 +282,7 @@ $(document).ready ->
           $('#full_calendar_execution_info_detail_text4').html('<font style="color:#55DAE1;font-weight:bold">OS:</font> ' + data['os'])
           $('#full_calendar_execution_info_detail_text5').html('<font style="color:#55DAE1;font-weight:bold">IP:</font> ' + data['ip'])
           $('#full_calendar_execution_info_detail_text6').html('<font style="color:#55DAE1;font-weight:bold">Result:</font> <font class="ypv_pass">' + data['result_pass'] + '</font>/<font class="ypv_fail">' + (parseInt(data['result_all']) - parseInt(data['result_pass'])) + '</font>/<font color="#ccc">' + data['result_all'] + '</font>')
+          $('#full_calendar_execution_info_detail_text7').html('<font style="color:#55DAE1;font-weight:bold">URL:</font> ' + data['base_url'])
           if /chrome/i.test data['device']
             $('#full_calendar_execution_info_detail_text1').attr('src' , '/assets/chrome-icon.png')
           else if /firefox|firefox_no_js/i.test data['device']

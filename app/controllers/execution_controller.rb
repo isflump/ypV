@@ -6,7 +6,6 @@ class ExecutionController < ApplicationController
   def show
     @execution = Execution.find_by(id: params[:id])
     @sshots = @execution.screenshots
-
     executions = Execution.select(:created_at,:id,:result,:session_id).where(case_name: @execution.case_name).order('executions.created_at ASC')
     calendarMap={}
     executions.each_with_index{ |s,i|

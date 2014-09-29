@@ -15,6 +15,7 @@
       <div class="full_calendar_execution_info_detail_text" id="full_calendar_execution_info_detail_text4"></div>
       <div class="full_calendar_execution_info_detail_text" id="full_calendar_execution_info_detail_text5"></div>
       <div class="full_calendar_execution_info_detail_text" id="full_calendar_execution_info_detail_text6"></div>
+      <div class="full_calendar_execution_info_detail_text" id="full_calendar_execution_info_detail_text7"></div>
     </div>
   </div>
 </div>
@@ -52,6 +53,7 @@
           <%elsif @session.project.name =~ /SWAN/%>
             <i class="fa fa-mobile"></i> <%=@session.base_url%>
           <%end%>
+          <i class="fa fa-tags" color="#01AEF2"></i> <%=@session.tags.collect{|t|t.name}.join(" ")%>
         </div>
     </div>
 

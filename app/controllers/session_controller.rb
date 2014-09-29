@@ -61,7 +61,7 @@ class SessionController < ApplicationController
       #find the lastest five executions
       data[:shortHistoryMap]={}
       for exec in data[:executions]
-        data[:shortHistoryMap][exec.id] = Execution.select(:result,:id,:created_at).where(case_name: exec.case_name).where("created_at < ?", exec.created_at).order('executions.created_at DESC').limit(4).reverse
+        data[:shortHistoryMap][exec.id] = Execution.select(:result,:id,:created_at).where(case_id: exec.case_id).where("created_at < ?", exec.created_at).order('executions.created_at DESC').limit(4).reverse
       end
       data[:sessionStatusPass]=0
       data[:sessionStatusFail]=0
@@ -119,6 +119,7 @@ class SessionController < ApplicationController
       data[:device] = session.browser
       data[:os] = session.os
       data[:ip] = session.ip
+      data[:base_url] = session.base_url
       data[:result_pass] = session.executions.collect{|e| e.result=~/pass/i ? 1 : 0}.sum
       data[:result_all] = session.executions.size
 
