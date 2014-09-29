@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get 'status_center/show'
+  post 'status_center/all'
 
   get 'home/index'
 

@@ -1,4 +1,5 @@
 <% content_for :title, "Status Center" %>
+<div class="doomtrain"></div>
 <div class="main_container" >
   <%= render "shared/side_menu" %>
 
@@ -9,11 +10,23 @@
   </div>
 
   <div class='info_container' >
+    <!-- <%if @tags%>
+      <select>
+
+      <% @tags.each{|t|%>
+          <option value="volvo">Volvo</option>
+          <option value="saab">Saab</option>
+          <option value="mercedes">Mercedes</option>
+          <option value="audi">Audi</option>
+      <%}%>
+      </select>
+    <%end%> -->
+
     <div id="sessionGraph1" class="sc_graph_container">
-        <div id="sessionFolderChart" style="width:800px !important; display:inline-block" ></div>
+        <div id="overallPassRateLine" style="width:800px !important; display:inline-block" ></div>
     </div>
-    <div id="sessionGraph2" class="sc_graph_container">
+    <!-- <div id="sessionGraph2" class="sc_graph_container">
         <div id="sessionFolderChart" style="width:800px !important; display:inline-block" ></div>
-    </div>
+    </div> -->
   </div>
 </div>

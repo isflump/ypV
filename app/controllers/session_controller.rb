@@ -57,7 +57,8 @@ class SessionController < ApplicationController
   def getStatus
     data = Hash.new
     begin
-      data[:executions] = Session.find_by(id: params[:id]).executions.select(:case_id,:case_name,:scenario,:duration,:spira_case_id,:location,:result,:id,:created_at,:isViewed)
+      ses = Session.find_by(id: params[:id])
+      data[:executions] = ses.executions.select(:case_id,:case_name,:scenario,:duration,:spira_case_id,:location,:result,:id,:created_at,:isViewed)
       #find the lastest five executions
       data[:shortHistoryMap]={}
       for exec in data[:executions]
@@ -72,7 +73,14 @@ class SessionController < ApplicationController
           data[:sessionStatusFail] = v.count
         end
       }
-
+      #calculate the pass rate
+      if data[:executions].size > 0
+        if data[:sessionStatusPass] == 0
+          ses.update_attribute(:pass_rate, 0)
+        else
+          ses.update_attribute(:pass_rate, ((data[:sessionStatusPass].to_f/data[:executions].size)*100).round(2))
+        end
+      end
       #genearte location bar chart data
       data[:sessionLocationLabel]=[]
       data[:sessionLocationPass]=[]
