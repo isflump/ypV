@@ -39,6 +39,10 @@
   </div>
 </div>
 
+<div class="spira_full_screen_grey_layer" id='tag_edit_layer'>
+  <div class="spira_close_btn"><i class="fa fa-times-circle-o" onclick="hide_tag_edit_layer()"></i></div>
+  <div></div>
+</div>
 
 <div class="main_container" >
   <%if @session%>
@@ -46,14 +50,14 @@
 
   <div class="detail_header_container">
     <div class="detail_header_text_block">
-        <div class="project_name_block"><i class="fa fa-rocket" style="font-size:22.5px;margin-right:5px;color:#55DAE1"></i> <%=@session.project.name%></div>
+        <div class="project_name_block"><i class="fa fa-rocket" style="font-size:22.5px;margin-right:5px;color:#55DAE1"></i> <%=@session.project.name%> </div>
         <div class="project_execution_time_block"><i class="fa fa-clock-o" color="#01AEF2"></i> <%=parse_date(@session.start_time)%>
           <%if @session.project.name =~ /SFDC/%>
             <i class="fa fa-external-link-square"></i> <%=@session.base_url%>
           <%elsif @session.project.name =~ /SWAN/%>
             <i class="fa fa-mobile"></i> <%=@session.base_url%>
           <%end%>
-          <i class="fa fa-tags" color="#01AEF2"></i> <%=@session.tags.collect{|t|t.name}.join(" ")%>
+          <i class="fa fa-tags" style="color: #55DAE1 !important" onclick='show_tag_info()'></i> <%=@session.tags.collect{|t|t.name}.join(" ")%>
         </div>
     </div>
 

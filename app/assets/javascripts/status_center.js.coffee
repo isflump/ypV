@@ -1,6 +1,9 @@
 # Place all the behaviors and hooks related to the matching controller here.
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
+
+sessionStatus = null
+sessionTags = null
 $(document).ready ->
   if $('body').find('.doomtrain').length > 0
     $.ajax({
@@ -9,37 +12,43 @@ $(document).ready ->
           data: ''
           success:(data) ->
             console.log(data)
-            label = []
-            dataPass = []
             if data['sessions'].length > 0
               date = new Date(data['sessions'][0].pass_rate)
-              dataPassStartPoint = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
-
-              for ses in data['sessions']
-                if ses.pass_rate isnt null
-                  console.log ses.id
-                  if ses.pass_rate >= 95
-                    sym = 'url(/assets/star.png)'
-                  else if ses.pass_rate < 50
-                    sym = 'url(/assets/exclamation-triangle.png)'
-                  else
-                    sym = 'url(/assets/cloud.png)'
-
-                  date = new Date(ses.start_time)
-                  dataPass.push({
-                    x: Date.UTC(date.getUTCFullYear(),date.getUTCMonth(), date.getUTCDate(), date.getHours() , date.getUTCMinutes(), date.getUTCSeconds()),
-                    y: ses.pass_rate,
-                    tags: data['tagMap'][ses.id].join()
-                    marker: {
-                      symbol: sym
-                      }
-                    })
-              construct_lineChart("#overallPassRateLine","Pass Rate", dataPassStartPoint, dataPass)
+              #dataPassStartPoint = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+              sessionStatus = data['sessions']
+              sessionTags = data['tagMap']
+              filterBaseOnTag("None")
         })
 
-pass_color="rgba(152, 198, 50,0.6)"
+@filterBaseOnTag = (tag) ->
+  dataPass = []
+  if tag is "None"
+    title = "Pass Rate"
+  else
+    title = "Pass Rate with tag " + tag
 
-construct_lineChart = (chartID,title,dataPassStartPoint,dataPass) ->
+  for ses in sessionStatus
+    if tag is "None" or tag in sessionTags[ses.id]
+      if ses.pass_rate isnt null
+        if ses.pass_rate >= 95
+          sym = 'url(/assets/star.png)'
+        else if ses.pass_rate < 50
+          sym = 'url(/assets/exclamation-triangle.png)'
+        else
+          sym = 'url(/assets/cloud.png)'
+
+        date = new Date(ses.start_time)
+        dataPass.push({
+          x: Date.UTC(date.getUTCFullYear(),date.getUTCMonth(), date.getUTCDate(), date.getHours() , date.getUTCMinutes(), date.getUTCSeconds()),
+          y: ses.pass_rate,
+          tags: sessionTags[ses.id].join()
+          marker: {
+            symbol: sym
+            }
+          })
+  construct_lineChart("#overallPassRateLine",title, dataPass)
+
+construct_lineChart = (chartID,title,dataPass) ->
   $(chartID).highcharts({
     chart:
         zoomType: 'x'
@@ -49,6 +58,7 @@ construct_lineChart = (chartID,title,dataPassStartPoint,dataPass) ->
         backgroundColor: "transparent"
     title:
         text: title
+        style: { "color": "white"}
     xAxis:
         type: 'datetime',
         dateTimeLabelFormats:

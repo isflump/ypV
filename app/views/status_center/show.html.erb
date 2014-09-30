@@ -5,23 +5,20 @@
 
   <div class="detail_header_container">
     <div class="detail_header_text_block">
-        <div class="project_name_block"><i class="fa fa-rocket" style="font-size:22.5px;margin-right:5px;color:#55DAE1"></i>SWAN</div>
+        <div class="project_name_block"><i class="fa fa-tags" style="font-size:22.5px;margin-top:4px;color:#55DAE1"></i>
+          <% if @tags %>
+            <select  onchange="filterBaseOnTag(this.value)">
+              <option value="None">None</option>
+              <% @tags.each do |name| %>
+                  <option value="<%=name%>"><%=name%></option>
+              <%end%>
+            </select>
+          <%end%>
+        </div>
     </div>
   </div>
 
   <div class='info_container' >
-    <!-- <%if @tags%>
-      <select>
-
-      <% @tags.each{|t|%>
-          <option value="volvo">Volvo</option>
-          <option value="saab">Saab</option>
-          <option value="mercedes">Mercedes</option>
-          <option value="audi">Audi</option>
-      <%}%>
-      </select>
-    <%end%> -->
-
     <div id="sessionGraph1" class="sc_graph_container">
         <div id="overallPassRateLine" style="width:800px !important; display:inline-block" ></div>
     </div>

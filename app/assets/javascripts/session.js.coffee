@@ -53,6 +53,10 @@ $(document).ready ->
   $('body').css('overflow','hidden')
   $('#spira_full_screen_grey_layer').show( "fold", {}, 'slow' );
 
+@show_tag_info = () ->
+  $('body').css('overflow','hidden')
+  $('#tag_edit_layer').show( "fold", {}, 'slow' );
+
 @render_spira_info = () ->
   $.ajax({
         type: "POST",
@@ -185,6 +189,9 @@ $(document).ready ->
 
 @hide_spira_info = () ->
   $('#spira_full_screen_grey_layer').hide( "fold", {}, 'slow' );
+  $('body').css('overflow','auto')
+@hide_tag_edit_layer = () ->
+  $('#tag_edit_layer').hide( "fold", {}, 'slow' );
   $('body').css('overflow','auto')
 
 @collapseRows = (id) ->

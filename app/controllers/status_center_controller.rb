@@ -1,6 +1,6 @@
 class StatusCenterController < ApplicationController
-  def index
-    #@tags=Tag.all().unique
+  def show
+    @tags=Tag.all().collect{|t| t.name}.uniq
   end
 
   def all
@@ -17,10 +17,9 @@ class StatusCenterController < ApplicationController
           if s.executions.size > 0
             s.executions.group_by{|e| e.result }.each{|k,v|
               if k =~/passed/i
-                puts "#{v.count} at #{s.id}"
                 s.pass_rate = ((v.count.to_f/s.executions.size)*100).round(2)
+                #s.update_attribute(:pass_rate,((v.count.to_f/s.executions.size)*100).round(2))
                 break
-                #s.update_attribute(:pass_rate, ((v.count.to_f/s.executions.size)*100).round(2))
                 #this is the case where no pass in the current session
               else
                 s.pass_rate = 0
