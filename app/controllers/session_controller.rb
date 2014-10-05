@@ -165,4 +165,40 @@ class SessionController < ApplicationController
       render json: data
     end
   end
+
+
+
+  #################Tag managment####################
+  def createTag
+    data = Hash.new()
+    session =  Session.find(params[:id])
+
+    begin
+      t = Tag.new(session_id: session.id, name: params[:name])
+      if t.save
+        data[:tag] = t
+      else
+        data[:tag] = nil
+      end
+      
+      render json: data
+    rescue Exception => e
+      data[:error] = e.message.strip
+      data[:trace] = e.backtrace.join("<br>")
+      render json: data
+    end
+  end
+
+  def deleteTag
+    data = Hash.new()
+    begin
+      Tag.delete(params[:tag_id])
+      data[:tag] = 'Success'
+      render json: data
+    rescue Exception => e
+      data[:error] = e.message.strip
+      data[:trace] = e.backtrace.join("<br>")
+      render json: data
+    end
+  end
 end

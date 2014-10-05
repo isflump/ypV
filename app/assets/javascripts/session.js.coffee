@@ -503,42 +503,38 @@ pre_hightLightColor=null
     $("#"+row_id).css('color','#666')
     pre_hightLightColor = $("#"+row_id).css("color")
 
-# construct_pieChart = (chartID, title, dataPass,dataFail) ->
-#   $(chartID).highcharts({
-#       chart:
-#           plotShadow: false
-#           width: 350
-#           height: 355
-#           backgroundColor: "transparent"
-#           style:
-#             fontFamily: 'monospace'
-#             color:"#aaa"
-#       colors: [pass_color, fail_color]
-#       title:
-#           text: title
-#       tooltip:
-#           pointFormat: '{point.percentage:.0f}%</b>'
-#       plotOptions:
-#           pie:
-#               allowPointSelect: true,
-#               cursor: 'pointer',
-#               dataLabels:
-#                 enabled: false
-#               showInLegend: true
-#
-#       series: [{
-#           type: 'pie'
-#           name: 'Pass/Fail Ratio'
-#           data: [
-#               ['Passed',   dataPass],
-#               ['Failed',   dataFail]
-#           ]
-#           point:
-#             events:
-#               click: (event) ->
-#                 filterBySessionStatus_hightChart(this,event)
-#       }]
-#     })
+@create_tag = () ->
+  if $("#tag").val()
+    param={'name' : $("#tag").val() }
+    $.ajax({
+          type: "POST",
+          url: document.URL+"/createTag",
+          data: param
+          success:(data) ->
+            console.log(data)
+            if data['tag']
+              content = "<li id='tag_" + data['tag'].id+ "'>" + data['tag'].name + "<i class=\"fa fa-times-circle-o\" style=\"margin-left:5px\" onclick=\"delete_tag('tag_" + data['tag'].id+ "' ," + data['tag'].id + ")\"></i></li>"
+              $("#session_tag_ul").append(content)
+              $("#tag").val('')
+          error:(data) ->
+            console.log(data["trace"])
+        })
+  else
+    alert("Please enter a value.")
+
+@delete_tag = (ui_id,id) ->
+  param={'tag_id' : id }
+  $.ajax({
+        type: "POST",
+        url: document.URL+"/deleteTag",
+        data: param
+        success:(data) ->
+          console.log(data)
+          if data['tag'] is 'Success'
+            $("#"+ui_id).remove()
+        error:(data) ->
+          console.log(data["trace"])
+      })
 construct_combChart = (chartID,title,label,dataPass,dataFail,dataPiePass,dataPieFail) ->
   $(chartID).highcharts({
     chart:

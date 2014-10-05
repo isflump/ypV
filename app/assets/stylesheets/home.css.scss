@@ -337,6 +337,7 @@
   background:rgba(0,0,0,0.875);
   display:none
 }
+
 .full_calendar{
 
   position:absolute;
@@ -544,4 +545,74 @@
   display:inline-block;
   text-align:center;
   color:#999;
+}
+
+.session_tag_input{
+  margin-left: 20px;
+   border: 1px solid #cccccc;
+  border-bottom-color: #fff;
+  border-right-color: #fff;
+  border-radius: 3px;
+  padding: 10px;
+  width: 280px;
+  margin-bottom: 5px;
+  background: #e5e5e5;
+  color: #555;
+}
+
+.tags {
+  list-style-type: none;
+  margin-left: 20px;
+  overflow: hidden; 
+}
+
+.tags li {
+  list-style:none;
+  display:inline-block;
+  background-color:#111;
+  border-radius:5px;
+  padding:5px 10px;
+  font-size:18px;
+  color:#B2BAC2;
+  box-shadow:0px 0px 7px black;
+  margin:3px 3px 3px 1px;
+  line-height:27px;
+  text-transform:uppercase;
+  cursor: pointer;
+}
+.tags>li:hover {
+  color:#111;
+  background-color: #fff200;
+}
+
+.tag_screen_grey_layer{
+  position:fixed;
+  overflow:hidden;
+  top:10%;
+  bottom:20%;
+  right:25%;
+  left:30%;
+  z-index:999;
+  background:#15191D;
+  display:none
+}
+
+.tag_close_btn{
+  position:fixed;
+  top:11%;
+  right:26%;
+  font-size:35px;
+  color:#aaa;
+  cursor:pointer;
+}
+
+.tag_add_btn{
+  font-size:35px;
+  color:#aaa;
+  cursor:pointer;
+  padding: 10px;
+}
+
+.tag_add_btn:hover, .tag_close_btn:hover{
+  color: #fff200;
 }

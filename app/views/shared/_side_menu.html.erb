@@ -1,5 +1,8 @@
   <nav class="side_bar" >
     <img src="/assets/WF-EN-C-L-W.gif" alt="some_text" width=60% style="margin-top:10px;margin-left:10px">
+    <div class="side_bar_cell" ref='tooltip' title='Display status graph view' onclick="window.open('/status_center/show','_blank')">
+      <i class="fa fa-line-chart"></i>
+    </div>
     <div class="time_selection_bar" >
       <% if @sessionHistory %>
         <% @sessionHistory.keys.sort.reverse.each do |m_key| %>
@@ -35,7 +38,7 @@
           <div class='time_month'><%=parse_month(m_key)%></div>
           <% @executionHistory[m_key].keys.sort.reverse.each do |d_key| %>
             <%if d_key == @execution.created_at.day%>
-              <div class="time_date" style="color:red" id="time_<%=m_key%>_<%=d_key%>" onmouseover="show_detail_exec_time(this.id,'display_<%=m_key%>_<%=d_key%>')"><%=parse_day(d_key)%></div>
+              <div class="time_date" style="color:#fff200" id="time_<%=m_key%>_<%=d_key%>" onmouseover="show_detail_exec_time(this.id,'display_<%=m_key%>_<%=d_key%>')"><%=parse_day(d_key)%></div>
             <%else%>
               <div class="time_date" id="time_<%=m_key%>_<%=d_key%>" onmouseover="show_detail_exec_time(this.id,'display_<%=m_key%>_<%=d_key%>')"><%=parse_day(d_key)%></div>
             <%end%>

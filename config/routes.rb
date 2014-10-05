@@ -21,6 +21,8 @@ Rails.application.routes.draw do
     post 'getAllSessions', on: :member
     post 'getSessionInfoById', on: :member
     post 'getSpiraStructure', on: :member
+    post 'createTag', on: :member
+    post 'deleteTag', on: :member
   end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

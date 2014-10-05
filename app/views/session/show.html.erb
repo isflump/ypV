@@ -39,10 +39,23 @@
   </div>
 </div>
 
-<div class="spira_full_screen_grey_layer" id='tag_edit_layer'>
-  <div class="spira_close_btn"><i class="fa fa-times-circle-o" onclick="hide_tag_edit_layer()"></i></div>
-  <input name="tagName"></input>
-  <input></input>
+<div class="tag_screen_grey_layer" id='tag_edit_layer'>
+  <div class="tag_close_btn"><i class="fa fa-times-circle-o" onclick="hide_tag_edit_layer()"></i></div>
+  <div class="project_name_block" style="margin-top:20px;margin-left:10px"><i class="fa fa-plus" style="font-size:22.5px;margin-right:5px;color:#55DAE1"></i> Add new tag</div>
+  <div>
+    <input value="" class="session_tag_input" placeholder="Enter new tag name" id="tag" />
+    <div class="tag_add_btn" style="display:inline-block;top:20px" onclick="create_tag()"><i class="fa fa-plus-circle"></i></div>
+  </div>
+  <div class="project_name_block" style="margin-top:20px;margin-left:10px"><i class="fa fa-tags" style="font-size:22.5px;margin-right:5px;color:#55DAE1"></i> Current tags</div>
+  <ul id="session_tag_ul" class="tags">
+  <% if @session.tags.size > 0%>
+    
+      <% @session.tags.each do |t| %>
+      <li id="tag_<%=t.id%>" ><%=t.name%> <i  class="fa fa-times-circle-o" style="margin-left:5px" onclick="delete_tag('tag_<%=t.id%>', <%=t.id%>)"></i></li>
+    
+      <%end%>
+  <% end%>
+  </ul>
 </div>
 
 <div class="main_container" >
