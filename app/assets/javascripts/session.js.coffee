@@ -222,10 +222,12 @@ $(document).ready ->
 
 @show_full_calendar = () ->
   fullSessions = []
+  params ={}
+  params['project_id'] = $('#project').find(":selected").val()
   $.ajax({
         type: "POST",
         url: document.URL+"/getAllSessions",
-        data: ''
+        data: params
         success:(data) ->
           console.log(data)
           if data['error'] isnt null
@@ -641,3 +643,8 @@ construct_table = (exec) ->
     temp = temp + '<td style="color:' + fail_color + '">ERROR</td>'
   temp = temp + '</tr>'
   return temp
+
+
+@changeProject = () ->
+  window.location.href = '/home/index?id='+$('#project').find(":selected").val()
+  #window.open('/home/index?project_id='+$('#project').find(":selected").val())

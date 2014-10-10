@@ -1,6 +1,7 @@
 class SessionController < ApplicationController
 
   def show
+    @projects = Project.all()
     @session = Session.find_by(id: params[:id])
     if @session
       sessions = Session.select(:start_time,:id, :browser).where(project_id: @session.project_id).order('sessions.created_at ASC')
@@ -104,11 +105,19 @@ class SessionController < ApplicationController
   def getAllSessions
     data = Hash.new
     begin
-      data[:sessions] = Session.all().order('sessions.created_at ASC').collect{|s|
-        s.start_time=Time.parse(s.start_time).strftime('%Y-%m-%dT%H:%M:%S') if s.start_time
-        s.end_time=Time.parse(s.end_time).strftime('%Y-%m-%dT%H:%M:%S') if s.end_time
-        s
-      }
+      if params[:project_id]
+        data[:sessions] = Session.all().where(:project_id => params[:project_id]).order('sessions.created_at ASC').collect{|s|
+          s.start_time=Time.parse(s.start_time).strftime('%Y-%m-%dT%H:%M:%S') if s.start_time
+          s.end_time=Time.parse(s.end_time).strftime('%Y-%m-%dT%H:%M:%S') if s.end_time
+          s
+        }
+      else
+        data[:sessions] = Session.all().order('sessions.created_at ASC').collect{|s|
+          s.start_time=Time.parse(s.start_time).strftime('%Y-%m-%dT%H:%M:%S') if s.start_time
+          s.end_time=Time.parse(s.end_time).strftime('%Y-%m-%dT%H:%M:%S') if s.end_time
+          s
+        }
+      end
       render json: data
     rescue Exception => e
       data[:error] = e.message.strip
