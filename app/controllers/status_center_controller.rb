@@ -1,12 +1,19 @@
 class StatusCenterController < ApplicationController
   def show
+    @currentProject = Project.find(params[:id])
+    @projects = Project.all()
     @tags=Tag.all().collect{|t| t.name}.uniq
   end
 
   def all
     data = Hash.new
     begin
-      project_id = Project.first().id
+      # if params[:project_id]
+      # else
+      #   project_id = Project.first().id
+      # end
+      project_id = params[:project_id] ? Project.find(params[:project_id]).id: Project.first().id
+
       data[:sessions] = Session.select(:id,:pass_rate,:browser, :start_time).where(project_id: project_id).order('start_time ASC')
       data[:tagMap] = {}
       data[:sessions].each{|s|

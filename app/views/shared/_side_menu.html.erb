@@ -1,8 +1,10 @@
   <nav class="side_bar" >
-    <img src="/assets/WF-EN-C-L-W.gif" alt="some_text" width=60% style="margin-top:10px;margin-left:10px">
-    <div class="side_bar_cell" ref='tooltip' title='Display status graph view' onclick="window.open('/status_center/show','_blank')">
-      <i class="fa fa-line-chart"></i>
-    </div>
+    <img src="/assets/WF-EN-C-L-W.gif" alt="some_text" width=60% style="margin-top:10px;margin-left:10px" onclick="window.location.href='http://www.yellowpages.ca'">
+    <% if @sessionHistory %>
+      <div class="side_bar_cell" ref='tooltip' title='Display status graph view' onclick="window.open('/status_center/show?id=<%=@session.project.id%>','_blank')">
+        <i class="fa fa-line-chart"></i>
+      </div>
+    <%end%>
     <div class="time_selection_bar" >
       <% if @sessionHistory %>
         <% @sessionHistory.keys.sort.reverse.each do |m_key| %>

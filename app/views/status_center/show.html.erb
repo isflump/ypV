@@ -5,6 +5,10 @@
 
   <div class="detail_header_container">
     <div class="detail_header_text_block">
+        <div id='project_id' data-id="<%=@currentProject.id%>" class="project_name_block"><i class="fa fa-rocket" style="font-size:22.5px;margin-right:5px;color:#55DAE1"></i> 
+        <%=@currentProject.name%>
+        </div>
+
         <div class="project_name_block"><i class="fa fa-tags" style="font-size:22.5px;margin-top:4px;color:#55DAE1"></i>
           <% if @tags %>
             <select  onchange="filterBaseOnTag(this.value)">

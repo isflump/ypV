@@ -5,11 +5,12 @@
 sessionStatus = null
 sessionTags = null
 $(document).ready ->
+  console.log $("#proejct_name").data('id')
   if $('body').find('.doomtrain').length > 0
     $.ajax({
           type: "POST",
           url: "all",
-          data: ''
+          data: {'project_id' : $("#project_id").data('id')}
           success:(data) ->
             console.log(data)
             if data['sessions'].length > 0
@@ -52,7 +53,7 @@ construct_lineChart = (chartID,title,dataPass) ->
   $(chartID).highcharts({
     chart:
         zoomType: 'x'
-        type: 'spline'
+        type: 'line'
         width: 900
         height: 355
         backgroundColor: "transparent"
@@ -75,12 +76,8 @@ construct_lineChart = (chartID,title,dataPass) ->
         headerFormat: '<b>{series.name}</b><br>',
         pointFormat: '{point.x:%Y %b %e %H:%M:%S}: {point.y}% with tags: {point.tags}'
     plotOptions:
-      spline:
+      line:
         lineWidth: 2
-        # dataLabels:
-        #     enabled: true
-        #     color: 'white'
-        #     format: '{point.y}%'
     series: [{
             name: 'Pass Rate'
             data: dataPass
