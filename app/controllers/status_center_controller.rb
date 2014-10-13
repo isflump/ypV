@@ -1,8 +1,8 @@
 class StatusCenterController < ApplicationController
   def show
-    @currentProject = Project.find(params[:id])
-    @projects = Project.all()
-    @tags=Tag.all().collect{|t| t.name}.uniq
+    # @currentProject = Project.find(params[:id])
+    # @projects = Project.all()
+    # @tags=Tag.all().collect{|t| t.name}.uniq
   end
 
   def all

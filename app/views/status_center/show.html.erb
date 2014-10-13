@@ -1,33 +1,14 @@
 <% content_for :title, "Status Center" %>
-<div class="doomtrain"></div>
-<div class="main_container" >
-  <%= render "shared/side_menu" %>
-
-  <div class="detail_header_container">
-    <div class="detail_header_text_block">
-        <div id='project_id' data-id="<%=@currentProject.id%>" class="project_name_block"><i class="fa fa-rocket" style="font-size:22.5px;margin-right:5px;color:#55DAE1"></i> 
-        <%=@currentProject.name%>
-        </div>
-
-        <div class="project_name_block"><i class="fa fa-tags" style="font-size:22.5px;margin-top:4px;color:#55DAE1"></i>
-          <% if @tags %>
-            <select  onchange="filterBaseOnTag(this.value)">
-              <option value="None">None</option>
-              <% @tags.each do |name| %>
-                  <option value="<%=name%>"><%=name%></option>
-              <%end%>
-            </select>
-          <%end%>
-        </div>
-    </div>
+<div class="eva"></div>
+<div class="eva_bg">
+  <div class="eva_header">  </div>
+  <div class="eva_rg_container">
+    <div class="eva_large_graph_panel"></div>
+    <div class="eva_large_graph_panel"></div>
   </div>
-
-  <div class='info_container' >
-    <div id="sessionGraph1" class="sc_graph_container">
-        <div id="overallPassRateLine" style="width:800px !important; display:inline-block" ></div>
-    </div>
-    <!-- <div id="sessionGraph2" class="sc_graph_container">
-        <div id="sessionFolderChart" style="width:800px !important; display:inline-block" ></div>
-    </div> -->
+  <div class="eva_lt_container">
+    <div class="eva_small_graph_panel"></div>
+    <div class="eva_small_graph_panel"></div>
+    <div class="eva_small_graph_panel"></div>
   </div>
 </div>
