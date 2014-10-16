@@ -50,12 +50,23 @@ $(document).ready ->
   construct_lineChart("#overallPassRateLine",title, dataPass)
 @evamouseOnFirstTimeSettingButton = (id) ->
   $("#" + id).find(".eva_copy").addClass("active")
+  $("#" + id).addClass("hover")
   $("#" + id).css("color", "#999")
 
 
 @evamouseOutFirstTimeSettingButton = (id) ->
   $("#" + id).find(".eva_copy").removeClass("active")
+  $("#" + id).removeClass("hover")
   $("#" + id).css("color", "#555")
+
+@evaGraphConfig = (id) ->
+  $('#' + id).addClass("active")
+  $('#' + id).removeAttr('onmouseout');
+  $('#' + id).removeAttr('onmouseover')
+  evamouseOnFirstTimeSettingButton()
+  if id == "evaLargeGraph1"
+    $("#drawer_lt").show('slide', {direction: 'right'}, 525)
+
 
 construct_lineChart = (chartID,title,dataPass) ->
   $(chartID).highcharts({
