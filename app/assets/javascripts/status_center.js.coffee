@@ -48,6 +48,14 @@ $(document).ready ->
             }
           })
   construct_lineChart("#overallPassRateLine",title, dataPass)
+@evamouseOnFirstTimeSettingButton = (id) ->
+  $("#" + id).find(".eva_copy").addClass("active")
+  $("#" + id).css("color", "#999")
+
+
+@evamouseOutFirstTimeSettingButton = (id) ->
+  $("#" + id).find(".eva_copy").removeClass("active")
+  $("#" + id).css("color", "#555")
 
 construct_lineChart = (chartID,title,dataPass) ->
   $(chartID).highcharts({

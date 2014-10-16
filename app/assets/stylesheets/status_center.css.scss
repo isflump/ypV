@@ -27,7 +27,7 @@
   height:35px;
 }
 
-.eva_rg_container{
+.eva_lt_container{
 	position:relative;
 	width:67.5%;
   height:calc(100% - 40px);
@@ -46,6 +46,7 @@
   margin-left:7.5px;
 }
 
+
 .eva_small_graph_panel{
   margin-top:1.5px;
   margin-bottom:1.5px;
@@ -61,9 +62,10 @@
 .eva_small_graph_panel:first-child{
   margin-top:7.5px;
 }
-.eva_lt_container{
+.eva_rg_container{
   position:relative;
-  width:32.5%;
+  width:calc(32.25% - 5.5px);
+  margin-right:5.5px;
   height:calc(100% - 40px);
   display:inline-block;
   float:right;
@@ -82,4 +84,110 @@
   margin-left:1.5%;
   overflow: auto;
 
+}
+.eva_large_graph_inner_container{
+  position:absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  justify-content: center;
+  left:calc(50% - 62.5px);
+  top:calc(50% - 62.5px);
+  height:125px;
+  width:125px;
+  border:dashed 2.5px #555;
+  border-radius:7.5px;
+  font-size:37.5px;
+  text-align:center;
+  color: #555;
+  cursor:pointer;
+}
+.eva_large_graph_inner_container:hover{
+  -webkit-animation:  enlarge 0.5s ease-in-out;
+  -webkit-animation-fill-mode: forwards;
+  animation: enlarge 0.5s ease-in-out;
+  animation-fill-mode: forwards;
+  border:dashed 2.5px #999;
+}
+.eva_small_graph_inner_container{
+  position:absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  justify-content: center;
+  left:calc(50% - 27.5px);
+  top:calc(50% - 27.5px);
+  height:55px;
+  width:55px;
+  border:dashed 2.5px #555;
+  border-radius:7.5px;
+  font-size:27.5px;
+  text-align:center;
+  color: #555;
+  cursor:pointer;
+}
+.eva_small_graph_inner_container:hover{
+  -webkit-animation:  enlarge_2 0.5s ease-in-out;
+  -webkit-animation-fill-mode: forwards;
+  animation: enlarge_2 0.5s ease-in-out;
+  animation-fill-mode: forwards;
+  border:dashed 2.5px #999;
+}
+.eva_nogo {
+  position: relative;
+}
+
+.eva_copy {
+  position: absolute;
+  left: 0; right: 0;
+  top: 0; bottom: 0;
+  height: 100%;
+  overflow: hidden;
+  opacity: 0.5;
+  vertical-align: 25px;
+}
+
+.eva_copy.active{
+  -webkit-animation: eva_pulse 1.5s infinite ease-in; /* Chrome, Safari, Opera */
+  animation: eva_pulse 1.5s infinite ease-in;
+}
+
+@-webkit-keyframes enlarge {
+    from {width: 175px;height:175px;font-size:37.5px}
+    to {left:2.5%;width: 95%;height: 85%;top:7.5%;font-size:55px}
+}
+@keyframes enlarge {
+    from {width: 175px;height:175px;font-size:37.5px}
+    to {left:2.5%;width: 95%;height: 85%;top:7.5%;font-size:55px}
+}
+
+@-webkit-keyframes enlarge_2 {
+    from {width: 55px;height:55px;font-size:27.5px}
+    to {left:2.5%;width: 95%;height: 85%;top:7.5%;font-size:42.5px}
+}
+@keyframes enlarge_2 {
+    from {width: 175px;height:175px;font-size:37.5px}
+    to {left:2.5%;width: 95%;height: 85%;top:7.5%;font-size:42.5px}
+}
+
+@keyframes eva_pulse {
+    0% { transform: scale(1); opacity: 0.5}
+    100% { transform: scale(3.5); opacity: 0 }
+}
+
+@-webkit-keyframes eva_pulse {
+    0% { -webkit-transform: scale(1); opacity: 0.5}
+    100% { -webkit-transform: scale(3.5); opacity: 0 }
 }
