@@ -28,7 +28,9 @@
 }
 
 .eva_lt_container{
-	position:relative;
+	position:fixed;
+  left:0px;
+  bottom:0px;
 	width:67.5%;
   height:calc(100% - 40px);
   display:inline-block;
@@ -45,7 +47,22 @@
   background: #202328;
   margin-left:7.5px;
 }
-
+.eva_lt_drawer{
+  top:42.5px;
+  right:0px;
+  position:fixed;
+  height:calc(100% - 42.5px);
+  width:calc(32.25% - 4.5px);
+  outline: 1px solid #101214;
+  border-left: 1px solid #3e444c;
+  border-radius: 2.5px;
+  background: #202328;
+  z-index:5;
+  -webkit-box-shadow: -8px 0px 17.5px 0px rgba(0,0,0,0.5);
+  -moz-box-shadow: -8px 0px 25px 0px rgba(0,0,0,0.5);
+  box-shadow: -8px 0px 25px 0px rgba(0,0,0,0.5);
+  display:none;
+}
 
 .eva_small_graph_panel{
   margin-top:1.5px;
@@ -63,28 +80,17 @@
   margin-top:7.5px;
 }
 .eva_rg_container{
-  position:relative;
-  width:calc(32.25% - 5.5px);
+  position:fixed;
+  width:calc(32.25% - 7.5px);
   margin-right:5.5px;
   height:calc(100% - 40px);
   display:inline-block;
-  float:right;
+  right:0px;
+  bottom:0px;
 }
 
 
-.eva_rg_panel{
-  margin-top:7.5px;
-  position:relative;
-  width:calc(61.8% - 2 - 1.5%);
-  outline: 1px solid #101214;
-  border-top: 1px solid #3e444c;
-  border-radius: 2.5px;
-  background: #202328;
-  padding-bottom: 25px;
-  margin-left:1.5%;
-  overflow: auto;
 
-}
 .eva_large_graph_inner_container{
   position:absolute;
   display: -webkit-box;
@@ -108,13 +114,18 @@
   color: #555;
   cursor:pointer;
 }
-.eva_large_graph_inner_container:hover{
+.eva_large_graph_inner_container.hover{
   -webkit-animation:  enlarge 0.5s ease-in-out;
   -webkit-animation-fill-mode: forwards;
   animation: enlarge 0.5s ease-in-out;
   animation-fill-mode: forwards;
   border:dashed 2.5px #999;
 }
+
+.eva_large_graph_inner_container.active{
+  left:2.5%;width: 95%;height: 85%;top:7.5%;font-size:55px
+}
+
 .eva_small_graph_inner_container{
   position:absolute;
   display: -webkit-box;

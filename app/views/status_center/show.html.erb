@@ -5,7 +5,7 @@
   <div class="eva_lt_container">
     <!-- first large graph -->
     <div class="eva_large_graph_panel">
-      <div class="eva_large_graph_inner_container selection_mode" id="evaLargeGraph1" onmouseover="evamouseOnFirstTimeSettingButton(this.id)" onmouseout="evamouseOutFirstTimeSettingButton(this.id)">
+      <div class="eva_large_graph_inner_container selection_mode" id="evaLargeGraph1" onclick="evaGraphConfig(this.id)" onmouseover="evamouseOnFirstTimeSettingButton(this.id)" onmouseout="evamouseOutFirstTimeSettingButton(this.id)">
         <span class="eva_nogo fa fa-area-chart">
           <span class="eva_copy fa fa-area-chart"></span>
         </span>
@@ -22,6 +22,11 @@
       <!-- second large graph -->
     </div>
   </div>
+  <!-- left graph drawer -->
+  <div class="eva_lt_drawer" id="drawer_lt">
+
+  </div>
+  <!-- left graph drawer -->
   <div class="eva_rg_container">
     <div class="eva_small_graph_panel">
       <!-- first small graph -->
@@ -51,4 +56,5 @@
       <!-- thrid small graph -->
     </div>
   </div>
+
 </div>
