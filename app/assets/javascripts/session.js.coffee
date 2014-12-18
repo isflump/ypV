@@ -621,7 +621,6 @@ construct_table = (exec) ->
   temp = temp + '<td>' + exec.case_id + '</td>'
   temp = temp + '<td rel="tooltip" title="'+exec.location+'">' + exec.case_name + '</td>'
   temp = temp + '<td>' + Math.round(exec.duration) + '</td>'
-  temp = temp + '<td>' + exec.spira_case_id + '</td>'
 
   temp = temp + '<td  style="text-align:center">'
   if sessionShortHistoryMap
@@ -632,7 +631,7 @@ construct_table = (exec) ->
             temp = temp + '<i id="ses_' + exec.id + '_trace_' + i + '" rel="tooltip" title="' + his.created_at + '" class="fa fa-check-circle sessionTablePassHistoryTrace"></i> '
           else
             temp = temp + '<i id="ses_' + exec.id + '_trace_' + i + '" rel="tooltip" title="' + his.created_at + '" class="fa fa-bug sessionTableFailHistoryTrace"></i> '
-
+  
   temp = temp + '</td>'
 
   if exec.result is "passed"
@@ -641,6 +640,12 @@ construct_table = (exec) ->
     temp = temp + '<td style="color:' + fail_color + '">'+ exec.result.toUpperCase() + '</td>'
   else
     temp = temp + '<td style="color:' + fail_color + '">ERROR</td>'
+
+  if exec.jira_number
+    temp = temp + '<td><a target="_blank" style="color:white" href="https://issues.ypg.com/browse/' + exec.jira_number + '">' + exec.jira_number + '</a></td>'
+  else
+    temp = temp + '<td></td>'
+
   temp = temp + '</tr>'
   return temp
 

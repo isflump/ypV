@@ -22,6 +22,7 @@ module YpV
     SPIRA_USER_NAME = 'ypgAutoTester'
     SPIRA_PASSWORD = '@ut0t3$t3r'
     SPIRA_TC_NAME_MAP = {}
-    # SPIRA_TC_ID_MAP = {}
+
+    STA_PRE_PATH = "#{Rails.public_path}/sta_preference/"
   end
 end

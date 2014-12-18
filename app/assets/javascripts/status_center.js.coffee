@@ -5,7 +5,7 @@
 sessionStatus = null
 sessionTags = null
 $(document).ready ->
-  console.log $("#proejct_name").data('id')
+  console.log $("#project_id").data('id')
   if $('body').find('.doomtrain').length > 0
     $.ajax({
           type: "POST",

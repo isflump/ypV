@@ -59,12 +59,25 @@ class SessionController < ApplicationController
     data = Hash.new
     begin
       ses = Session.find_by(id: params[:id])
-      data[:executions] = ses.executions.select(:case_id,:case_name,:scenario,:duration,:spira_case_id,:location,:result,:id,:created_at,:isViewed)
+      data[:executions] = ses.executions.select(:case_id,:case_name,:scenario,:duration,:spira_case_id,:location,:result,:id,:created_at,:isViewed,:jira_number)
       #find the lastest five executions
       data[:shortHistoryMap]={}
+      #find all jira tickets
+      jira_number_hash = {}
+
+      Jira.all().each{|j|jira_number_hash[j.case_name] = j.jira_id}
+
+      puts jira_number_hash.size
+
       for exec in data[:executions]
         data[:shortHistoryMap][exec.id] = Execution.select(:result,:id,:created_at).where(case_id: exec.case_id).where("created_at < ?", exec.created_at).order('executions.created_at DESC').limit(4).reverse
+        
+        exec.jira_number = jira_number_hash[exec.case_name.upcase] if jira_number_hash.has_key?(exec.case_name.upcase) if jira_number_hash.size != 0  
       end
+      # for exec in data[:executions]
+      #   puts '------------------------------------------------------------'
+      #   puts "herehere #{exec.duration}"
+      # end
       data[:sessionStatusPass]=0
       data[:sessionStatusFail]=0
       data[:executions].group_by{|e| e.result }.each{|k,v|
@@ -94,6 +107,8 @@ class SessionController < ApplicationController
         data[:sessionLocationPass] << v[v.keys[0]].collect{|o| o.has_key?("passed") ? o["passed"] : 0}.sum
         data[:sessionLocationFail] << v[v.keys[0]].collect{|o| o.has_key?("failed") ? o["failed"] : 0}.sum
       }
+
+      #find all jira tickets
       render json: data
     rescue Exception => e
       data[:error] = e.message.strip

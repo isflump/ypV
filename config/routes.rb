@@ -2,12 +2,15 @@ Rails.application.routes.draw do
   get 'status_center/show'
   post 'status_center/all'
 
+
   get 'home/index'
 
   post 'store/storeSession'
   post 'store/storeExecution'
   post 'store/storeScreenShot'
 
+  post 'jira/save_jira'
+  resources :jira
 
   resources :execution do
     post 'getSpira', on: :member

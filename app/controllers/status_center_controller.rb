@@ -1,17 +1,21 @@
 class StatusCenterController < ApplicationController
+  
   def show
-    # @currentProject = Project.find(params[:id])
-    # @projects = Project.all()
-    # @tags=Tag.all().collect{|t| t.name}.uniq
+    @currentProject = Project.find(params[:id])
+    @projects = Project.all()
+    @tags=Tag.all().collect{|t| t.name}.uniq
+    
+    puts YpV::Application::STA_PRE_PATH+"#{request.remote_ip}"
+    if File.directory?( YpV::Application::STA_PRE_PATH+request.remote_ip)
+      puts "sureure"
+    end
+
   end
 
   def all
     data = Hash.new
+    puts params
     begin
-      # if params[:project_id]
-      # else
-      #   project_id = Project.first().id
-      # end
       project_id = params[:project_id] ? Project.find(params[:project_id]).id: Project.first().id
 
       data[:sessions] = Session.select(:id,:pass_rate,:browser, :start_time).where(project_id: project_id).order('start_time ASC')
@@ -25,9 +29,9 @@ class StatusCenterController < ApplicationController
             s.executions.group_by{|e| e.result }.each{|k,v|
               if k =~/passed/i
                 s.pass_rate = ((v.count.to_f/s.executions.size)*100).round(2)
-                #s.update_attribute(:pass_rate,((v.count.to_f/s.executions.size)*100).round(2))
+                #s.update_attribute(:pass_rate,s.pass_rate)
                 break
-                #this is the case where no pass in the current session
+              #this is the case where no pass in the current session
               else
                 s.pass_rate = 0
               end
@@ -45,4 +49,11 @@ class StatusCenterController < ApplicationController
       render json: data
     end
   end
+
+
+  #calculate pass rate 
+  def calculate_pass_rate
+
+  end
+
 end

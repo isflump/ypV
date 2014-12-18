@@ -55,6 +55,9 @@ class ExecutionController < ApplicationController
       @execution.isViewed = true
       @execution.save
     end
+
+    #find Jira if exits
+    @jira = Jira.find_by(case_name: @execution.case_name.upcase)
   end
 
 
