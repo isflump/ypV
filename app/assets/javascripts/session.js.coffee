@@ -642,7 +642,10 @@ construct_table = (exec) ->
     temp = temp + '<td style="color:' + fail_color + '">ERROR</td>'
 
   if exec.jira_number
-    temp = temp + '<td><a target="_blank" style="color:white" href="https://issues.ypg.com/browse/' + exec.jira_number + '">' + exec.jira_number + '</a></td>'
+    if exec.jira_number is 'script'
+      temp = temp + '<td>' + exec.jira_number.toUpperCase() + '</td>'
+    else
+      temp = temp + '<td><a target="_blank" style="color:white" href="https://issues.ypg.com/browse/' + exec.jira_number + '">' + exec.jira_number + '</a></td>'
   else
     temp = temp + '<td></td>'
 
