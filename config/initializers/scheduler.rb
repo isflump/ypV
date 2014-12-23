@@ -32,7 +32,6 @@ def refresh_spira_object
         for i in 1..((testCaseNo / 225).to_i + 1)
           i == 1 ? startPos =  1 : startPos = (i - 1) * 225
           driver.TestCase_Retrieve({startingRow: startPos,numberOfRows: 225}).testCase_RetrieveResult.remoteTestCase.each_with_index{|tc,i|
-            puts tc.name.strip
             if YpV::Application::SPIRA_TC_NAME_MAP.has_key?(p.name)
               YpV::Application::SPIRA_TC_NAME_MAP[p.name][tc.name.strip]=tc
             else
