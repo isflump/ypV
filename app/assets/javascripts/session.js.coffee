@@ -53,6 +53,10 @@ $(document).ready ->
   $('body').css('overflow','hidden')
   $('#spira_full_screen_grey_layer').show( "fold", {}, 'slow' );
 
+@show_tag_info = () ->
+  $('body').css('overflow','hidden')
+  $('#tag_edit_layer').show( "fold", {}, 'slow' );
+
 @render_spira_info = () ->
   $.ajax({
         type: "POST",
@@ -134,7 +138,7 @@ $(document).ready ->
           category_data = []
           autoCase_data = []
           nAutoCase_data = []
-          
+
           for f in folder_collector[3].reverse()
             category_data.push Object.keys(f)[0]
             autoCase_data.push f[Object.keys(f)[0]]["automated"]
@@ -186,6 +190,9 @@ $(document).ready ->
 @hide_spira_info = () ->
   $('#spira_full_screen_grey_layer').hide( "fold", {}, 'slow' );
   $('body').css('overflow','auto')
+@hide_tag_edit_layer = () ->
+  $('#tag_edit_layer').hide( "fold", {}, 'slow' );
+  $('body').css('overflow','auto')
 
 @collapseRows = (id) ->
   curAction = $("#"+id).data("id")
@@ -215,10 +222,12 @@ $(document).ready ->
 
 @show_full_calendar = () ->
   fullSessions = []
+  params ={}
+  params['project_id'] = $('#project').find(":selected").val()
   $.ajax({
         type: "POST",
         url: document.URL+"/getAllSessions",
-        data: ''
+        data: params
         success:(data) ->
           console.log(data)
           if data['error'] isnt null
@@ -266,6 +275,8 @@ $(document).ready ->
   $('#full_calendar_execution_info_detail_text4').html('<font style="color:#55DAE1;font-weight:bold">OS:</font> ')
   $('#full_calendar_execution_info_detail_text5').html('<font style="color:#55DAE1;font-weight:bold">IP:</font> ' )
   $('#full_calendar_execution_info_detail_text6').html('<font style="color:#55DAE1;font-weight:bold">Result:</font> ' )
+  $('#full_calendar_execution_info_detail_text7').html('<font style="color:#55DAE1;font-weight:bold">URL:</font> ' )
+
   #fill info here
   data = {}
   data['sid'] = id
@@ -280,6 +291,7 @@ $(document).ready ->
           $('#full_calendar_execution_info_detail_text4').html('<font style="color:#55DAE1;font-weight:bold">OS:</font> ' + data['os'])
           $('#full_calendar_execution_info_detail_text5').html('<font style="color:#55DAE1;font-weight:bold">IP:</font> ' + data['ip'])
           $('#full_calendar_execution_info_detail_text6').html('<font style="color:#55DAE1;font-weight:bold">Result:</font> <font class="ypv_pass">' + data['result_pass'] + '</font>/<font class="ypv_fail">' + (parseInt(data['result_all']) - parseInt(data['result_pass'])) + '</font>/<font color="#ccc">' + data['result_all'] + '</font>')
+          $('#full_calendar_execution_info_detail_text7').html('<font style="color:#55DAE1;font-weight:bold">URL:</font> ' + data['base_url'])
           if /chrome/i.test data['device']
             $('#full_calendar_execution_info_detail_text1').attr('src' , '/assets/chrome-icon.png')
           else if /firefox|firefox_no_js/i.test data['device']
@@ -493,42 +505,38 @@ pre_hightLightColor=null
     $("#"+row_id).css('color','#666')
     pre_hightLightColor = $("#"+row_id).css("color")
 
-# construct_pieChart = (chartID, title, dataPass,dataFail) ->
-#   $(chartID).highcharts({
-#       chart:
-#           plotShadow: false
-#           width: 350
-#           height: 355
-#           backgroundColor: "transparent"
-#           style:
-#             fontFamily: 'monospace'
-#             color:"#aaa"
-#       colors: [pass_color, fail_color]
-#       title:
-#           text: title
-#       tooltip:
-#           pointFormat: '{point.percentage:.0f}%</b>'
-#       plotOptions:
-#           pie:
-#               allowPointSelect: true,
-#               cursor: 'pointer',
-#               dataLabels:
-#                 enabled: false
-#               showInLegend: true
-#
-#       series: [{
-#           type: 'pie'
-#           name: 'Pass/Fail Ratio'
-#           data: [
-#               ['Passed',   dataPass],
-#               ['Failed',   dataFail]
-#           ]
-#           point:
-#             events:
-#               click: (event) ->
-#                 filterBySessionStatus_hightChart(this,event)
-#       }]
-#     })
+@create_tag = () ->
+  if $("#tag").val()
+    param={'name' : $("#tag").val() }
+    $.ajax({
+          type: "POST",
+          url: document.URL+"/createTag",
+          data: param
+          success:(data) ->
+            console.log(data)
+            if data['tag']
+              content = "<li id='tag_" + data['tag'].id+ "'>" + data['tag'].name + "<i class=\"fa fa-times-circle-o\" style=\"margin-left:5px\" onclick=\"delete_tag('tag_" + data['tag'].id+ "' ," + data['tag'].id + ")\"></i></li>"
+              $("#session_tag_ul").append(content)
+              $("#tag").val('')
+          error:(data) ->
+            console.log(data["trace"])
+        })
+  else
+    alert("Please enter a value.")
+
+@delete_tag = (ui_id,id) ->
+  param={'tag_id' : id }
+  $.ajax({
+        type: "POST",
+        url: document.URL+"/deleteTag",
+        data: param
+        success:(data) ->
+          console.log(data)
+          if data['tag'] is 'Success'
+            $("#"+ui_id).remove()
+        error:(data) ->
+          console.log(data["trace"])
+      })
 construct_combChart = (chartID,title,label,dataPass,dataFail,dataPiePass,dataPieFail) ->
   $(chartID).highcharts({
     chart:
@@ -613,7 +621,6 @@ construct_table = (exec) ->
   temp = temp + '<td>' + exec.case_id + '</td>'
   temp = temp + '<td rel="tooltip" title="'+exec.location+'">' + exec.case_name + '</td>'
   temp = temp + '<td>' + Math.round(exec.duration) + '</td>'
-  temp = temp + '<td>' + exec.spira_case_id + '</td>'
 
   temp = temp + '<td  style="text-align:center">'
   if sessionShortHistoryMap
@@ -624,7 +631,7 @@ construct_table = (exec) ->
             temp = temp + '<i id="ses_' + exec.id + '_trace_' + i + '" rel="tooltip" title="' + his.created_at + '" class="fa fa-check-circle sessionTablePassHistoryTrace"></i> '
           else
             temp = temp + '<i id="ses_' + exec.id + '_trace_' + i + '" rel="tooltip" title="' + his.created_at + '" class="fa fa-bug sessionTableFailHistoryTrace"></i> '
-
+  
   temp = temp + '</td>'
 
   if exec.result is "passed"
@@ -633,5 +640,19 @@ construct_table = (exec) ->
     temp = temp + '<td style="color:' + fail_color + '">'+ exec.result.toUpperCase() + '</td>'
   else
     temp = temp + '<td style="color:' + fail_color + '">ERROR</td>'
+
+  if exec.jira_number
+    if exec.jira_number is 'script'
+      temp = temp + '<td>' + exec.jira_number.toUpperCase() + '</td>'
+    else
+      temp = temp + '<td><a target="_blank" style="color:white" href="https://issues.ypg.com/browse/' + exec.jira_number + '">' + exec.jira_number + '</a></td>'
+  else
+    temp = temp + '<td></td>'
+
   temp = temp + '</tr>'
   return temp
+
+
+@changeProject = () ->
+  window.location.href = '/home/index?id='+$('#project').find(":selected").val()
+  #window.open('/home/index?project_id='+$('#project').find(":selected").val())

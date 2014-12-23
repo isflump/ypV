@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   get 'status_center/show'
+  post 'status_center/all'
+
 
   get 'home/index'
 
@@ -7,6 +9,8 @@ Rails.application.routes.draw do
   post 'store/storeExecution'
   post 'store/storeScreenShot'
 
+  post 'jira/save_jira'
+  resources :jira
 
   resources :execution do
     post 'getSpira', on: :member
@@ -20,6 +24,8 @@ Rails.application.routes.draw do
     post 'getAllSessions', on: :member
     post 'getSessionInfoById', on: :member
     post 'getSpiraStructure', on: :member
+    post 'createTag', on: :member
+    post 'deleteTag', on: :member
   end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

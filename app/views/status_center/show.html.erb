@@ -1,19 +1,65 @@
 <% content_for :title, "Status Center" %>
-<div class="main_container" >
-  <%= render "shared/side_menu" %>
+<div class="doomtrain"></div>
+<div id='project_id' data-id="<%=@currentProject.id%>" class="project_name_block"><i class="fa fa-rocket" style="font-size:22.5px;margin-right:5px;color:#55DAE1"></i> 
+        <%=@currentProject.name%>
+        </div>
 
-  <div class="detail_header_container">
-    <div class="detail_header_text_block">
-        <div class="project_name_block"><i class="fa fa-rocket" style="font-size:22.5px;margin-right:5px;color:#55DAE1"></i>SWAN</div>
+<div class="eva"></div>
+<div class="eva_bg">
+  <div class="eva_header">  </div>
+  <div class="eva_lt_container">
+    <!-- first large graph -->
+    <div class="eva_large_graph_panel">
+      <div class="eva_large_graph_inner_container selection_mode" id="evaLargeGraph1" onclick="evaGraphConfig(this.id)" onmouseover="evamouseOnFirstTimeSettingButton(this.id)" onmouseout="evamouseOutFirstTimeSettingButton(this.id)">
+        <span class="eva_nogo fa fa-area-chart">
+          <span class="eva_copy fa fa-area-chart"></span>
+        </span>
+      </div>
+    </div>
+    <!-- first large graph -->
+    <div class="eva_large_graph_panel">
+      <!-- second large graph -->
+        <div class="eva_large_graph_inner_container selection_mode" id="evaLargeGraph2" onmouseover="evamouseOnFirstTimeSettingButton(this.id)" onmouseout="evamouseOutFirstTimeSettingButton(this.id)">
+          <span class="eva_nogo fa fa-area-chart">
+            <span class="eva_copy fa fa-area-chart"></span>
+          </span>
+        </div>
+      <!-- second large graph -->
+    </div>
+  </div>
+  <!-- left graph drawer -->
+  <div class="eva_lt_drawer" id="drawer_lt">
+
+  </div>
+  <!-- left graph drawer -->
+  <div class="eva_rg_container">
+    <div class="eva_small_graph_panel">
+      <!-- first small graph -->
+        <div class="eva_small_graph_inner_container selection_mode" id="evaSmallGraph1" onmouseover="evamouseOnFirstTimeSettingButton(this.id)" onmouseout="evamouseOutFirstTimeSettingButton(this.id)">
+          <span class="eva_nogo fa fa-area-chart">
+            <span class="eva_copy fa fa-area-chart"></span>
+          </span>
+        </div>
+      <!-- first small graph -->
+    </div>
+    <div class="eva_small_graph_panel">
+      <!-- second small graph -->
+        <div class="eva_small_graph_inner_container selection_mode" id="evaSmallGraph2" onmouseover="evamouseOnFirstTimeSettingButton(this.id)" onmouseout="evamouseOutFirstTimeSettingButton(this.id)">
+          <span class="eva_nogo fa fa-area-chart">
+            <span class="eva_copy fa fa-area-chart"></span>
+          </span>
+        </div>
+      <!-- second small graph -->
+    </div>
+    <div class="eva_small_graph_panel">
+      <!-- thrid small graph -->
+        <div class="eva_small_graph_inner_container selection_mode" id="evaSmallGraph3" onmouseover="evamouseOnFirstTimeSettingButton(this.id)" onmouseout="evamouseOutFirstTimeSettingButton(this.id)">
+          <span class="eva_nogo fa fa-area-chart">
+            <span class="eva_copy fa fa-area-chart"></span>
+          </span>
+        </div>
+      <!-- thrid small graph -->
     </div>
   </div>
 
-  <div class='info_container' >
-    <div id="sessionGraph1" class="sc_graph_container">
-        <div id="sessionFolderChart" style="width:800px !important; display:inline-block" ></div>
-    </div>
-    <div id="sessionGraph2" class="sc_graph_container">
-        <div id="sessionFolderChart" style="width:800px !important; display:inline-block" ></div>
-    </div>
-  </div>
 </div>

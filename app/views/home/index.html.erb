@@ -10,8 +10,22 @@
 
   <div class='info_container'>
     <div class="home_report_list_container" style="color:white !important">
-      We cannot find any sessions in your DB! <br>
-      Make sure your project pytest is connected to this server.
+      <% if @projects.size > 1 %>
+        <% if @currentProject%>
+          We cannot find any sessions under the project <%=@currentProject.name%> ! Please choose another one <br>
+        <%end%>
+        <select id="project" onchange="changeProject()">
+            <%@projects.each do |p|%>
+             <%if @currentProject.name == p.name%>
+                <option selected="selected" value="<%=p.id%>"><%=p.name%></option>
+              <%else%>
+                <option value="<%=p.id%>"><%=p.name%></option>
+            <%end end%>
+        </select> 
+      <%else%>
+         We cannot find any sessions under the project!
+      <%end%>
+      <br> Make sure your project pytest is connected to this server.
     </div>
 
   </div>

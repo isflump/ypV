@@ -1,6 +1,7 @@
 class SessionController < ApplicationController
 
   def show
+    @projects = Project.all()
     @session = Session.find_by(id: params[:id])
     if @session
       sessions = Session.select(:start_time,:id, :browser).where(project_id: @session.project_id).order('sessions.created_at ASC')
@@ -57,12 +58,26 @@ class SessionController < ApplicationController
   def getStatus
     data = Hash.new
     begin
-      data[:executions] = Session.find_by(id: params[:id]).executions.select(:case_id,:case_name,:scenario,:duration,:spira_case_id,:location,:result,:id,:created_at,:isViewed)
+      ses = Session.find_by(id: params[:id])
+      data[:executions] = ses.executions.select(:case_id,:case_name,:scenario,:duration,:spira_case_id,:location,:result,:id,:created_at,:isViewed,:jira_number)
       #find the lastest five executions
       data[:shortHistoryMap]={}
+      #find all jira tickets
+      jira_number_hash = {}
+
+      Jira.all().each{|j|jira_number_hash[j.case_name] = j.jira_id}
+
+      puts jira_number_hash.size
+
       for exec in data[:executions]
-        data[:shortHistoryMap][exec.id] = Execution.select(:result,:id,:created_at).where(case_name: exec.case_name).where("created_at < ?", exec.created_at).order('executions.created_at DESC').limit(4).reverse
+        data[:shortHistoryMap][exec.id] = Execution.select(:result,:id,:created_at).where(case_id: exec.case_id).where("created_at < ?", exec.created_at).order('executions.created_at DESC').limit(4).reverse
+        
+        exec.jira_number = jira_number_hash[exec.case_name.upcase] if jira_number_hash.has_key?(exec.case_name.upcase) if jira_number_hash.size != 0  
       end
+      # for exec in data[:executions]
+      #   puts '------------------------------------------------------------'
+      #   puts "herehere #{exec.duration}"
+      # end
       data[:sessionStatusPass]=0
       data[:sessionStatusFail]=0
       data[:executions].group_by{|e| e.result }.each{|k,v|
@@ -72,7 +87,14 @@ class SessionController < ApplicationController
           data[:sessionStatusFail] = v.count
         end
       }
-
+      #calculate the pass rate
+      if data[:executions].size > 0
+        if data[:sessionStatusPass] == 0
+          ses.update_attribute(:pass_rate, 0)
+        else
+          ses.update_attribute(:pass_rate, ((data[:sessionStatusPass].to_f/data[:executions].size)*100).round(2))
+        end
+      end
       #genearte location bar chart data
       data[:sessionLocationLabel]=[]
       data[:sessionLocationPass]=[]
@@ -85,6 +107,8 @@ class SessionController < ApplicationController
         data[:sessionLocationPass] << v[v.keys[0]].collect{|o| o.has_key?("passed") ? o["passed"] : 0}.sum
         data[:sessionLocationFail] << v[v.keys[0]].collect{|o| o.has_key?("failed") ? o["failed"] : 0}.sum
       }
+
+      #find all jira tickets
       render json: data
     rescue Exception => e
       data[:error] = e.message.strip
@@ -96,11 +120,19 @@ class SessionController < ApplicationController
   def getAllSessions
     data = Hash.new
     begin
-      data[:sessions] = Session.all().order('sessions.created_at ASC').collect{|s|
-        s.start_time=Time.parse(s.start_time).strftime('%Y-%m-%dT%H:%M:%S') if s.start_time
-        s.end_time=Time.parse(s.end_time).strftime('%Y-%m-%dT%H:%M:%S') if s.end_time
-        s
-      }
+      if params[:project_id]
+        data[:sessions] = Session.all().where(:project_id => params[:project_id]).order('sessions.created_at ASC').collect{|s|
+          s.start_time=Time.parse(s.start_time).strftime('%Y-%m-%dT%H:%M:%S') if s.start_time
+          s.end_time=Time.parse(s.end_time).strftime('%Y-%m-%dT%H:%M:%S') if s.end_time
+          s
+        }
+      else
+        data[:sessions] = Session.all().order('sessions.created_at ASC').collect{|s|
+          s.start_time=Time.parse(s.start_time).strftime('%Y-%m-%dT%H:%M:%S') if s.start_time
+          s.end_time=Time.parse(s.end_time).strftime('%Y-%m-%dT%H:%M:%S') if s.end_time
+          s
+        }
+      end
       render json: data
     rescue Exception => e
       data[:error] = e.message.strip
@@ -119,6 +151,7 @@ class SessionController < ApplicationController
       data[:device] = session.browser
       data[:os] = session.os
       data[:ip] = session.ip
+      data[:base_url] = session.base_url
       data[:result_pass] = session.executions.collect{|e| e.result=~/pass/i ? 1 : 0}.sum
       data[:result_all] = session.executions.size
 
@@ -151,6 +184,42 @@ class SessionController < ApplicationController
       render json: data
     rescue Exception => e
       puts e
+      data[:error] = e.message.strip
+      data[:trace] = e.backtrace.join("<br>")
+      render json: data
+    end
+  end
+
+
+
+  #################Tag managment####################
+  def createTag
+    data = Hash.new()
+    session =  Session.find(params[:id])
+
+    begin
+      t = Tag.new(session_id: session.id, name: params[:name])
+      if t.save
+        data[:tag] = t
+      else
+        data[:tag] = nil
+      end
+      
+      render json: data
+    rescue Exception => e
+      data[:error] = e.message.strip
+      data[:trace] = e.backtrace.join("<br>")
+      render json: data
+    end
+  end
+
+  def deleteTag
+    data = Hash.new()
+    begin
+      Tag.delete(params[:tag_id])
+      data[:tag] = 'Success'
+      render json: data
+    rescue Exception => e
       data[:error] = e.message.strip
       data[:trace] = e.backtrace.join("<br>")
       render json: data

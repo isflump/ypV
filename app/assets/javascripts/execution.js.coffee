@@ -649,3 +649,38 @@ prevPanelId=null
   $('#' + display_id).css('right' , rightPos)
 
   $('#' + display_id).show()
+
+
+@save_jira_issue_number = () ->
+  input = $("#exec_ticket_num_input").val()
+  name = $("#exec_case_name").html().split('</i>')[1]
+
+  if input is ''
+    alert("Jira number cannot be empty")
+  else
+    param = {"jira" : input, "case_name": name}
+    $.ajax({
+      type: "POST",
+      url: "/jira/save_jira",
+      data: param
+      success:(data) ->
+        alert(data['success'])
+      error:(data) ->
+        alert(data['trace'])
+    })
+
+
+@delete_jira_issue_number = (id) ->
+  $.ajax({
+    type: "DELETE",
+    url: "/jira/" + id,
+    data: ''
+    success:(data) ->
+      alert(data['success'])
+      $("#delete_jira_button").hide()
+      $("#exec_ticket_num_input").val('')
+    error:(data) ->
+      alert(data['trace'])
+  })
+
+

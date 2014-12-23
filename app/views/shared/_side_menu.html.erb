@@ -1,10 +1,15 @@
   <nav class="side_bar" >
-    <img src="/assets/WF-EN-C-L-W.gif" alt="some_text" width=60% style="margin-top:10px;margin-left:10px">
+    <img src="/assets/WF-EN-C-L-W.gif" alt="some_text" width=60% style="margin-top:10px;margin-left:10px" onclick="window.location.href='http://www.yellowpages.ca'">
+<!--     <% if @sessionHistory %>
+      <div class="side_bar_cell" ref='tooltip' title='Display status graph view' onclick="window.open('/status_center/show?id=<%=@session.project.id%>','_blank')">
+        <i class="fa fa-line-chart"></i>
+      </div>
+    <%end%> -->
     <div class="time_selection_bar" >
       <% if @sessionHistory %>
-        <% @sessionHistory.keys.sort.each do |m_key| %>
+        <% @sessionHistory.keys.sort.reverse.each do |m_key| %>
           <div class='time_month'><%=parse_month(m_key)%></div>
-          <% @sessionHistory[m_key].keys.sort.each do |d_key| %>
+          <% @sessionHistory[m_key].keys.sort.reverse.each do |d_key| %>
             <div class="time_date" id="time_<%=m_key%>_<%=d_key%>" onmouseover="show_detail_exec_time(this.id,'display_<%=m_key%>_<%=d_key%>')"><%=parse_day(d_key)%></div>
             <div class="detail_exec_time_block"  id="display_<%=m_key%>_<%=d_key%>" style="display:none">
             <% @sessionHistory[m_key][d_key].each do |ses| %>
@@ -31,11 +36,11 @@
       <% end %>
 
       <% if @executionHistory %>
-        <% @executionHistory.keys.sort.each do |m_key| %>
+        <% @executionHistory.keys.sort.reverse.each do |m_key| %>
           <div class='time_month'><%=parse_month(m_key)%></div>
-          <% @executionHistory[m_key].keys.sort.each do |d_key| %>
+          <% @executionHistory[m_key].keys.sort.reverse.each do |d_key| %>
             <%if d_key == @execution.created_at.day%>
-              <div class="time_date" style="color:red" id="time_<%=m_key%>_<%=d_key%>" onmouseover="show_detail_exec_time(this.id,'display_<%=m_key%>_<%=d_key%>')"><%=parse_day(d_key)%></div>
+              <div class="time_date" style="color:#fff200" id="time_<%=m_key%>_<%=d_key%>" onmouseover="show_detail_exec_time(this.id,'display_<%=m_key%>_<%=d_key%>')"><%=parse_day(d_key)%></div>
             <%else%>
               <div class="time_date" id="time_<%=m_key%>_<%=d_key%>" onmouseover="show_detail_exec_time(this.id,'display_<%=m_key%>_<%=d_key%>')"><%=parse_day(d_key)%></div>
             <%end%>
@@ -46,6 +51,7 @@
                 <%else%>
                   <div class="one_single_exec" onclick="execution_compare_with(<%=x.id%>)">
                 <%end%>
+                  <% if x.session %>
                   <% if x.session.browser =~ /chrome/i %>
                     <img src='/assets/chrome-icon.png' class='detail_execution_device_report'></img>
                   <% elsif x.session.browser =~ /(firefox|firefox_no_js)/i%>
@@ -56,7 +62,7 @@
                     <img src='/assets/samsung.png' class='detail_execution_device_report' ></img>
                   <% elsif x.session.browser =~ /google/i%>
                     <img src='/assets/nexus.png' class='detail_execution_device_report' ></img>
-                  <% end %>
+                  <% end end %>
                   <div class="exec_time"><i class="fa fa-clock-o" color="#01AEF2"></i> <%=x.created_at.strftime("%H:%M:%S")%></div>
                   <div class="exec_pass_fail">
 

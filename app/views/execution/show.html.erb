@@ -5,18 +5,29 @@
   <%= render "shared/side_menu" %>
 
   <div class="detail_header_container">
-    <div class="detail_header_text_block">
+    <div class="detail_header_text_block" style="width:95%">
       <% if @execution.result =~/passed/ %>
-        <div class="detail_header_case_name_block"><i class="fa fa-smile-o" style="font-size:22.5px;margin-right:5px;color:#73c632"></i><%=@execution.case_name.upcase%></div>
+        <div id="exec_case_name" class="detail_header_case_name_block"><i class="fa fa-smile-o" style="font-size:22.5px;margin-right:5px;color:#73c632"></i><%=@execution.case_name.upcase%></div>
       <%else%>
-        <div class="detail_header_case_name_block"><i class="fa fa-bug" style="font-size:22.5px;margin-right:5px;color:red"></i><%=@execution.case_name.upcase%></div>
+        <div id="exec_case_name" class="detail_header_case_name_block"><i class="fa fa-bug" style="font-size:22.5px;margin-right:5px;color:red"></i><%=@execution.case_name.upcase%></div>
       <%end%>
-      <div class="detail_header_case_path_block">
+      <div class="detail_header_case_path_block" >
         <i class="fa fa-folder-open"></i> <%=@execution.location%>
       </div>
       <div class="detail_header_case_path_block">
         <i class="fa fa-clock-o"></i> <%=@execution.created_at%>
       </div>
+      <div class="detail_header_case_path_block">
+        <% if @jira %>
+          <input id="exec_ticket_num_input" type="text" name="jira_number" value="<%=@jira.jira_id%>" placeholder="Tickets number">
+          <button id="save_jira_button" type="button" onclick="save_jira_issue_number()"><i class="fa fa-save"></i></button> 
+          <button id="delete_jira_button" type="button" onclick="delete_jira_issue_number(<%=@jira.id%>)"><i class="fa fa-trash"></i></button> 
+          <a target="_blank" style="color:white" href="https://issues.ypg.com/browse/<%=@jira.jira_id%>">View</a>
+        <% else %>
+          <input id="exec_ticket_num_input" type="text" name="jira_number" value="" placeholder="Tickets number"><button type="button" onclick="save_jira_issue_number()"><i class="fa fa-save"></i></button>
+        <% end %>
+      </div>
+
     </div>
     <div class="detail_header_author_block">
 
