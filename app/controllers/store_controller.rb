@@ -36,6 +36,10 @@ class StoreController < ApplicationController
     @exec = Execution.find_by(id: params[:execution_id])
     @ss = Screenshot.new(:avatar => params[:file], :execution_id => @exec.id)
     @ss.save
-    render :text => "Success", :status => 200
+    if @ss.save
+      render :text => @ss.avatar_url, :status => 200
+    else
+      render :text => "ERROR: #{@ss.errors.full_messages.join()}", :status => 400
+    end
   end
 end

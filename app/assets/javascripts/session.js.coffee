@@ -643,7 +643,8 @@ construct_table = (exec) ->
 
   if exec.jira_number
     if exec.jira_number is 'script'
-      temp = temp + '<td>' + exec.jira_number.toUpperCase() + '</td>'
+      if exec.result is "failed"
+        temp = temp + '<td>' + exec.jira_number.toUpperCase() + '</td>'
     else
       temp = temp + '<td><a target="_blank" style="color:white" href="https://issues.ypg.com/browse/' + exec.jira_number + '">' + exec.jira_number + '</a></td>'
   else
